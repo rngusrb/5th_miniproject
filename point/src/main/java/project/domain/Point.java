@@ -20,7 +20,7 @@ public class Point {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
-
+    
     private Integer point;
 
     private Date changeDate;
