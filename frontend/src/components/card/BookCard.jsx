@@ -1,11 +1,11 @@
 import './BookCard.css';
 
-export default function BookCard({ book }) {
+export default function BookCard({ book, showSubscribe = true }) {
   return (
     <div className="book-card">
       <div className="book-thumbnail">{book.title}</div>
       <div className="book-actions">
-        <button>구독</button>
+        {showSubscribe && <button>구독</button>}
         <button>열람</button>
       </div>
       <div className="book-meta">❤️ {book.likes} 👁 {book.views}</div>
