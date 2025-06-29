@@ -1,0 +1,32 @@
+.mypage-panel {
+  background-color: white;
+  border-left: 2px solid #ddd;
+  padding: 24px;
+  height: 100%;
+  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.05);
+  border-radius: 12px 0 0 12px;
+}
+
+.mypage-panel h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #222;
+}
+
+.mypage-panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mypage-panel li {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.mypage-panel li:hover {
+  color: #2979ff;
+}
