@@ -44,8 +44,8 @@ public class PolicyHandler {
         Subscription.subscriptionAdd(pointUpdated);
     }
 
-    //  subscriptionCheck 에서 발행된 4가지 케이스 이벤트 처리(case1~4)
-    
+    //  subscriptionCheck 에서 발행된 4가지 케이스 이벤트 처리( case 1~4 )
+
 
     // 구독권 o , 구독권 x
     @StreamListener(

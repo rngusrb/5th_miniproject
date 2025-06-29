@@ -14,4 +14,15 @@ import project.domain.*;
     path = "subscriptions"
 )
 public interface SubscriptionRepository
-    extends PagingAndSortingRepository<Subscription, Long> {}
+    extends PagingAndSortingRepository<Subscription, Long> {
+
+        // 전체 목록
+
+        List<SubscriptionList> findAll();
+        // 사용자별 조회
+
+        List<SubscriptionList> findByUserId(Long userId);
+        
+        // 책별 조회
+        List<SubscriptionList> findByBookId(Long bookId);
+    }
