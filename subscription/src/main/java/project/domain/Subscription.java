@@ -109,25 +109,13 @@ public class Subscription {
     }
 
     public static void subscriptionAdd(PointUpdated pointUpdated) {
-        //implement business logic here:
+        Long userId = pointUpdated.getId();                        // 이벤트의 userId
+        Integer updatedRemain = pointUpdated.getRemainPoint();     // 변경 후 잔여 포인트
 
-        /** Example 1:  new item 
-        Subscription subscription = new Subscription();
-        repository().save(subscription);
-
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(pointUpdated.get???()).ifPresent(subscription->{
-            
-            subscription // do something
-            repository().save(subscription);
-
-
-         });
-        */
+        repository().findById(userId).ifPresent(sub -> {
+            sub.setPoint(updatedRemain);                           // Subscription.point 갱신
+            repository().save(sub);                                // 변경사항 저장(UPDATE)
+        });
 
     }
 

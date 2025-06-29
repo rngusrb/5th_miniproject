@@ -10,6 +10,7 @@ import javax.persistence.*;
 import lombok.Data;
 import project.PointApplication;
 import project.domain.PointUpdated;
+import project.domain.events.SubscriptionCheckCase4;
 
 @Entity
 @Table(name = "Point_table")
@@ -20,7 +21,7 @@ public class Point {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
-    
+
     private Integer point;
 
     private Date changeDate;
@@ -44,32 +45,32 @@ public class Point {
         return pointRepository;
     }
 
-    //<<< Clean Arch / Port Method
-    public static void pointBalanceChange(
-        SubscriptionNotOwned subscriptionNotOwned
-    ) {
-        //implement business logic here:
+    // 포인트 사용 메서드
+    // 구독권도 없고, 열람 요청한 책에 대한 구독 이력이 없을 때!
+    public static void pointBalanceChange(SubscriptionCheckCase4 evt) {
+        Long userId = evt.getUserId();
+        Long bookId = evt.getBookId();
+        final int cost = 1000; // 예시: 열람 비용
 
-        /** Example 1:  new item 
-        Point point = new Point();
-        repository().save(point);
+        repository().findById(userId).ifPresent(p -> {
+            int remaining = (p.getRemainPoint() != null ? p.getRemainPoint() : p.getPoint());
 
-        */
+            if (remaining >= cost) {
+                // 포인트 차감
+                p.setChangePoint(-cost);
+                p.setRemainPoint(remaining - cost);
+                p.setChangeDate(new Date());
+                repository().save(p);
+                // save 시 @PostPersist가 아니므로 수동 이벤트 발행
+                PointUpdated upd = new PointUpdated(p);
+                upd.publishAfterCommit();
 
-        /** Example 2:  finding and process
-        
-
-        repository().findById(subscriptionNotOwned.get???()).ifPresent(point->{
-            
-            point // do something
-            repository().save(point);
-
-
-         });
-        */
+            } else {
+                // 포인트 부족 시 안내
+                System.out.println("포인트가 부족합니다. KT 통신사 이동 및 요금제 구독을 추천드립니다.");
+            }
+        });       
 
     }
-    //>>> Clean Arch / Port Method
-
 }
-//>>> DDD / Aggregate Root
+

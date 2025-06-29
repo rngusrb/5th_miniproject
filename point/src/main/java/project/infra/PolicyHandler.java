@@ -18,27 +18,29 @@ import project.domain.*;
 public class PolicyHandler {
 
     @Autowired
-    PointRepository pointRepository;
+    private PointRepository pointRepository;
 
     @StreamListener(KafkaProcessor.INPUT)
-    public void whatever(@Payload String eventString) {}
+    public void whatever(@Payload String eventString) {
+        // Ignore unrelated events
+    }
 
+    /**
+     * 구독권 없고, 구독 이력도 없는 경우 책 열람 요청 시
+     * SubscriptionCheckCase4 이벤트 수신 → 포인트 차감 로직 호출
+     */
     @StreamListener(
         value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='SubscriptionNotOwned'"
+        condition = "headers['type']=='SubscriptionCheckCase4'"
     )
-    public void wheneverSubscriptionNotOwned_PointBalanceChange(
-        @Payload SubscriptionNotOwned subscriptionNotOwned
+    public void wheneverSubscriptionCheckCase4_PointBalanceChange(
+        @Payload SubscriptionCheckCase4 event
     ) {
-        SubscriptionNotOwned event = subscriptionNotOwned;
-        System.out.println(
-            "\n\n##### listener PointBalanceChange : " +
-            subscriptionNotOwned +
-            "\n\n"
-        );
-
-        // Sample Logic //
+        System.out.println("##### listener PointBalanceChange : " + event);
         Point.pointBalanceChange(event);
     }
+
+
+    
 }
-//>>> Clean Arch / Inbound Adaptor
+
