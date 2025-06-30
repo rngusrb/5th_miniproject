@@ -9,4 +9,5 @@ public class RegistAuthorRequested {
     private String authorPortfolio;
     private Boolean isActive;
     private Long authorId;
+    private String authorPw;
 }

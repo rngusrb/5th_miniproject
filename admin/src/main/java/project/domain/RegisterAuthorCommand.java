@@ -8,4 +8,6 @@ public class RegisterAuthorCommand {
     private String authorInfo;
     private String authorPortfolio;
     private Boolean isActive;
+    private Long authorId;
+    private String authorPw;
 }

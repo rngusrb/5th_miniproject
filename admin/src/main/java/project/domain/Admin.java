@@ -1,11 +1,5 @@
 package project.domain;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import javax.persistence.*;
 import lombok.Data;
 import project.AdminApplication;
@@ -22,6 +16,11 @@ public class Admin {
     private Long id;
 
     private Long authorId;
+    private String authorPw;
+    private String authorName;
+    private String authorInfo;
+    private String authorPortfolio;
+    private Boolean isActive;
 
     @PostPersist
     public void onPostPersist() {
@@ -30,17 +29,19 @@ public class Admin {
     }
 
     public static AdminRepository repository() {
-        AdminRepository adminRepository = AdminApplication.applicationContext.getBean(
-            AdminRepository.class
-        );
-        return adminRepository;
+        return AdminApplication.applicationContext.getBean(AdminRepository.class);
     }
 
     //<<< Clean Arch / Port Method
     public static void registerAuthor(RegistAuthorRequested registAuthorRequested) {
-    Admin admin = new Admin();
-    admin.setAuthorId(registAuthorRequested.getAuthorId()); // 여기가 문제 없는지
-    repository().save(admin);
-}
+        Admin admin = new Admin();
+        admin.setAuthorId(registAuthorRequested.getAuthorId());
+        admin.setAuthorPw(registAuthorRequested.getAuthorPw());
+        admin.setAuthorName(registAuthorRequested.getAuthorName());
+        admin.setAuthorInfo(registAuthorRequested.getAuthorInfo());
+        admin.setAuthorPortfolio(registAuthorRequested.getAuthorPortfolio());
+        admin.setIsActive(registAuthorRequested.getIsActive());
+        repository().save(admin);
+    }
     //>>> Clean Arch / Port Method
 }

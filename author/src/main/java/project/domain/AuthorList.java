@@ -20,4 +20,5 @@ public class AuthorList {
     private String authorInfo;
     private String authorPortfolio;
     private Boolean isActive;
+    private String authorPw;
 }
