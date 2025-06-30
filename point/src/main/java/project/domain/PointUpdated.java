@@ -1,6 +1,6 @@
 package project.domain;
 
-import java.time.LocalDate;
+
 import java.util.*;
 import lombok.*;
 import project.domain.*;
@@ -9,7 +9,7 @@ import project.infra.AbstractEvent;
 //<<< DDD / Domain Event
 @Data
 @ToString
-public class PointMinus extends AbstractEvent {
+public class PointUpdated extends AbstractEvent {
 
     private Long userId;
 
@@ -21,7 +21,7 @@ public class PointMinus extends AbstractEvent {
 
     private Date changeDate;
 
-    public PointMinus(Point aggregate) {
+    public PointUpdated(Point aggregate) {
         super(aggregate);
 
         this.userId = aggregate.getUserId();
@@ -30,8 +30,8 @@ public class PointMinus extends AbstractEvent {
         this.reason = aggregate.getReason();
         this.changeDate = aggregate.getChangeDate();       
     }
-
-    public PointMinus() {
+    
+    public PointUpdated() {
         super();
     }
 }

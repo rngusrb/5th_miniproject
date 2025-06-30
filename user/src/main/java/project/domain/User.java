@@ -8,7 +8,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import project.UserApplication;
 import project.domain.SubscriptionCanceled;
 import project.domain.UserLoggedIn;
@@ -17,6 +20,8 @@ import project.domain.UserRegistered;
 @Entity
 @Table(name = "User_table")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 //<<< DDD / Aggregate Root
 public class User {
 

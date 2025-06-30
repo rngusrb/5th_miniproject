@@ -13,9 +13,6 @@ import project.domain.*;
 public class PolicyHandler {
 
     @Autowired
-    PointRepository pointRepository;
-
-    @Autowired
     PointUsageHistoryRepository pointUsageHistoryRepository;
 
     @StreamListener(KafkaProcessor.INPUT)
@@ -58,15 +55,15 @@ public class PolicyHandler {
         value = KafkaProcessor.INPUT,
         condition = "headers['type']=='PointMinus'"
     )
-    public void wheneverPointMinus_SavePointUsage(@Payload PointMinus pointMinus) {
-        if (pointMinus == null || pointMinus.getId() == null) return;
+    public void wheneverPointMinus_SavePointUsage(@Payload PointUpdated pointMinus) {
+        if (pointMinus == null || pointMinus.getUserId() == null) return;
 
         System.out.println(
             "\n\n##### listener SavePointUsageHistory : " + pointMinus + "\n\n"
         );
 
         PointUsageHistory history = new PointUsageHistory();
-        history.setUserId(pointMinus.getId());
+        history.setUserId(pointMinus.getUserId());
         history.setChangePoint(pointMinus.getChangePoint());
         history.setPointSum(pointMinus.getPointSum());
         history.setReason(pointMinus.getReason());

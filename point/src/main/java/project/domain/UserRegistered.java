@@ -9,5 +9,20 @@ import project.infra.AbstractEvent;
 @ToString
 public class UserRegistered extends AbstractEvent {
 
-    private Long id;
+
+    // 유저 아이디
+    private Long userId;
+    // 가입 유형
+    private String userType;
+
+    public UserRegistered() {
+         super();
+     }
+
+     public UserRegistered(Long id,String userType) {
+         super();
+
+         this.userId = id;
+         this.userType= userType;
+     }
 }

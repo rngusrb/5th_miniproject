@@ -7,13 +7,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import project.PointApplication;
-import project.domain.PointMinus;
+import project.domain.PointUpdated;
 
 @Entity
 @Table(name = "Point_table")
-@Data
 public class Point {
 
     @Id
@@ -49,7 +51,7 @@ public class Point {
 
         repository().save(point);
 
-        PointMinus pointMinus = new PointMinus(point);
+        PointUpdated pointMinus = new PointUpdated(point);
         pointMinus.publishAfterCommit();
     }
 
@@ -78,7 +80,7 @@ public class Point {
 
         repository().save(point);
 
-        PointMinus pointMinus = new PointMinus(point);
+        PointUpdated pointMinus = new PointUpdated(point);
         pointMinus.publishAfterCommit();
     }
 }

@@ -56,7 +56,7 @@ public class Subscription {
     }
 
     // 구독 추가 
-    public static void subscriptionAdd(PointMinus pointMinus) {
+    public static void subscriptionAdd(PointUpdated pointMinus) {
         // 새로운 구독 엔티티 생성
         Subscription subscription = new Subscription();
         subscription.setUserId(pointMinus.getUserId());

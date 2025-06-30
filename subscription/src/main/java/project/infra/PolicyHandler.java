@@ -52,7 +52,7 @@ public class PolicyHandler {
         condition = "headers['type']=='PointMinus'"
     )
     public void wheneverPointMinus_SubscriptionAdd(
-        @Payload PointMinus pointMinus
+        @Payload PointUpdated pointMinus
     ) {
         System.out.println(
             "\n\n##### listener SubscriptionAdd : " + pointMinus + "\n\n"
