@@ -16,7 +16,7 @@ import project.domain.*;
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
-@RequestMapping(value="/api/v1/manuscripts")
+@RequestMapping(value="/manuscripts")
 @Transactional
 public class ManuscriptController {
 
