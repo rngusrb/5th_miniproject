@@ -8,7 +8,7 @@ export default function BookCard({ book, showSubscribe = true }) {
         {showSubscribe && <button>구독</button>}
         <button>열람</button>
       </div>
-      <div className="book-meta">❤️ {book.likes} 👁 {book.views}</div>
+      <div className="book-meta">❤️ {book.likes} ☆ {book.subscribes}</div>
     </div>
   );
 }

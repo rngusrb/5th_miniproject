@@ -8,14 +8,14 @@ const dummyBooks = [
     id: 1,
     title: "작가의 첫 번째 책",
     likes: 30,
-    saves: 22,
+    subscribes: 22,
     imageUrl: "https://via.placeholder.com/150",
   },
   {
     id: 2,
     title: "후속작: 깊은 이야기",
     likes: 12,
-    saves: 6,
+    subscribes: 6,
     imageUrl: "https://via.placeholder.com/150",
   },
 ];

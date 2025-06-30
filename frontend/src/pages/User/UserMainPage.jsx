@@ -7,15 +7,15 @@ export default function UserMainPage() {
   const [showMyPage, setShowMyPage] = useState(false);
 
   const bestsellers = [
-    { id: 1, title: "책 1", likes: 370, views: 82 },
-    { id: 2, title: "책 2", likes: 350, views: 70 },
-    { id: 3, title: "책 3", likes: 320, views: 60 }
+    { id: 1, title: "책 1", likes: 370, subscribes: 82 },
+    { id: 2, title: "책 2", likes: 350, subscribes: 70 },
+    { id: 3, title: "책 3", likes: 320, subscribes: 60 }
   ];
 
   const categories = {
-    "소설": [{ id: 4, title: "소설책", likes: 370, views: 82 }],
-    "판타지": [{ id: 5, title: "판타지책", likes: 370, views: 82 }],
-    "경제": [{ id: 6, title: "경제책", likes: 370, views: 82 }]
+    "소설": [{ id: 4, title: "소설책", likes: 370, subscribes: 82 }],
+    "판타지": [{ id: 5, title: "판타지책", likes: 370, subscribes: 82 }],
+    "경제": [{ id: 6, title: "경제책", likes: 370, subscribes: 82 }]
   };
 
   return (

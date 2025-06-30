@@ -14,6 +14,8 @@ import BookDetailPage from '../pages/User/BookDetailPage';
 
 // Author
 import AuthorMainPage from '../pages/Author/AuthorMainPage';
+import AuthorRegister from '../pages/Author/AuthorRegister';
+import ManuscriptRegister from '../pages/Author/ManuscriptRegister';
 
 // Admin
 import AdminMainPage from '../pages/Admin/AdminMainPage';
@@ -41,6 +43,8 @@ export default function AppRoutes() {
 
       {/* 작가 페이지 */}
       <Route path="/main/author" element={<AuthorMainPage />} />
+      <Route path="/author/register" element={<AuthorRegister />} />
+      <Route path="/author/manuscript" element={<ManuscriptRegister />} />
 
       {/* 관리자 페이지 */}
       <Route path="/admin" element={<AdminMainPage />} />
