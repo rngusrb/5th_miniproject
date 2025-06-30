@@ -11,3 +11,5 @@ public class BookAccessGranted extends AbstractEvent {
 
     private Long id;
 }
+
+// test
