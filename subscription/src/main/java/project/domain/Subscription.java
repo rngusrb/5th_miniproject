@@ -7,35 +7,28 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import project.SubscriptionApplication;
-import project.domain.SubscriptionNotOwned;
-import project.domain.SubscriptionOwned;
+import project.domain.BookAccessGranted;
 
 @Entity
 @Table(name = "Subscription_table")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 //<<< DDD / Aggregate Root
 public class Subscription {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; 
+
     private Long userId;
-
-    private Integer point;
-
     private Long bookId;
-
-    @PostPersist
-    public void onPostPersist() {
-        SubscriptionOwned subscriptionOwned = new SubscriptionOwned(this);
-        subscriptionOwned.publishAfterCommit();
-
-        SubscriptionNotOwned subscriptionNotOwned = new SubscriptionNotOwned(
-            this
-        );
-        subscriptionNotOwned.publishAfterCommit();
-    }
 
     public static SubscriptionRepository repository() {
         SubscriptionRepository subscriptionRepository = SubscriptionApplication.applicationContext.getBean(
@@ -45,8 +38,25 @@ public class Subscription {
     }
 
     //<<< Clean Arch / Port Method
-    public static void subscriptionCheck(BookViewed bookViewed) {
+    public static void subscriptionSuccess(BookAccessGranted bookAccessGranted, Long bookId) {
         //implement business logic here:
+        boolean exists = repository().existsByUserIdAndBookId(
+            bookAccessGranted.getUserId(),
+            // bookAccessGranted.getBookId()
+            bookId
+        );
+
+        if (!exists) {
+            Subscription subscription = new Subscription();
+            subscription.setUserId(bookAccessGranted.getUserId());
+            subscription.setBookId(bookId);
+
+            repository().save(subscription);
+            System.out.println("✅ 구독 성공 저장 완료 (subscriptionSuccess)");
+        } else {
+            System.out.println("⚠️ 이미 구독되어 있음");
+        }
+
 
         /** Example 1:  new item 
         Subscription subscription = new Subscription();
@@ -57,7 +67,7 @@ public class Subscription {
         /** Example 2:  finding and process
         
 
-        repository().findById(bookViewed.get???()).ifPresent(subscription->{
+        repository().findById(passOwned.get???()).ifPresent(subscription->{
             
             subscription // do something
             repository().save(subscription);
@@ -67,32 +77,23 @@ public class Subscription {
         */
 
     }
-
     //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
-    public static void subscriptionAdd(PointUpdated pointUpdated) {
-        //implement business logic here:
 
-        /** Example 1:  new item 
+    public static void subscriptionAdd(PointUpdated pointUpdated, Long bookId) {
+        // 중복 체크 생략 가능하거나 포함 가능
         Subscription subscription = new Subscription();
+        subscription.setUserId(pointUpdated.getUserId());
+        subscription.setBookId(bookId);
+
         repository().save(subscription);
 
-        */
+        SubscriptionAdded event = new SubscriptionAdded(subscription);
+        event.publishAfterCommit();
 
-        /** Example 2:  finding and process
-        
-
-        repository().findById(pointUpdated.get???()).ifPresent(subscription->{
-            
-            subscription // do something
-            repository().save(subscription);
-
-
-         });
-        */
-
+        System.out.println("✅ 구독 추가 및 이벤트 발행 완료 (subscriptionAdd)");
     }
-    //>>> Clean Arch / Port Method
+
+
 
 }
 //>>> DDD / Aggregate Root

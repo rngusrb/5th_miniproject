@@ -1,6 +1,8 @@
 package project.infra;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import project.domain.*;
@@ -10,4 +12,6 @@ import project.domain.*;
     path = "subscriptionLists"
 )
 public interface SubscriptionListRepository
-    extends PagingAndSortingRepository<SubscriptionList, Long> {}
+    extends PagingAndSortingRepository<SubscriptionList, Long> {
+        Optional<SubscriptionList> findByBookId(Long bookId);
+    }

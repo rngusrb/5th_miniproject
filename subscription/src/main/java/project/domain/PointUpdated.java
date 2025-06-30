@@ -9,5 +9,10 @@ import project.infra.AbstractEvent;
 @ToString
 public class PointUpdated extends AbstractEvent {
 
-    private Long id;
+    private Long userId;
+    private Integer point;
+    private Date changeDate;
+    private Date expireDate;
+    private Integer changePoint;
+    private Integer remainPoint;
 }

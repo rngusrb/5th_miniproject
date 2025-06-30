@@ -14,4 +14,8 @@ import project.domain.*;
     path = "subscriptions"
 )
 public interface SubscriptionRepository
-    extends PagingAndSortingRepository<Subscription, Long> {}
+    extends PagingAndSortingRepository<Subscription, Long> {
+        boolean existsByUserIdAndBookId(Long userId, Long bookId);
+
+
+    }
