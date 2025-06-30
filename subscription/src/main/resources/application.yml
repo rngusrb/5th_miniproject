@@ -57,6 +57,10 @@ spring:
 #>>> EDA / Topic Name
           contentType: application/json
 
+springdoc:
+  swagger-ui:
+    path: /subscription-docs
+
 logging:
   level:
     org.hibernate.type: trace

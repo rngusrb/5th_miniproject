@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ad7ef2d3-a7ca-4fe3-8889-3008e2158f81" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/book/src/main/java/project/domain/PublicationRequested.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/book/src/main/java/project/infra/Listner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/manuscript/src/main/java/project/infra/EventProducer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/book/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/book/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manuscript/src/main/java/project/domain/PublicationRequested.java" beforeDir="false" afterPath="$PROJECT_DIR$/manuscript/src/main/java/project/domain/PublicationRequested.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manuscript/src/main/java/project/infra/ManuscriptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/manuscript/src/main/java/project/infra/ManuscriptController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manuscript/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/manuscript/src/main/resources/application.yml" afterDir="false" />
-    </list>
+    <list default="true" id="ad7ef2d3-a7ca-4fe3-8889-3008e2158f81" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -45,12 +37,59 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "leeyumin",
+    "git-widget-placeholder": "0630",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/User/Desktop/5th_miniproject/manuscript"
+    "last_opened_file_path": "C:/Users/User/Desktop/5th_miniproject"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="5th_miniproject" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="5th_miniproject" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="5th_miniproject" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="Tox" factoryName="Tox">
+      <module name="5th_miniproject" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
