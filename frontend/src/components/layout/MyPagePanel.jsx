@@ -1,4 +1,5 @@
 import './MyPagePanel.css';
+import React from 'react';
 
 export default function MyPagePanel({ onClose }) {
   return (
