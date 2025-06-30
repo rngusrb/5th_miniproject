@@ -12,4 +12,8 @@ import project.domain.*;
 //<<< PoEAA / Repository
 @RepositoryRestResource(collectionResourceRel = "books", path = "books")
 public interface BookRepository
-    extends JpaRepository<Book, Long> {}
+    extends JpaRepository<Book, Long> {
+
+        List<Book> findByAuthorId(Long authorId);
+
+    }
