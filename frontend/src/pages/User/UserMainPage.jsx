@@ -22,34 +22,40 @@ export default function UserMainPage() {
 
   return (
     <MainLayout>
-      <div className="user-main-container">
+      <div className="user-main-container">       {/* ② 최상위 container */}
         <div className="main-left">
+          {/* 헤더 */}
           <div className="user-header-panel">
             <h1>걷다가 서재</h1>
             <span>포인트: 8000</span>
-            <button onClick={() => setShowMyPage(!showMyPage)}>My Page</button>
+            <button onClick={() => setShowMyPage(v => !v)}>
+              My Page
+            </button>
           </div>
 
+          {/* 이달의 베스트셀러 */}
           <h2>이달의 베스트셀러</h2>
-          <div className="book-grid">
+          <div className="bestseller-grid">
             {bestsellers.map(book => (
               <BookCard key={book.id} book={book} />
             ))}
           </div>
 
+          {/* 카테고리별 */}
           <h2>카테고리별</h2>
-          {Object.entries(categories).map(([category, books]) => (
-            <div key={category}>
-              <h3>{category}</h3>
-              <div className="book-grid">
+          <div className="category-grid">
+            {Object.entries(categories).map(([catName, books]) => (
+              <div key={catName} className="category-item">
+                <div className="category-label">{catName}</div>
                 {books.map(book => (
                   <BookCard key={book.id} book={book} />
                 ))}
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
+        {/* My Page 패널 */}
         {showMyPage && (
           <div className="main-right">
             <MyPagePanel onClose={() => setShowMyPage(false)} />
