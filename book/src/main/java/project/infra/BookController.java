@@ -1,44 +1,62 @@
 package project.infra;
 
+import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
 import project.domain.*;
 
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
-// @RequestMapping(value="/books")
+@RequestMapping(value="/books")
 @Transactional
 public class BookController {
 
     @Autowired
     BookRepository bookRepository;
-
-    @RequestMapping(
-        value = "/books/{id}/viewbook",
-        method = RequestMethod.PUT,
+    
+    @PatchMapping(
+        value = "/{bookId}/viewbook",
         produces = "application/json;charset=UTF-8"
     )
     public Book viewBook(
-        @PathVariable(value = "id") Long id,
+        @PathVariable(value = "bookId") Long bookId,
         HttpServletRequest request,
         HttpServletResponse response
     ) throws Exception {
         System.out.println("##### /book/viewBook  called #####");
-        Optional<Book> optionalBook = bookRepository.findById(id);
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("도서를 찾을 수 없습니다."));
 
-        optionalBook.orElseThrow(() -> new Exception("No Entity Found"));
-        Book book = optionalBook.get();
-        book.viewBook();
-
+        book.setViewCount(book.getViewCount() + 1);
         bookRepository.save(book);
+
         return book;
     }
+    
+    @PatchMapping(
+        value = "/{bookId}/likebook",
+        produces = "application/json;charset=UTF-8"
+    )
+    public Book likeBook(
+        @PathVariable(value = "bookId") Long bookId,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws Exception {
+        System.out.println("##### /book/likeBook  called #####");
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("도서를 찾을 수 없습니다."));
+
+        book.setLikeCount(book.getLikeCount() + 1);
+        bookRepository.save(book);
+
+        return book;
+    }
+
 }
 //>>> Clean Arch / Inbound Adaptor
