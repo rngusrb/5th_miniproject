@@ -1,4 +1,5 @@
 package project.domain;
+import java.util.Objects;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
@@ -10,7 +11,6 @@ import javax.persistence.*;
 import lombok.Data;
 import project.UserApplication;
 import project.domain.SubscriptionCanceled;
-import project.domain.SubscriptionRequested;
 import project.domain.UserLoggedIn;
 import project.domain.UserRegistered;
 
@@ -21,30 +21,13 @@ import project.domain.UserRegistered;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
 
     private Long userPw;
-
-    private Long point;
+    private Boolean pass;
 
     @PostPersist
     public void onPostPersist() {
-        UserRegistered userRegistered = new UserRegistered(this);
-        userRegistered.publishAfterCommit();
-
-        UserLoggedIn userLoggedIn = new UserLoggedIn(this);
-        userLoggedIn.publishAfterCommit();
-
-        SubscriptionRequested subscriptionRequested = new SubscriptionRequested(
-            this
-        );
-        subscriptionRequested.publishAfterCommit();
-
-        SubscriptionCanceled subscriptionCanceled = new SubscriptionCanceled(
-            this
-        );
-        subscriptionCanceled.publishAfterCommit();
     }
 
     public static UserRepository repository() {
@@ -55,32 +38,48 @@ public class User {
     }
 
     //<<< Clean Arch / Port Method
-    public void reqeustLogin() {
-        //implement business logic here:
+    public void login(Long inputPw) {
+        if (!Objects.equals(this.userPw, inputPw)) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
 
+        UserLoggedIn event = new UserLoggedIn(this);
+        event.publishAfterCommit();
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public void requestUserRegistration() {
-        //implement business logic here:
-
+        UserRegistered userRegistered = new UserRegistered(this);
+        userRegistered.publishAfterCommit();
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public void requestSubscription() {
-        //implement business logic here:
-
+        this.pass = true;
+        SubscriptionRequested event = new SubscriptionRequested(this);
+        event.publishAfterCommit();
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public void cancelSubscription() {
-        //implement business logic here:
-
+        this.pass = false;
+        SubscriptionCanceled event = new SubscriptionCanceled(this);
+        event.publishAfterCommit();
     }
     //>>> Clean Arch / Port Method
+
+    public void checkBookAccess(Long bookId) {
+        if (Boolean.TRUE.equals(this.pass)) {
+            BookAccessGranted event = new BookAccessGranted(this.getUserId(), bookId);
+            event.publishAfterCommit();
+        } else {
+            BookAccessDenied event = new BookAccessDenied(this.getUserId(), bookId);
+            event.publishAfterCommit();
+        }
+    }    
 
 }
 //>>> DDD / Aggregate Root

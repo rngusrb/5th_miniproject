@@ -31,7 +31,8 @@ public class PolicyHandler {
     )
     public void wheneverBookAccessGranted_SubscriptionSuccess(@Payload String eventString) {
     try {
-        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper mapper = new ObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         
         // 1. BookAccessGranted 정보 추출
         BookAccessGranted event = mapper.readValue(eventString, BookAccessGranted.class);

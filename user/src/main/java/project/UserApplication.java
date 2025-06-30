@@ -7,8 +7,8 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.context.ApplicationContext;
 import project.config.kafka.KafkaProcessor;
 
-@SpringBootApplication
 @EnableBinding(KafkaProcessor.class)
+@SpringBootApplication(scanBasePackages = "project")
 @EnableFeignClients
 public class UserApplication {
 

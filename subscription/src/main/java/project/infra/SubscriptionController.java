@@ -32,31 +32,24 @@ public class SubscriptionController {
     @PostMapping("/publish")
     public String publishEvent(@RequestBody Map<String, Object> payload) {
         try {
-            String type = (String) payload.get("eventType");  // 이벤트 타입 추출
+            String type = (String) payload.get("eventType");
 
             if (type == null) {
-                return " eventType is required in JSON payload";
+                return "eventType is required in JSON payload";
             }
 
-            // JSON 직렬화
             ObjectMapper mapper = new ObjectMapper();
             String jsonPayload = mapper.writeValueAsString(payload);
 
-            // Kafka 메시지 생성 및 전송
-            Message<String> message = MessageBuilder
-                .withPayload(jsonPayload)
-                .setHeader("type", type)
-                .build();
-
-            kafkaTemplate.send("project", message);  // "project"는 Kafka 토픽
+            kafkaTemplate.send("project", jsonPayload);
 
             return "Event sent: " + type;
-
         } catch (Exception e) {
             e.printStackTrace();
             return "Failed to send event: " + e.getMessage();
         }
-    }
+    }   
+   
 
 
 
