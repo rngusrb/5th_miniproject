@@ -19,6 +19,8 @@ import ManuscriptRegister from '../pages/Author/ManuscriptRegister';
 
 // Admin
 import AdminMainPage from '../pages/Admin/AdminMainPage';
+import AuthorApprovalPage from "../pages/Admin/AuthorApprovalPage";
+import UserManagePage from '../pages/Admin/UserManagePage';
 
 export default function AppRoutes() {
   return (
@@ -48,6 +50,13 @@ export default function AppRoutes() {
 
       {/* 관리자 페이지 */}
       <Route path="/admin" element={<AdminMainPage />} />
+      <Route path="/admin/author-approval" element={<AuthorApprovalPage />} />
+
+      <Route path="/admin/author-manage" element={<div>작가 관리 페이지</div>} />
+      <Route path="/admin/manuscript-manage" element={<div>원고 관리 페이지</div>} />
+      <Route path="/admin/user-manage" element={<UserManagePage />}  />
+      <Route path="/admin/book-manage" element={<div>도서 관리 페이지</div>} />
+      <Route path="/admin/ai-manage" element={<div>AI 관리 페이지</div>} />
     </Routes>
   );
 }

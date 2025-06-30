@@ -1,0 +1,40 @@
+.user-manage-page {
+  padding: 2rem;
+}
+
+.user-manage-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.user-manage-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.user-manage-table th,
+.user-manage-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.user-manage-table th {
+  background-color: #f4f4f4;
+  font-weight: 600;
+}
+
+.user-manage-button {
+  padding: 10px 20px;
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.user-manage-button:hover {
+  background-color: #b71c1c;
+}
