@@ -11,7 +11,7 @@ import project.infra.AbstractEvent;
 @ToString
 public class ManuscriptEdited extends AbstractEvent {
 
-    private Long id;
+    private Long manuscriptId;
 
     public ManuscriptEdited(Manuscript aggregate) {
         super(aggregate);

@@ -10,7 +10,7 @@ import org.springframework.transaction.support.TransactionSynchronizationAdapter
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.MimeTypeUtils;
 import project.ManuscriptApplication;
-import project.config.kafka.KafkaProcessor;
+import project.config.KafkaProcessor;
 
 //<<< Clean Arch / Outbound Adaptor
 public class AbstractEvent {

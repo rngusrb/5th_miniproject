@@ -4,10 +4,23 @@ server:
 spring:
   application:
     name: manuscript
+
+openai:
+  api:
+    key:
 ---
 
 spring:
   profiles: default
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/testdb
+    username: test
+    password: 1234
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   jpa:
     properties:
       hibernate:
@@ -30,24 +43,27 @@ spring:
       bindings:
         event-in:
           group: manuscript
-#<<< EDA / Topic Name
+          #<<< EDA / Topic Name
           destination: project
-#>>> EDA / Topic Name
+          #>>> EDA / Topic Name
           contentType: application/json
         event-out:
-#<<< EDA / Topic Name
+          #<<< EDA / Topic Name
           destination: project
-#>>> EDA / Topic Name
+          #>>> EDA / Topic Name
           contentType: application/json
+
+springdoc:
+  swagger-ui:
+    path: /manuscript-docs
 
 logging:
   level:
     org.hibernate.type: trace
     org.springframework.cloud: debug
 
-
-server:
-  port: 8087
+#server:
+#  port: 8087
 
 ---
 

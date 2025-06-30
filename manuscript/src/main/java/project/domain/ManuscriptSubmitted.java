@@ -1,6 +1,7 @@
 package project.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import lombok.*;
 import project.domain.*;
@@ -11,7 +12,8 @@ import project.infra.AbstractEvent;
 @ToString
 public class ManuscriptSubmitted extends AbstractEvent {
 
-    private Long id;
+    private Long manuscriptId;
+    private String content;
 
     public ManuscriptSubmitted(Manuscript aggregate) {
         super(aggregate);
