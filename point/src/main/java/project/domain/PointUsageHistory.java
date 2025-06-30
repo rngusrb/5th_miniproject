@@ -13,6 +13,11 @@ import lombok.Data;
 public class PointUsageHistory {
 
     @Id
-    //@GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long userId;
+
+    private Integer changePoint;
+    private Long pointSum;
+    private String reason;
+    private Date changeDate;  
 }

@@ -11,10 +11,24 @@ import project.infra.AbstractEvent;
 @ToString
 public class PointMinus extends AbstractEvent {
 
-    private Long id;
+    private Long userId;
+
+    private Integer changePoint;
+
+    private Long pointSum;
+    
+    private String reason;
+
+    private Date changeDate;
 
     public PointMinus(Point aggregate) {
         super(aggregate);
+
+        this.userId = aggregate.getUserId();
+        this.changePoint = aggregate.getChangePoint();
+        this.pointSum = aggregate.getPointSum();
+        this.reason = aggregate.getReason();
+        this.changeDate = aggregate.getChangeDate();       
     }
 
     public PointMinus() {

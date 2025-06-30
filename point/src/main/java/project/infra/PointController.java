@@ -13,7 +13,7 @@ import project.domain.*;
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
-// @RequestMapping(value="/points")
+@RequestMapping(value="/api/v1/points")
 @Transactional
 public class PointController {
 

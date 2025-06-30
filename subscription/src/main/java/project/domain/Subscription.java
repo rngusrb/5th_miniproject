@@ -9,33 +9,18 @@ import java.util.Map;
 import javax.persistence.*;
 import lombok.Data;
 import project.SubscriptionApplication;
-import project.domain.SubscriptionNotOwned;
-import project.domain.SubscriptionOwned;
+import project.domain.SubscriptionAdded;
 
 @Entity
 @Table(name = "Subscription_table")
 @Data
-//<<< DDD / Aggregate Root
 public class Subscription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
 
-    private Integer point;
-
     private Long bookId;
-
-    @PostPersist
-    public void onPostPersist() {
-        SubscriptionOwned subscriptionOwned = new SubscriptionOwned(this);
-        subscriptionOwned.publishAfterCommit();
-
-        SubscriptionNotOwned subscriptionNotOwned = new SubscriptionNotOwned(
-            this
-        );
-        subscriptionNotOwned.publishAfterCommit();
-    }
 
     public static SubscriptionRepository repository() {
         SubscriptionRepository subscriptionRepository = SubscriptionApplication.applicationContext.getBean(
@@ -45,7 +30,9 @@ public class Subscription {
     }
 
     //<<< Clean Arch / Port Method
-    public static void subscriptionCheck(BookViewed bookViewed) {
+    public static void subscriptionSuccess(
+        BookAccessGranted bookAccessGranted
+    ) {
         //implement business logic here:
 
         /** Example 1:  new item 
@@ -57,7 +44,7 @@ public class Subscription {
         /** Example 2:  finding and process
         
 
-        repository().findById(bookViewed.get???()).ifPresent(subscription->{
+        repository().findById(bookAccessGranted.get???()).ifPresent(subscription->{
             
             subscription // do something
             repository().save(subscription);
@@ -68,28 +55,23 @@ public class Subscription {
 
     }
 
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
-    public static void subscriptionAdd(PointUpdated pointUpdated) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
+    // 구독 추가 
+    public static void subscriptionAdd(PointMinus pointMinus) {
+        // 새로운 구독 엔티티 생성
         Subscription subscription = new Subscription();
+        subscription.setUserId(pointMinus.getUserId());
+        subscription.setBookId(pointMinus.getBookId());
+
+        // DB에 저장
         repository().save(subscription);
 
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(pointUpdated.get???()).ifPresent(subscription->{
-            
-            subscription // do something
-            repository().save(subscription);
-
-
-         });
-        */
+        // 도메인 이벤트 발행
+        SubscriptionAdded subscriptionAdded = new SubscriptionAdded(subscription);
+        // (필요하다면 이벤트 객체에 추가 필드 셋팅)
+        subscriptionAdded.setUserId(subscription.getUserId());
+        subscriptionAdded.setBookId(subscription.getBookId());
+        // 다음 이벤트로 가도록 해줌
+        subscriptionAdded.publishAfterCommit();
 
     }
     //>>> Clean Arch / Port Method

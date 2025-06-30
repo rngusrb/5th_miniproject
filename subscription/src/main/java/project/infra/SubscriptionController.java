@@ -13,7 +13,7 @@ import project.domain.*;
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
-// @RequestMapping(value="/subscriptions")
+@RequestMapping(value="/api/v1/subscriptions")
 @Transactional
 public class SubscriptionController {
 
