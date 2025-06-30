@@ -13,5 +13,8 @@ import project.domain.*;
 )
 public interface SubscriptionListRepository
     extends PagingAndSortingRepository<SubscriptionList, Long> {
-        Optional<SubscriptionList> findByBookId(Long bookId);
+        List<SubscriptionList> findByUserId(Long userId);
+        List<SubscriptionList> findByBookId(Long bookId);
+        List<SubscriptionList> findAll();
+
     }

@@ -13,7 +13,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import project.SubscriptionApplication;
+<<<<<<< Updated upstream
 import project.domain.BookAccessGranted;
+=======
+>>>>>>> Stashed changes
 
 @Entity
 @Table(name = "Subscription_table")

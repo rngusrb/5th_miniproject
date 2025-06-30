@@ -8,7 +8,10 @@ import project.infra.AbstractEvent;
 @Data
 @ToString
 public class BookViewed extends AbstractEvent {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     private Long bookId;
     private Long authorId;
     private String bookTitle;

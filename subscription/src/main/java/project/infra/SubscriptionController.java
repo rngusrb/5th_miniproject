@@ -14,17 +14,23 @@ import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import project.domain.*;
+import java.util.List;
 
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
+<<<<<<< Updated upstream
 @RequestMapping(value="/api/v1/subscriptions")
+=======
+@RequestMapping(value="/subscriptions")
+>>>>>>> Stashed changes
 @Transactional
 public class SubscriptionController {
 
     @Autowired
     SubscriptionRepository subscriptionRepository;
 
+<<<<<<< Updated upstream
     
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
@@ -52,6 +58,22 @@ public class SubscriptionController {
    
 
 
+=======
+    @Autowired
+    SubscriptionListRepository subscriptionListRepository;
+
+    @GetMapping
+    public List<SubscriptionList> getAllSubscriptions() {
+        return subscriptionListRepository.findAll();
+    }
+
+
+    @GetMapping("/{userId}")
+    public List<SubscriptionList> getSubscriptionsByUserId(@PathVariable Long userId) {
+        return subscriptionListRepository.findByUserId(userId);
+    }
+
+>>>>>>> Stashed changes
 
 }
 //>>> Clean Arch / Inbound Adaptor

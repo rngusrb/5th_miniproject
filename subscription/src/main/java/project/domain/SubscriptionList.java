@@ -13,8 +13,9 @@ import lombok.Data;
 public class SubscriptionList {
 
     @Id
-    //@GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+<<<<<<< Updated upstream
     private Long userId;
 
     private Long bookId;
@@ -24,4 +25,14 @@ public class SubscriptionList {
     private String bookCoverImage;
     private String bookSummary;
     private String bookContent;
+=======
+
+    private Long userId;
+    private Long bookId;
+    private String bookTitle;
+    private String bookSummary;
+    private String bookCoverImage;
+    private String category;
+    private Date subscribedDate;
+>>>>>>> Stashed changes
 }
