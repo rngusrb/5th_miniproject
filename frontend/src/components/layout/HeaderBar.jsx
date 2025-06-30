@@ -1,27 +1,15 @@
+// src/components/layout/HeaderBar.jsx
 import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+import { useLocation } from 'react-router-dom';
+import './HeaderBar.css';
 
-function HeaderBar() {
-  const user = null; // TODO: replace with actual auth logic
-  const points = 0;
+export default function HeaderBar() {
+  const { pathname } = useLocation();
+
+
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6">걷다가 서재</Typography>
-        <Box sx={{ flexGrow: 1 }} />
-        {user && (
-          <>
-            <Typography sx={{ mr: 2 }}>포인트: {points}</Typography>
-            <Button color="inherit" href="/app/mypage">My Page</Button>
-          </>
-        )}
-      </Toolbar>
-    </AppBar>
+    <header className="header-bar">
+      걷다가 서재
+    </header>
   );
 }
-
-export default HeaderBar;

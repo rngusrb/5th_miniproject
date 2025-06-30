@@ -1,5 +1,5 @@
 import React from "react";
-import AuthorLayout from "../../components/layout/AuthorLayout";
+import MainLayout from '../../components/layout/MainLayout';
 import BookCard from "../../components/card/BookCard";
 import { useNavigate } from "react-router-dom";
 
@@ -24,7 +24,7 @@ export default function AuthorMainPage() {
   const navigate = useNavigate();
 
   return (
-    <AuthorLayout>
+    <MainLayout>
       <h2>내가 출판한 도서</h2>
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginBottom: "2rem" }}>
         {dummyBooks.map((book) => (
@@ -40,6 +40,6 @@ export default function AuthorMainPage() {
         <button onClick={() => navigate("/author/request")}>출간 요청</button>
         <button onClick={() => navigate("/author/confirm")}>출간 확인</button>
       </div>
-    </AuthorLayout>
+    </MainLayout>
   );
 }

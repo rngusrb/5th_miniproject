@@ -1,28 +1,26 @@
 import React from 'react';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Box from '@mui/material/Box';
-import { Outlet } from 'react-router-dom';
+import MainLayout from '../../components/layout/MainLayout';
+import './AdminMainPage.css';
 
-function AdminMain() {
+const AdminMainPage = () => {
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Drawer variant="permanent" open>
-        <List>
-          <ListItem>작가 승인</ListItem>
-          <ListItem>작가 관리</ListItem>
-          <ListItem>원고 관리</ListItem>
-          <ListItem>유저 관리</ListItem>
-          <ListItem>도서 관리</ListItem>
-          <ListItem>AI 관리</ListItem>
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Outlet />
-      </Box>
-    </Box>
+    <MainLayout>
+      <div className="admin-page">
+        <div className="admin-grid">
+          <div className="admin-section">
+            <button className="admin-button">작가 승인</button>
+            <button className="admin-button">작가 관리</button>
+            <button className="admin-button">원고 관리</button>
+          </div>
+          <div className="admin-section">
+            <button className="admin-button">유저 관리</button>
+            <button className="admin-button">도서 관리</button>
+            <button className="admin-button">AI 관리</button>
+          </div>
+        </div>
+      </div>
+    </MainLayout>
   );
-}
+};
 
-export default AdminMain;
+export default AdminMainPage;
