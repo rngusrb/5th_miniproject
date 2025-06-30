@@ -15,4 +15,9 @@ public class AuthorList {
     @Id
     //@GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+    private String authorName;
+    private Date createDate;
+    private String authorInfo;
+    private String authorPortfolio;
+    private Boolean isActive;
 }

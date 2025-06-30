@@ -49,6 +49,18 @@ public class Author {
         authorDeleted.publishAfterCommit();
     }
 
+    @PostUpdate
+    public void onPostUpdate() {
+    AuthorModified authorModified = new AuthorModified(this);
+    authorModified.publishAfterCommit();
+   }
+
+    @PostRemove
+    public void onPostRemove() {
+    AuthorDeleted authorDeleted = new AuthorDeleted(this);
+    authorDeleted.publishAfterCommit();
+    }
+
     public static AuthorRepository repository() {
         AuthorRepository authorRepository = AuthorApplication.applicationContext.getBean(
             AuthorRepository.class

@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.persistence.*;
 import lombok.Data;
 import project.AdminApplication;
-import project.domain.FinishedPublish;
 import project.domain.RegistedAuthor;
 
 @Entity
@@ -24,15 +23,10 @@ public class Admin {
 
     private Long authorId;
 
-    private Long bookId;
-
     @PostPersist
     public void onPostPersist() {
         RegistedAuthor registedAuthor = new RegistedAuthor(this);
         registedAuthor.publishAfterCommit();
-
-        FinishedPublish finishedPublish = new FinishedPublish(this);
-        finishedPublish.publishAfterCommit();
     }
 
     public static AdminRepository repository() {
@@ -43,11 +37,10 @@ public class Admin {
     }
 
     //<<< Clean Arch / Port Method
-    public void registerBook() {
-        //implement business logic here:
-
-    }
-    //>>> Clean Arch / Port Method
-
+    public static void registerAuthor(RegistAuthorRequested registAuthorRequested) {
+    Admin admin = new Admin();
+    admin.setAuthorId(registAuthorRequested.getAuthorId()); // 여기가 문제 없는지
+    repository().save(admin);
 }
-//>>> DDD / Aggregate Root
+    //>>> Clean Arch / Port Method
+}
