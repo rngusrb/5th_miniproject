@@ -17,7 +17,10 @@ import BookDetailPage from '../pages/User/BookDetailPage';
 import AuthorMainPage from '../pages/Author/AuthorMainPage';
 import AuthorRegister from '../pages/Author/AuthorRegister';
 import ManuscriptRegister from '../pages/Author/ManuscriptRegister';
-
+import DraftListPage from '../pages/Author/DraftListPage';
+import PublishRequest from '../pages/Author/PublishRequest';
+import PublishConfirm from '../pages/Author/PublishConfirm';
+import BookRead       from '../pages/Author/BookRead';
 // Admin
 import AdminMainPage from '../pages/Admin/AdminMainPage';
 import AuthorApprovalPage from "../pages/Admin/AuthorApprovalPage";
@@ -51,7 +54,10 @@ export default function AppRoutes() {
       <Route path="/main/author" element={<AuthorMainPage />} />
       <Route path="/author/register" element={<AuthorRegister />} />
       <Route path="/author/manuscript" element={<ManuscriptRegister />} />
-
+      <Route path="/author/draftlist" element={<DraftListPage />} />
+      <Route path="/author/publishrequest" element={<PublishRequest />} />
+      <Route path="/author/publishconfirm" element={<PublishConfirm />} />
+      <Route path="/author/book/:id" element={<BookRead />} />
       {/* 관리자 페이지 */}
       <Route path="/admin" element={<AdminMainPage />} />
       <Route path="/admin/author-approval" element={<AuthorApprovalPage />} />
