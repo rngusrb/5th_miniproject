@@ -2,8 +2,8 @@ package project.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
@@ -31,9 +31,9 @@ public class Book {
 
     private String category;
 
-    private Date createDate;
+    private LocalDateTime createDate;
 
-    private Date modifyDate;
+    private LocalDateTime modifyDate;
 
     private String bookSummary;
 
@@ -41,23 +41,11 @@ public class Book {
 
     private String bookContent;
 
-    @PostPersist
-    public void onPostPersist() {
-        BookViewed bookViewed = new BookViewed(this);
-        bookViewed.publishAfterCommit();
+    private Integer viewCount;
 
-        GetViewCount getViewCount = new GetViewCount(this);
-        getViewCount.publishAfterCommit();
+    private Integer likeCount;
 
-        GetLikeCount getLikeCount = new GetLikeCount(this);
-        getLikeCount.publishAfterCommit();
-
-        AddedToWishlist addedToWishlist = new AddedToWishlist(this);
-        addedToWishlist.publishAfterCommit();
-
-        EditedBookInfo editedBookInfo = new EditedBookInfo(this);
-        editedBookInfo.publishAfterCommit();
-    }
+    private Integer price;
 
     public static BookRepository repository() {
         BookRepository bookRepository = BookApplication.applicationContext.getBean(
@@ -70,6 +58,23 @@ public class Book {
     public void viewBook() {
         //implement business logic here:
 
+        // 열람 시도
+
+        
+        BookViewed bookViewed = new BookViewed(this);
+        bookViewed.publishAfterCommit();
+    }
+    //>>> Clean Arch / Port Method
+    
+    //<<< Clean Arch / Port Method
+    public void addWishlist() {
+        //implement business logic here:
+
+        // 관심도서 등록 시도
+
+        
+        AddedToWishlist addedToWishlist = new AddedToWishlist(this);
+        addedToWishlist.publishAfterCommit();
     }
     //>>> Clean Arch / Port Method
 
