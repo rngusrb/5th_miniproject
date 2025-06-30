@@ -3,6 +3,7 @@ package project.infra;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -41,10 +42,27 @@ public class ManuscriptController {
     }
 
     @PostMapping
-    public void resgisterManuscript(@RequestBody Manuscript manuscript) {
-        manuscript.register();
+    public void registerManuscript(@RequestBody Manuscript manuscript) {
+        if ("TEMP".equalsIgnoreCase(manuscript.getStatus())) {
+            Optional<Manuscript> existing = manuscriptRepository.findFirstByAuthorIdAndStatus(manuscript.getAuthorId(), "TEMP");
+            if (existing.isPresent()) {
+                Manuscript temp = existing.get();
+                temp.setTitle(manuscript.getTitle());
+                temp.setContent(manuscript.getContent());
+                temp.setModifyDate(LocalDateTime.now());
+                // 기타 필요한 필드 업데이트
+                manuscriptRepository.save(temp);
+                return;
+            }
+        }
+
+        // TEMP가 아니거나 기존 TEMP가 없는 경우
+        if (!"TEMP".equalsIgnoreCase(manuscript.getStatus())) {
+            manuscript.register(); // 최종 저장일 경우만 REGISTERED 처리
+        }
         manuscriptRepository.save(manuscript);
     }
+
 
     @PatchMapping("/edit/{id}")
     public void editManuscript(@PathVariable Long id, @RequestBody Manuscript body) {
