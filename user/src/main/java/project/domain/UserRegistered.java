@@ -10,15 +10,12 @@ import project.infra.AbstractEvent;
 @Data
 @ToString
 public class UserRegistered extends AbstractEvent {
-
-    private Long id;
+    private Long userId;
 
     public UserRegistered(User aggregate) {
         super(aggregate);
-    }
-
-    public UserRegistered() {
-        super();
+        this.userId = aggregate.getUserId();
+        this.setEventType(this.getClass().getSimpleName());
     }
 }
 //>>> DDD / Domain Event

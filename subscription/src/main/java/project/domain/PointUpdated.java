@@ -5,9 +5,19 @@ import lombok.*;
 import project.domain.*;
 import project.infra.AbstractEvent;
 
-@Data
+
 @ToString
+@Data
 public class PointUpdated extends AbstractEvent {
 
-    private Long id;
+    private Long userId;
+    private Long bookId;
+
+    public PointUpdated() {
+        super();
+    }
+
+    public PointUpdated(Point aggregate) {
+        super(aggregate);
+    }
 }

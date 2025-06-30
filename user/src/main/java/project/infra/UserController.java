@@ -1,107 +1,98 @@
 package project.infra;
+import java.util.Map;
+import java.util.HashMap;
 
+import java.util.HashMap;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
 import project.domain.*;
 
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
-// @RequestMapping(value="/users")
+@RequestMapping(value="/api/v1/users")
 @Transactional
 public class UserController {
 
     @Autowired
     UserRepository userRepository;
 
-    @RequestMapping(
-        value = "/users/{id}/reqeustlogin",
-        method = RequestMethod.PUT,
-        produces = "application/json;charset=UTF-8"
-    )
-    public User reqeustLogin(
-        @PathVariable(value = "id") Long id,
-        HttpServletRequest request,
-        HttpServletResponse response
-    ) throws Exception {
-        System.out.println("##### /user/reqeustLogin  called #####");
-        Optional<User> optionalUser = userRepository.findById(id);
+    @PostMapping("/login")
+    public User login(@RequestBody RequestUserRegistrationCommand request) {
+        Long userId = request.getUserId();
+        Long inputPw = request.getUserPw();
 
-        optionalUser.orElseThrow(() -> new Exception("No Entity Found"));
-        User user = optionalUser.get();
-        user.reqeustLogin();
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 유저가 존재하지 않습니다."));
+
+        // 검증은 도메인에게 맡긴다
+        try {
+            user.login(inputPw); 
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
 
         userRepository.save(user);
         return user;
     }
 
-    @RequestMapping(
-        value = "/users/{id}/requestuserregistration",
-        method = RequestMethod.PUT,
-        produces = "application/json;charset=UTF-8"
-    )
-    public User requestUserRegistration(
-        @PathVariable(value = "id") Long id,
-        HttpServletRequest request,
-        HttpServletResponse response
-    ) throws Exception {
-        System.out.println("##### /user/requestUserRegistration  called #####");
-        Optional<User> optionalUser = userRepository.findById(id);
 
-        optionalUser.orElseThrow(() -> new Exception("No Entity Found"));
-        User user = optionalUser.get();
-        user.requestUserRegistration();
+    @PostMapping("/users")
+        public User registerUser(@RequestBody RequestUserRegistrationCommand command) {
+            User user = new User();
+            user.setUserId(command.getUserId());
+            user.setUserPw(command.getUserPw());
+            user.setPass(false); // 기본값 false
 
-        userRepository.save(user);
-        return user;
-    }
+            userRepository.save(user);
+            user.requestUserRegistration(); // 이벤트 발행
 
-    @RequestMapping(
-        value = "/users/{id}/requestsubscription",
-        method = RequestMethod.PUT,
-        produces = "application/json;charset=UTF-8"
-    )
-    public User requestSubscription(
-        @PathVariable(value = "id") Long id,
-        HttpServletRequest request,
-        HttpServletResponse response
-    ) throws Exception {
-        System.out.println("##### /user/requestSubscription  called #####");
-        Optional<User> optionalUser = userRepository.findById(id);
+            return user;
+        }
 
-        optionalUser.orElseThrow(() -> new Exception("No Entity Found"));
-        User user = optionalUser.get();
+
+    @PutMapping("/users/{id}/requestsubscription")
+    public User requestSubscription(@PathVariable Long id) throws Exception {
+        User user = userRepository.findById(id).orElseThrow(() -> new Exception("No Entity Found"));
         user.requestSubscription();
-
         userRepository.save(user);
         return user;
     }
 
-    @RequestMapping(
-        value = "/users/{id}/cancelsubscription",
-        method = RequestMethod.PUT,
-        produces = "application/json;charset=UTF-8"
-    )
-    public User cancelSubscription(
-        @PathVariable(value = "id") Long id,
-        HttpServletRequest request,
-        HttpServletResponse response
-    ) throws Exception {
-        System.out.println("##### /user/cancelSubscription  called #####");
-        Optional<User> optionalUser = userRepository.findById(id);
-
-        optionalUser.orElseThrow(() -> new Exception("No Entity Found"));
-        User user = optionalUser.get();
+    @PutMapping("/users/{id}/cancelsubscription")
+    public User cancelSubscription(@PathVariable Long id) throws Exception {
+        User user = userRepository.findById(id).orElseThrow(() -> new Exception("No Entity Found"));
         user.cancelSubscription();
-
         userRepository.save(user);
         return user;
+    }
+
+    @PostMapping("/users/{userId}/access")
+    public Map<String, Object> accessBook(
+            @PathVariable Long userId,
+            @RequestBody BookAccessRequest request) throws Exception {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 유저가 존재하지 않습니다."));
+
+        Long bookId = request.getBookId(); // 수정됨
+        boolean pass = Boolean.TRUE.equals(user.getPass());
+
+        user.checkBookAccess(bookId); // 수정됨
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("userId", userId);
+        response.put("bookId", bookId);
+        response.put("access", pass ? "GRANTED" : "DENIED");
+
+        return response;
     }
 }
 //>>> Clean Arch / Inbound Adaptor

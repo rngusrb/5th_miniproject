@@ -14,8 +14,13 @@ public class SubscriptionAdded extends AbstractEvent {
     private Long userId;
     private Long bookId;
 
+    // 구독 추가 이벤트 !
     public SubscriptionAdded(Subscription aggregate) {
         super(aggregate);
+
+        this.userId = aggregate.getUserId();
+        this.bookId = aggregate.getBookId();
+        
     }
 
     public SubscriptionAdded() {

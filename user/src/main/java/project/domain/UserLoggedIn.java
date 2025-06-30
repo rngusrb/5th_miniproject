@@ -10,11 +10,15 @@ import project.infra.AbstractEvent;
 @Data
 @ToString
 public class UserLoggedIn extends AbstractEvent {
-
-    private Long id;
+    private Long userId;
+    private Long userPw;
+    private Boolean pass;
 
     public UserLoggedIn(User aggregate) {
         super(aggregate);
+        this.userId = aggregate.getUserId();
+        this.userPw = aggregate.getUserPw();
+        this.pass = aggregate.getPass();
     }
 
     public UserLoggedIn() {
