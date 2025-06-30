@@ -12,12 +12,6 @@ public class BookHateoasProcessor
 
     @Override
     public EntityModel<Book> process(EntityModel<Book> model) {
-        model.add(
-            Link
-                .of(model.getRequiredLink("self").getHref() + "/viewbook")
-                .withRel("viewbook")
-        );
-
         return model;
     }
 }
