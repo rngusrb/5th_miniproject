@@ -1,0 +1,50 @@
+.user-main-container {
+  display: flex;
+  padding: 40px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.main-left {
+  flex: 1;
+  padding-right: 40px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  flex: 1;
+  font-size: 24px;
+  color: #333;
+}
+
+.header span {
+  font-size: 16px;
+  color: #555;
+}
+
+.header button {
+  padding: 8px 14px;
+  background-color: #4078f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.book-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.main-right {
+  width: 280px;
+}
