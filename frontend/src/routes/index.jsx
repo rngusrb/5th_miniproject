@@ -21,6 +21,8 @@ import ManuscriptRegister from '../pages/Author/ManuscriptRegister';
 import AdminMainPage from '../pages/Admin/AdminMainPage';
 import AuthorApprovalPage from "../pages/Admin/AuthorApprovalPage";
 import UserManagePage from '../pages/Admin/UserManagePage';
+import AuthorManagePage from '../pages/Admin/AuthorManagePage';
+import BookManagePage from '../pages/Admin/BookManagePage';
 
 export default function AppRoutes() {
   return (
@@ -52,10 +54,10 @@ export default function AppRoutes() {
       <Route path="/admin" element={<AdminMainPage />} />
       <Route path="/admin/author-approval" element={<AuthorApprovalPage />} />
 
-      <Route path="/admin/author-manage" element={<div>작가 관리 페이지</div>} />
+      <Route path="/admin/author-manage" element={<AuthorManagePage />}  />
       <Route path="/admin/manuscript-manage" element={<div>원고 관리 페이지</div>} />
       <Route path="/admin/user-manage" element={<UserManagePage />}  />
-      <Route path="/admin/book-manage" element={<div>도서 관리 페이지</div>} />
+      <Route path="/admin/book-manage" element={<BookManagePage />}  />
       <Route path="/admin/ai-manage" element={<div>AI 관리 페이지</div>} />
     </Routes>
   );
