@@ -12,9 +12,11 @@ public class UserRegistered extends AbstractEvent {
 
     // 유저 아이디
     private Long userId;
+
     // 가입 유형
     private String userType;
 
+    // 
     public UserRegistered() {
          super();
      }

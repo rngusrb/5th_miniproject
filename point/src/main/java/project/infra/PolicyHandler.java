@@ -53,21 +53,21 @@ public class PolicyHandler {
     // 포인트 사용/지급 내역 저장
     @StreamListener(
         value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='PointMinus'"
+        condition = "headers['type']=='PointUpdated'"
     )
-    public void wheneverPointMinus_SavePointUsage(@Payload PointUpdated pointMinus) {
-        if (pointMinus == null || pointMinus.getUserId() == null) return;
+    public void wheneverPointMinus_SavePointUsage(@Payload PointUpdated pointUpdated) {
+        if (pointUpdated == null || pointUpdated.getUserId() == null) return;
 
         System.out.println(
-            "\n\n##### listener SavePointUsageHistory : " + pointMinus + "\n\n"
+            "\n\n##### listener SavePointUsageHistory : " + pointUpdated + "\n\n"
         );
 
         PointUsageHistory history = new PointUsageHistory();
-        history.setUserId(pointMinus.getUserId());
-        history.setChangePoint(pointMinus.getChangePoint());
-        history.setPointSum(pointMinus.getPointSum());
-        history.setReason(pointMinus.getReason());
-        history.setChangeDate(pointMinus.getChangeDate());
+        history.setUserId(pointUpdated.getUserId());
+        history.setChangePoint(pointUpdated.getChangePoint());
+        history.setPointSum(pointUpdated.getPointSum());
+        history.setReason(pointUpdated.getReason());
+        history.setChangeDate(pointUpdated.getChangeDate());
 
         pointUsageHistoryRepository.save(history);
     }

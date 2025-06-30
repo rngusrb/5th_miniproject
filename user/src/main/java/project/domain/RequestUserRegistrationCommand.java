@@ -6,6 +6,8 @@ import lombok.Data;
 
 @Data
 public class RequestUserRegistrationCommand {
+
     private Long userId;
     private Long userPw;
+    
 }

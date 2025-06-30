@@ -14,8 +14,10 @@ import lombok.NoArgsConstructor;
 import project.PointApplication;
 import project.domain.PointUpdated;
 
+
 @Entity
 @Table(name = "Point_table")
+@Data
 public class Point {
 
     @Id
