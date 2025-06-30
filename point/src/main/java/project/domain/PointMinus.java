@@ -9,15 +9,15 @@ import project.infra.AbstractEvent;
 //<<< DDD / Domain Event
 @Data
 @ToString
-public class SubscriptionNotOwned extends AbstractEvent {
+public class PointMinus extends AbstractEvent {
 
     private Long id;
 
-    public SubscriptionNotOwned(Subscription aggregate) {
+    public PointMinus(Point aggregate) {
         super(aggregate);
     }
 
-    public SubscriptionNotOwned() {
+    public PointMinus() {
         super();
     }
 }

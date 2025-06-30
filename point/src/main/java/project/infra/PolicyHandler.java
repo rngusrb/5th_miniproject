@@ -25,16 +25,32 @@ public class PolicyHandler {
 
     @StreamListener(
         value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='SubscriptionNotOwned'"
+        condition = "headers['type']=='BookAccessDenied'"
     )
-    public void wheneverSubscriptionNotOwned_PointBalanceChange(
-        @Payload SubscriptionNotOwned subscriptionNotOwned
+    public void wheneverBookAccessDenied_PointBalanceChange(
+        @Payload BookAccessDenied bookAccessDenied
     ) {
-        SubscriptionNotOwned event = subscriptionNotOwned;
+        BookAccessDenied event = bookAccessDenied;
         System.out.println(
             "\n\n##### listener PointBalanceChange : " +
-            subscriptionNotOwned +
+            bookAccessDenied +
             "\n\n"
+        );
+
+        // Sample Logic //
+        Point.pointBalanceChange(event);
+    }
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='UserRegistered'"
+    )
+    public void wheneverUserRegistered_PointBalanceChange(
+        @Payload UserRegistered userRegistered
+    ) {
+        UserRegistered event = userRegistered;
+        System.out.println(
+            "\n\n##### listener PointBalanceChange : " + userRegistered + "\n\n"
         );
 
         // Sample Logic //

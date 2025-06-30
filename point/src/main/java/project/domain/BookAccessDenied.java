@@ -7,7 +7,7 @@ import project.infra.AbstractEvent;
 
 @Data
 @ToString
-public class BookViewed extends AbstractEvent {
+public class BookAccessDenied extends AbstractEvent {
 
     private Long id;
 }

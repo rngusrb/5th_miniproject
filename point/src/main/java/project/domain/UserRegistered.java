@@ -7,7 +7,7 @@ import project.infra.AbstractEvent;
 
 @Data
 @ToString
-public class SubscriptionNotOwned extends AbstractEvent {
+public class UserRegistered extends AbstractEvent {
 
     private Long id;
 }
