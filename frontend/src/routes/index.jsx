@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import React from 'react';
 
 // Auth
 import SelectLoginPage  from '../pages/Auth/SelectLoginPage';
@@ -23,6 +24,7 @@ import AuthorApprovalPage from "../pages/Admin/AuthorApprovalPage";
 import UserManagePage from '../pages/Admin/UserManagePage';
 import AuthorManagePage from '../pages/Admin/AuthorManagePage';
 import BookManagePage from '../pages/Admin/BookManagePage';
+import ManuscriptManagePage from '../pages/Admin/ManuscriptManagePage';
 
 export default function AppRoutes() {
   return (
@@ -55,7 +57,7 @@ export default function AppRoutes() {
       <Route path="/admin/author-approval" element={<AuthorApprovalPage />} />
 
       <Route path="/admin/author-manage" element={<AuthorManagePage />}  />
-      <Route path="/admin/manuscript-manage" element={<div>원고 관리 페이지</div>} />
+      <Route path="/admin/manuscript-manage" element={<ManuscriptManagePage />}  />
       <Route path="/admin/user-manage" element={<UserManagePage />}  />
       <Route path="/admin/book-manage" element={<BookManagePage />}  />
       <Route path="/admin/ai-manage" element={<div>AI 관리 페이지</div>} />

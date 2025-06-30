@@ -1,4 +1,5 @@
 import './BookCard.css';
+import React from 'react';
 
 export default function BookCard({ book, showSubscribe = true }) {
   return (

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import BookCard from '../../components/card/BookCard';
 import MyPagePanel from '../../components/layout/MyPagePanel';
