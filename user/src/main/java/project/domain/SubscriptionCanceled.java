@@ -10,7 +10,6 @@ import project.infra.AbstractEvent;
 @Data
 @ToString
 public class SubscriptionCanceled extends AbstractEvent {
-
     private Long id;
 
     public SubscriptionCanceled(User aggregate) {

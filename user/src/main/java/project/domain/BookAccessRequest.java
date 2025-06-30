@@ -5,7 +5,6 @@ import java.util.*;
 import lombok.Data;
 
 @Data
-public class ReqeustLoginCommand {
-    private Long userId;
-    private Long userPw;
+public class BookAccessRequest {
+    private Long bookId;
 }
