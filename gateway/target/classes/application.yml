@@ -2,7 +2,8 @@ server:
   port: 8088
 
 ---
-
+jwt:
+  secret: aivle5thminiprojectgroup10secretkey
 spring:
   profiles: default
   cloud:
