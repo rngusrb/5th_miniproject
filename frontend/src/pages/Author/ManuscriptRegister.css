@@ -1,0 +1,54 @@
+.manuscript-register-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+  text-align: center;
+}
+
+.manuscript-title-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.ql-container {
+  height: 400px !important; /* 글쓰기 영역 확장 */
+}
+
+.ql-editor {
+  height: 350px;  /* 내부 에디터 높이 */
+  overflow-y: auto;
+  font-size: 16px;
+}
+
+.manuscript-button-group {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.manuscript-button {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.temp {
+  background-color: #4f8cff;
+  color: white;
+}
+
+.load {
+  background-color: #d5d5d5;
+  color: black;
+}
+
+.final {
+  background-color: #007a4d;
+  color: white;
+}

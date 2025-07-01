@@ -33,10 +33,13 @@ public class Book {
 
     private LocalDateTime modifyDate;
 
+    @Column(length = 1000)
     private String bookSummary;
-
+    
+    @Column(length = 1000)
     private String bookCoverImage;
 
+    @Column(length = 4000)        
     private String bookContent;
 
     private Integer viewCount;
@@ -55,17 +58,17 @@ public class Book {
 
     @PostPersist
     public void onPostPersist() {
-        BookViewed bookViewed = new BookViewed(this);
-        bookViewed.publishAfterCommit();
+        // BookViewed bookViewed = new BookViewed(this);
+        // bookViewed.publishAfterCommit();
 
-        EditedBookInfo editedBookInfo = new EditedBookInfo(this);
-        editedBookInfo.publishAfterCommit();
+        // EditedBookInfo editedBookInfo = new EditedBookInfo(this);
+        // editedBookInfo.publishAfterCommit();
 
-        BookPublished bookPublished = new BookPublished(this);
-        bookPublished.publishAfterCommit();
+        // BookPublished bookPublished = new BookPublished(this);
+        // bookPublished.publishAfterCommit();
 
-        BookDeleted bookDeleted = new BookDeleted(this);
-        bookDeleted.publishAfterCommit();
+        // BookDeleted bookDeleted = new BookDeleted(this);
+        // bookDeleted.publishAfterCommit();
     }
 
     @PreUpdate

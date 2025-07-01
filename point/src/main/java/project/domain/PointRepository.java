@@ -10,5 +10,10 @@ import project.domain.*;
 
 //<<< PoEAA / Repository
 @RepositoryRestResource(collectionResourceRel = "points", path = "points")
-public interface PointRepository
-    extends PagingAndSortingRepository<Point, Long> {}
+public interface PointRepository extends PagingAndSortingRepository<Point, Long> {
+
+    // 최신 포인트 로그 1건 (native)
+    @Query(value = "SELECT * FROM point_table WHERE user_id = :userId ORDER BY change_date DESC LIMIT 1", nativeQuery = true)
+    Point findLatestByUserId(Long userId);
+
+}

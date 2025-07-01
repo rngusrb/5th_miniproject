@@ -1,0 +1,47 @@
+
+.approval-page {
+  padding: 2rem;
+}
+
+.approval-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.approval-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.approval-table th,
+.approval-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.approval-table th {
+  background-color: #f4f4f4;
+  font-weight: 600;
+}
+
+.approval-table td a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.approval-button {
+  margin-top: 1rem;
+  padding: 10px 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.approval-button:hover {
+  background-color: #1565c0;
+}

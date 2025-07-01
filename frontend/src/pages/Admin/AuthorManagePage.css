@@ -1,0 +1,45 @@
+.author-manage-page {
+  padding: 2rem;
+}
+
+.author-manage-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.author-manage-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.author-manage-table th,
+.author-manage-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.author-manage-table th {
+  background-color: #f4f4f4;
+  font-weight: 600;
+}
+
+.author-manage-table td a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.author-manage-button {
+  padding: 10px 20px;
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.author-manage-button:hover {
+  background-color: #b71c1c;
+}

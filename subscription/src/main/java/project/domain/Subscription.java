@@ -20,21 +20,16 @@ public class Subscription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long Id;
+    
     private Long userId;
-
-    private Integer point;
 
     private Long bookId;
 
     @PostPersist
     public void onPostPersist() {
-        SubscriptionOwned subscriptionOwned = new SubscriptionOwned(this);
-        subscriptionOwned.publishAfterCommit();
-
-        SubscriptionNotOwned subscriptionNotOwned = new SubscriptionNotOwned(
-            this
-        );
-        subscriptionNotOwned.publishAfterCommit();
+        SubscriptionSaved event = new SubscriptionSaved(this);
+        event.publishAfterCommit();
     }
 
     public static SubscriptionRepository repository() {

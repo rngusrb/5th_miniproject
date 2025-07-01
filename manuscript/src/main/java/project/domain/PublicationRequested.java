@@ -1,9 +1,7 @@
 package project.domain;
 
-import java.time.LocalDate;
-import java.util.*;
+import java.time.LocalDateTime;
 import lombok.*;
-import project.domain.*;
 import project.infra.AbstractEvent;
 
 //<<< DDD / Domain Event
@@ -11,7 +9,25 @@ import project.infra.AbstractEvent;
 @ToString
 public class PublicationRequested extends AbstractEvent {
 
-    private Long id;
+    private Long manuscriptId;
+
+    private Long authorId;
+
+    private String title;
+
+    private String category;
+
+    private String content;
+
+    private LocalDateTime createDate;
+
+    private LocalDateTime modifyDate;
+
+    private String summary;
+
+    private String bookCoverImage;
+
+    private String status;
 
     public PublicationRequested(Manuscript aggregate) {
         super(aggregate);
@@ -20,5 +36,6 @@ public class PublicationRequested extends AbstractEvent {
     public PublicationRequested() {
         super();
     }
+
 }
 //>>> DDD / Domain Event

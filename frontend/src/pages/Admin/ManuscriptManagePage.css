@@ -1,0 +1,40 @@
+.manuscript-manage-page {
+  padding: 2rem;
+}
+
+.manuscript-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.manuscript-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.manuscript-table th,
+.manuscript-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.manuscript-table th {
+  background-color: #f4f4f4;
+  font-weight: 600;
+}
+
+.approve-btn {
+  background-color: #388e3c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.approve-btn:hover {
+  background-color: #2e7d32;
+}
