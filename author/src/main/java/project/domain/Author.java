@@ -61,6 +61,11 @@ public class Author {
     authorDeleted.publishAfterCommit();
     }
 
+    public void register() {
+        RegistAuthorRequested registAuthorRequested = new RegistAuthorRequested(this);
+        registAuthorRequested.publishAfterCommit();
+    }
+
     public static AuthorRepository repository() {
         AuthorRepository authorRepository = AuthorApplication.applicationContext.getBean(
             AuthorRepository.class

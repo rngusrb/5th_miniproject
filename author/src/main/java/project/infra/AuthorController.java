@@ -25,6 +25,7 @@ public class AuthorController {
         System.out.println("##### /authors/register called #####");
         author.setCreateDate(new java.util.Date());
         author.setIsActive(true);  // 기본값으로 활성화
+        author.register();
         return authorRepository.save(author);
     }
 
