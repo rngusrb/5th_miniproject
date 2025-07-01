@@ -9,17 +9,19 @@ import project.infra.AbstractEvent;
 //<<< DDD / Domain Event
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class SubscriptionAdded extends AbstractEvent {
 
     private Long userId;
     private Long bookId;
 
-    public SubscriptionAdded(Subscription aggregate) {
-        super(aggregate);
-    }
+    // public SubscriptionAdded(Subscription aggregate) {
+    //     super(aggregate);
+    // }
 
-    public SubscriptionAdded() {
-        super();
-    }
+    // public SubscriptionAdded() {
+    //     super();
+    // }
 }
 //>>> DDD / Domain Event

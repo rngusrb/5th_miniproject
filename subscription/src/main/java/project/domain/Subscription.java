@@ -32,6 +32,14 @@ public class Subscription {
         event.publishAfterCommit();
     }
 
+    // @PostPersist
+    // public void onPostPersist() {
+    //     SubscriptionAdded event = new SubscriptionAdded();
+    //     event.setUserId(this.getUserId());
+    //     event.setBookId(this.getBookId());
+    //     event.publishAfterCommit();
+    // }
+
     public static SubscriptionRepository repository() {
         SubscriptionRepository subscriptionRepository = SubscriptionApplication.applicationContext.getBean(
             SubscriptionRepository.class

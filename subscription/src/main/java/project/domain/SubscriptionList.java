@@ -14,5 +14,13 @@ public class SubscriptionList {
 
     @Id
     //@GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
+    private Long userId;
+
+    private Long bookId;
+    private String bookTitle;
+    private String authorId;
+    private String category;
+    private String bookCoverImage;
+    private String bookSummary;
+    private String bookContent;
 }

@@ -10,4 +10,7 @@ import project.domain.*;
     path = "subscriptionLists"
 )
 public interface SubscriptionListRepository
-    extends PagingAndSortingRepository<SubscriptionList, Long> {}
+    extends PagingAndSortingRepository<SubscriptionList, Long> {
+    List<SubscriptionList> findByBookId(Long bookId);
+}
+

@@ -19,5 +19,7 @@ public class SubscriptionController {
 
     @Autowired
     SubscriptionRepository subscriptionRepository;
+
+    
 }
 //>>> Clean Arch / Inbound Adaptor
