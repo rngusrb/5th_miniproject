@@ -9,8 +9,9 @@ import java.util.Map;
 import javax.persistence.*;
 import lombok.Data;
 import project.SubscriptionApplication;
-import project.domain.SubscriptionNotOwned;
-import project.domain.SubscriptionOwned;
+
+import org.springframework.web.client.RestTemplate;
+import project.infra.SubscriptionListRepository;
 
 @Entity
 @Table(name = "Subscription_table")
@@ -21,9 +22,8 @@ public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
-    
-    private Long userId;
 
+    private Long userId;
     private Long bookId;
 
     @PostPersist
@@ -32,70 +32,5 @@ public class Subscription {
         event.publishAfterCommit();
     }
 
-    // @PostPersist
-    // public void onPostPersist() {
-    //     SubscriptionAdded event = new SubscriptionAdded();
-    //     event.setUserId(this.getUserId());
-    //     event.setBookId(this.getBookId());
-    //     event.publishAfterCommit();
-    // }
-
-    public static SubscriptionRepository repository() {
-        SubscriptionRepository subscriptionRepository = SubscriptionApplication.applicationContext.getBean(
-            SubscriptionRepository.class
-        );
-        return subscriptionRepository;
-    }
-
-    //<<< Clean Arch / Port Method
-    public static void subscriptionCheck(BookViewed bookViewed) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Subscription subscription = new Subscription();
-        repository().save(subscription);
-
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(bookViewed.get???()).ifPresent(subscription->{
-            
-            subscription // do something
-            repository().save(subscription);
-
-
-         });
-        */
-
-    }
-
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
-    public static void subscriptionAdd(PointUpdated pointUpdated) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Subscription subscription = new Subscription();
-        repository().save(subscription);
-
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(pointUpdated.get???()).ifPresent(subscription->{
-            
-            subscription // do something
-            repository().save(subscription);
-
-
-         });
-        */
-
-    }
-    //>>> Clean Arch / Port Method
-
+    // 기타 도메인 로직 생략
 }
-//>>> DDD / Aggregate Root
