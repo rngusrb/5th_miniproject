@@ -12,20 +12,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import lombok.RequiredArgsConstructor;
 import project.domain.*;
+import project.util.JwtUtil;
 
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value="/users")
 @Transactional
 public class UserController {
 
     @Autowired
     UserRepository userRepository;
+    
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public User login(@RequestBody RequestUserRegistrationCommand request) {
+    public UserDTO.Response login(@RequestBody RequestUserRegistrationCommand request) {
         Long userId = request.getUserId();
         Long inputPw = request.getUserPw();
 
@@ -38,9 +43,17 @@ public class UserController {
         } catch (RuntimeException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
+        
+        String token = jwtUtil.generateToken(user.getUserId());
+
+        UserDTO.Response response = new UserDTO.Response(
+            user.getUserId(),
+            user.getUserPw(),
+            token
+        );
 
         userRepository.save(user);
-        return user;
+        return response;
     }
 
 
