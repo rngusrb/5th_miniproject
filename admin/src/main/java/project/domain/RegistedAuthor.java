@@ -8,7 +8,7 @@ import project.infra.AbstractEvent;
 public class RegistedAuthor extends AbstractEvent {
 
     private Long id;
-    private Long authorId;
+    private String authorLoginId;
     private String authorPw;
     private String authorName;
     private String authorInfo;
@@ -18,7 +18,7 @@ public class RegistedAuthor extends AbstractEvent {
     public RegistedAuthor(Admin aggregate) {
         super(aggregate);
         this.id = aggregate.getId();
-        this.authorId = aggregate.getAuthorId();
+        this.authorLoginId = aggregate.getAuthorLoginId();
         this.authorPw = aggregate.getAuthorPw();
         this.authorName = aggregate.getAuthorName();
         this.authorInfo = aggregate.getAuthorInfo();

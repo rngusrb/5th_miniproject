@@ -23,6 +23,8 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long authorId;
 
+    private String authorLoginId;
+
     private String authorPw;
 
     private String authorName;

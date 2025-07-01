@@ -36,7 +36,7 @@ public class PolicyHandler {
 
          Admin admin = new Admin();
         admin.setId(registAuthorRequested.getId());
-        admin.setAuthorId(registAuthorRequested.getAuthorId());
+        admin.setAuthorLoginId(registAuthorRequested.getAuthorLoginId());
         admin.setAuthorPw(registAuthorRequested.getAuthorPw());
         admin.setAuthorName(registAuthorRequested.getAuthorName());
         admin.setAuthorInfo(registAuthorRequested.getAuthorInfo());
@@ -44,7 +44,7 @@ public class PolicyHandler {
         admin.setIsActive(registAuthorRequested.getIsActive());
         admin.setCreateDate(registAuthorRequested.getCreateDate());
 
-    adminRepository.save(admin);
+        adminRepository.save(admin);
 
         
 

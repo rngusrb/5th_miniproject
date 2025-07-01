@@ -16,7 +16,7 @@ public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long authorId;
+    private String authorLoginId;
     private String authorPw;
     private String authorName;
     private Date createDate;
@@ -37,7 +37,7 @@ public class Admin {
     //<<< Clean Arch / Port Method
     public static void registerAuthor(RegistAuthorRequested registAuthorRequested) {
         Admin admin = new Admin();
-        admin.setAuthorId(registAuthorRequested.getAuthorId());
+        admin.setAuthorLoginId(registAuthorRequested.getAuthorLoginId());
         admin.setAuthorPw(registAuthorRequested.getAuthorPw());
         admin.setAuthorName(registAuthorRequested.getAuthorName());
         admin.setAuthorInfo(registAuthorRequested.getAuthorInfo());
