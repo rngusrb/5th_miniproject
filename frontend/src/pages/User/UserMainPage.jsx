@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import BookCard from '../../components/card/BookCard';
 import MyPagePanel from '../../components/layout/MyPagePanel';
+import PointChargePanel from '../../components/layout/PointChargePanel'; // 👈 새로 추가
 import MainLayout from '../../components/layout/MainLayout';
 import './UserMainPage.css';
 
 export default function UserMainPage() {
   const [showMyPage, setShowMyPage] = useState(false);
+  const [showChargePanel, setShowChargePanel] = useState(false); // 👈 포인트 충전 패널 상태
   const [point, setPoint] = useState(0);
 
   const bestsellers = [
@@ -21,34 +23,35 @@ export default function UserMainPage() {
     "경제": [{ id: 6, title: "경제책", likes: 370, subscribes: 82 }]
   };
 
-  useEffect(() => {
-    const fetchPoint = async () => {
-      try {
-        const userId = localStorage.getItem('userId');
-        const token = localStorage.getItem('token');
-        if (!userId || !token) return;
+  const fetchPoint = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      const token = localStorage.getItem('token');
+      if (!userId || !token) return;
 
-        const res = await axios.get(`/points/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      const res = await axios.get(`/points/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        console.log("📦 point 응답 데이터:", res.data); // 👈 이거 추가
+      console.log("📦 point 응답 데이터:", res.data);
 
-        if (res.data?.pointSum !== undefined) {
-          setPoint(res.data.pointSum);
-        } else {
-          setPoint(0);
-        }
-      } catch (err) {
-        console.error('포인트 조회 실패:', err);
+      if (res.data?.pointSum !== undefined) {
+        setPoint(res.data.pointSum);
+      } else {
         setPoint(0);
       }
-    };
+    } catch (err) {
+      console.error('포인트 조회 실패:', err);
+      setPoint(0);
+    }
+  };
 
+  useEffect(() => {
     fetchPoint();
   }, []);
+
   return (
     <MainLayout>
       <div className="user-main-container">
@@ -81,9 +84,26 @@ export default function UserMainPage() {
           </div>
         </div>
 
+        {/* 마이페이지 패널 */}
         {showMyPage && (
           <div className="main-right">
-            <MyPagePanel onClose={() => setShowMyPage(false)} />
+            <MyPagePanel
+              onClose={() => setShowMyPage(false)}
+              onChargeClick={() => {
+                setShowMyPage(false);         // 마이페이지 닫고
+                setShowChargePanel(true);     // 충전창 열기
+              }}
+            />
+          </div>
+        )}
+
+        {/* 포인트 충전 패널 */}
+        {showChargePanel && (
+          <div className="main-right">
+            <PointChargePanel
+              onClose={() => setShowChargePanel(false)}
+              onCharged={fetchPoint}
+            />
           </div>
         )}
       </div>

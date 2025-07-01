@@ -59,4 +59,29 @@ public class PointController {
         }
         return latest;
     }
+    // ✅ 포인트 충전 API (프론트 연동용)
+    @PostMapping("/charge")
+    public Point chargePoints(@RequestBody ChargeRequest request) {
+        Long userId = request.getUserId();
+        Integer amount = request.getAmount();
+
+        if (amount == null || amount <= 0) {
+            throw new IllegalArgumentException("Invalid amount");
+        }
+
+        Long currentSum = 0L;
+        Point latest = pointRepository.findLatestByUserId(userId);
+        if (latest != null) {
+            currentSum = latest.getPointSum();
+        }
+
+        Point point = new Point();
+        point.setUserId(userId);
+        point.setChangeDate(new Date());
+        point.setChangePoint(amount);
+        point.setPointSum(currentSum + amount);
+        point.setReason("사용자 충전");
+
+        return pointRepository.save(point);
+    }
 }
