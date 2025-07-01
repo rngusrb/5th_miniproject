@@ -5,7 +5,7 @@ export default {
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8080', // 백엔드 주소
+        target: 'http://localhost:8088', // 백엔드 주소
         changeOrigin: true,
       },
     },
