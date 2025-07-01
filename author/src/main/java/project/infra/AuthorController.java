@@ -12,7 +12,7 @@ import project.domain.*;
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
-// @RequestMapping(value="/authors")
+@RequestMapping(value="/authors")
 @Transactional
 public class AuthorController {
 
