@@ -122,7 +122,7 @@ public class ManuscriptController {
         Manuscript manuscript = manuscriptRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 ID의 원고가 존재하지 않습니다"));
 
-        String prompt = "다음 글의 표지 이미지를 생성해줘:" + manuscript.getContent();
+        String prompt = "다음 원고를 바탕으로 원고의 내용과 어울리는 책 표지 이미지를 생성해줘:" + manuscript.getContent();
         String category = openai.generateImage(prompt);
 
 
