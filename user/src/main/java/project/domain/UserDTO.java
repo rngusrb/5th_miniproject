@@ -16,10 +16,5 @@ public class UserDTO {
         private Long userPw;
         private String token;
 
-        // JWT만 포함한 응답을 위한 생성자 (보안용)
-        public Response(Long userId, String token) {
-            this.userId = userId;
-            this.token = token;
-        }
     }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-// import axios from 'axios'; // 🔄 실제 백엔드 연동 시 사용
+import axios from 'axios'; // 🔄 실제 백엔드 연동 시 사용
 import './AuthForm.css';
 
 export default function UserSignup() {

@@ -45,7 +45,7 @@ public class UserController {
 
         String token = jwtUtil.generateToken(user.getUserId());
 
-        return new UserDTO.Response(user.getUserId(), token);
+        return new UserDTO.Response(user.getUserId(), user.getUserPw(), token);
     }
 
     @PostMapping
@@ -65,7 +65,7 @@ public class UserController {
 
         String token = jwtUtil.generateToken(user.getUserId());
 
-        return new UserDTO.Response(user.getUserId(), token);
+        return new UserDTO.Response(user.getUserId(), user.getUserPw(), token);
     }
 
     @PutMapping("/{id}/requestsubscription")
