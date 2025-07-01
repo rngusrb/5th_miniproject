@@ -26,7 +26,7 @@ function ManuscriptRegister() {
   const handleTempSave = async () => {
     const manuscriptData = {
       ...form,
-      authorId: 1, // TODO: Replace with logged-in author ID
+      authorId: 1,
       status: 'TEMP',
       createDate: new Date().toISOString(),
       modifyDate: new Date().toISOString(),
@@ -78,18 +78,28 @@ function ManuscriptRegister() {
 
   return (
     <div className="manuscript-register-container">
-      <h2>원고 등록</h2>
-      <input
-        type="text"
-        placeholder="책 제목"
-        value={form.title}
-        onChange={(e) => handleChange('title', e.target.value)}
-      />
-      <ReactQuill
-        theme="snow"
-        value={form.content}
-        onChange={(value) => handleChange('content', value)}
-      />
+      <h2 style={{ fontWeight: 'bold', fontSize: '24px', marginBottom: '20px' }}>원고 등록</h2>
+
+      <div style={{ textAlign: 'left', marginBottom: '10px' }}>
+        <label htmlFor="title" style={{ fontWeight: 'bold', fontSize: '16px' }}>책 제목</label>
+        <input
+          id="title"
+          type="text"
+          className="manuscript-title-input"
+          placeholder="책 제목을 입력하세요"
+          value={form.title}
+          onChange={(e) => handleChange('title', e.target.value)}
+        />
+      </div>
+
+      <div style={{ marginBottom: '30px' }}>
+        <ReactQuill
+          theme="snow"
+          value={form.content}
+          onChange={(value) => handleChange('content', value)}
+        />
+      </div>
+
       <div className="manuscript-button-group">
         <button className="manuscript-button temp" onClick={handleTempSave}>임시 저장</button>
         <button className="manuscript-button load" onClick={loadTempData}>임시 저장 불러오기</button>

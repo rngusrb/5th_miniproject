@@ -1,3 +1,4 @@
+/* 전체 레이아웃 */
 .user-main-container {
   display: flex;
   padding: 40px;
@@ -6,30 +7,34 @@
   box-sizing: border-box;
 }
 
+/* 왼쪽 영역 */
 .main-left {
   flex: 1;
   padding-right: 40px;
 }
 
-.header {
+/* 오른쪽 My Page */
+.main-right {
+  width: 280px;
+}
+
+/* 헤더 */
+.user-header-panel {
   display: flex;
   align-items: center;
   gap: 16px;
   margin-bottom: 32px;
 }
-
-.header h1 {
+.user-header-panel h1 {
   flex: 1;
   font-size: 24px;
   color: #333;
 }
-
-.header span {
+.user-header-panel span {
   font-size: 16px;
   color: #555;
 }
-
-.header button {
+.user-header-panel button {
   padding: 8px 14px;
   background-color: #4078f2;
   color: white;
@@ -38,13 +43,30 @@
   cursor: pointer;
 }
 
-.book-grid {
-  display: flex;
+/* 이달의 베스트셀러: 3열 grid */
+.bestseller-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  flex-wrap: wrap;
   margin-bottom: 32px;
 }
 
-.main-right {
-  width: 280px;
+/* 카테고리별: 3열 grid */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 32px;
+}
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.category-label {
+  background-color: #e0e0e0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
 }

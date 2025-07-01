@@ -1,5 +1,6 @@
+import React from 'react';
 import { createContext, useContext, useState } from 'react';
-// import axios from 'axios'; // 🔄 백엔드 연동 시 사용
+import axios from 'axios'; // 🔄 백엔드 연동 시 사용
 
 const AuthContext = createContext();
 

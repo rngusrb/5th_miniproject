@@ -1,0 +1,54 @@
+.book-manage-page {
+  padding: 2rem;
+}
+
+.book-manage-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.book-manage-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.book-manage-table th,
+.book-manage-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.book-manage-table th {
+  background-color: #f0f0f0;
+  font-weight: 600;
+}
+
+.book-edit-btn {
+  background-color: #0288d1;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-right: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.book-edit-btn:hover {
+  background-color: #0277bd;
+}
+
+.book-delete-btn {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.book-delete-btn:hover {
+  background-color: #b71c1c;
+}
