@@ -25,11 +25,7 @@ public class Point {
 
     private Long userId;
 
-    private Integer point;
-
     private Date changeDate;
-
-    private Date expireDate;
 
     private Integer changePoint;
 
@@ -103,4 +99,3 @@ public static void pointBalanceChange(UserRegistered userRegistered) {
     pointGranted.publishAfterCommit();
 }
 }
-//>>> DDD / Aggregate Root

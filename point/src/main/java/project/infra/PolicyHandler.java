@@ -72,4 +72,3 @@ public class PolicyHandler {
         pointUsageHistoryRepository.save(history);
     }
 }
-//>>> Clean Arch / Inbound Adaptor
