@@ -1,5 +1,7 @@
 package project.domain;
 
+import java.util.Date;
+
 import javax.persistence.*;
 import lombok.Data;
 import project.AdminApplication;
@@ -14,10 +16,10 @@ public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private Long authorId;
     private String authorPw;
     private String authorName;
+    private Date createDate;
     private String authorInfo;
     private String authorPortfolio;
     private Boolean isActive;
@@ -41,6 +43,7 @@ public class Admin {
         admin.setAuthorInfo(registAuthorRequested.getAuthorInfo());
         admin.setAuthorPortfolio(registAuthorRequested.getAuthorPortfolio());
         admin.setIsActive(registAuthorRequested.getIsActive());
+        admin.setCreateDate(registAuthorRequested.getCreateDate());
         repository().save(admin);
     }
     //>>> Clean Arch / Port Method
