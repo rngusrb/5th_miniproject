@@ -34,7 +34,7 @@ public class PolicyHandler {
             "\n\n"
         );
 
-         Admin admin = new Admin();
+        Admin admin = new Admin();
         admin.setId(registAuthorRequested.getId());
         admin.setAuthorLoginId(registAuthorRequested.getAuthorLoginId());
         admin.setAuthorPw(registAuthorRequested.getAuthorPw());
