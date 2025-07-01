@@ -34,11 +34,19 @@ public class PolicyHandler {
             "\n\n"
         );
 
-        // 실제 작가 등록 처리 로직
-        RegisterAuthorCommand command = new RegisterAuthorCommand();
-        // 필요한 필드들을 command에 채워 넣을 수 있음
-        // 예: command.setAuthorName(registAuthorRequested.getAuthorName());
+       Admin admin = new Admin();
+       admin.setId(registAuthorRequested.getId());
+       admin.setAuthorId(registAuthorRequested.getAuthorId());
+       admin.setAuthorPw(registAuthorRequested.getAuthorPw());
+       admin.setAuthorName(registAuthorRequested.getAuthorName());
+       admin.setAuthorInfo(registAuthorRequested.getAuthorInfo());
+       admin.setAuthorPortfolio(registAuthorRequested.getAuthorPortfolio());
+       admin.setIsActive(registAuthorRequested.getIsActive());
+       admin.setCreateDate(registAuthorRequested.getCreateDate());
 
+    adminRepository.save(admin);
+
+    
         
     }
 }

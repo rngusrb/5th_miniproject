@@ -34,7 +34,7 @@ spring:
           predicates:
             - Path=/manuscripts/**, /manuscriptLists/**
         - id: subscription
-          uri: http://localhost:8088
+          uri: http://localhost:8081
           predicates:
             - Path=/subscriptions/**, /subscriptionLists/**
         - id: point
