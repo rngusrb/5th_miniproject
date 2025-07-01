@@ -9,16 +9,16 @@ import project.infra.AbstractEvent;
 //<<< DDD / Domain Event
 @Data
 @ToString
-public class FinishedPublish extends AbstractEvent {
+public class SubscriptionAdded extends AbstractEvent {
 
-    private Long id;
-    private Long authorId;
+    private Long userId;
+    private Long bookId;
 
-    public FinishedPublish(Admin aggregate) {
+    public SubscriptionAdded(Subscription aggregate) {
         super(aggregate);
     }
 
-    public FinishedPublish() {
+    public SubscriptionAdded() {
         super();
     }
 }

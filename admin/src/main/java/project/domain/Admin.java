@@ -1,15 +1,8 @@
 package project.domain;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import javax.persistence.*;
 import lombok.Data;
 import project.AdminApplication;
-import project.domain.FinishedPublish;
 import project.domain.RegistedAuthor;
 
 @Entity
@@ -23,31 +16,32 @@ public class Admin {
     private Long id;
 
     private Long authorId;
-
-    private Long bookId;
+    private String authorPw;
+    private String authorName;
+    private String authorInfo;
+    private String authorPortfolio;
+    private Boolean isActive;
 
     @PostPersist
     public void onPostPersist() {
         RegistedAuthor registedAuthor = new RegistedAuthor(this);
         registedAuthor.publishAfterCommit();
-
-        FinishedPublish finishedPublish = new FinishedPublish(this);
-        finishedPublish.publishAfterCommit();
     }
 
     public static AdminRepository repository() {
-        AdminRepository adminRepository = AdminApplication.applicationContext.getBean(
-            AdminRepository.class
-        );
-        return adminRepository;
+        return AdminApplication.applicationContext.getBean(AdminRepository.class);
     }
 
     //<<< Clean Arch / Port Method
-    public void registerBook() {
-        //implement business logic here:
-
+    public static void registerAuthor(RegistAuthorRequested registAuthorRequested) {
+        Admin admin = new Admin();
+        admin.setAuthorId(registAuthorRequested.getAuthorId());
+        admin.setAuthorPw(registAuthorRequested.getAuthorPw());
+        admin.setAuthorName(registAuthorRequested.getAuthorName());
+        admin.setAuthorInfo(registAuthorRequested.getAuthorInfo());
+        admin.setAuthorPortfolio(registAuthorRequested.getAuthorPortfolio());
+        admin.setIsActive(registAuthorRequested.getIsActive());
+        repository().save(admin);
     }
     //>>> Clean Arch / Port Method
-
 }
-//>>> DDD / Aggregate Root

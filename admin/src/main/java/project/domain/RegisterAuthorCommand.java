@@ -3,7 +3,7 @@ package project.domain;
 import lombok.Data;
 
 @Data
-public class RegistAuthorRequested {
+public class RegisterAuthorCommand {
     private String authorName;
     private String authorInfo;
     private String authorPortfolio;

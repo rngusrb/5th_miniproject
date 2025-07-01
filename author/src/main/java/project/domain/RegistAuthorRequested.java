@@ -1,20 +1,32 @@
 package project.domain;
 
-import java.time.LocalDate;
-import java.util.*;
 import lombok.*;
-import project.domain.*;
 import project.infra.AbstractEvent;
+import java.util.Date;
 
-//<<< DDD / Domain Event
 @Data
 @ToString
 public class RegistAuthorRequested extends AbstractEvent {
 
     private Long id;
+    private Long authorId;
+    private String authorPw;
+    private String authorName;
+    private Date createDate;
+    private String authorInfo;
+    private String authorPortfolio;
+    private Boolean isActive;
 
     public RegistAuthorRequested(Author aggregate) {
         super(aggregate);
+        this.id = aggregate.getAuthorId();
+        this.authorId = aggregate.getAuthorId();
+        this.authorPw = aggregate.getAuthorPw();
+        this.authorName = aggregate.getAuthorName();
+        this.createDate = aggregate.getCreateDate();
+        this.authorInfo = aggregate.getAuthorInfo();
+        this.authorPortfolio = aggregate.getAuthorPortfolio();
+        this.isActive = aggregate.getIsActive();
     }
 
     public RegistAuthorRequested() {
