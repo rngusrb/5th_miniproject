@@ -16,6 +16,11 @@ import project.domain.*;
 public interface SubscriptionRepository
     extends PagingAndSortingRepository<Subscription, Long> {
 
-    // ✅ 사용자 ID로 구독 목록 조회
+    //  사용자 ID로 구독 목록 조회
     List<Subscription> findByUserId(Long userId);
+
+    // 사용자와 도서 ID로 구독 여부 확인 (중복 구독 방지 등)
+    boolean existsByUserIdAndBookId(Long userId, Long bookId);
+
+    
 }

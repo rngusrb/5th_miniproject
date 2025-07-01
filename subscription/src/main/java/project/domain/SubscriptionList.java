@@ -18,9 +18,10 @@ public class SubscriptionList {
 
     private Long bookId;
     private String bookTitle;
-    private String authorId;
+    private Long authorId;
     private String category;
     private String bookCoverImage;
     private String bookSummary;
     private String bookContent;
+    private Date subscribedDate;
 }

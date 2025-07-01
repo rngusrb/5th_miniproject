@@ -28,36 +28,52 @@ public class PolicyHandler {
     public void whatever(@Payload String eventString) {}
 
 
+    // @StreamListener(
+    //     value = KafkaProcessor.INPUT,
+    //     condition = "headers['type']=='BookAccessGranted'"
+    // )
+    // public void wheneverBookAccessGranted_AddSubscription(
+    //     @Payload BookAccessGranted granted
+    // ) {
+    //     System.out.println("\n\n✅ BookAccessGranted received: " + granted + "\n\n");
+
+    //     Subscription subscription = new Subscription();
+    //     subscription.setUserId(granted.getUserId());
+    //     subscription.setBookId(granted.getBookId());
+    //     subscriptionRepository.save(subscription);
+        
+    // }
     @StreamListener(
         value = KafkaProcessor.INPUT,
         condition = "headers['type']=='BookAccessGranted'"
     )
-    public void wheneverBookAccessGranted_AddSubscription(
-        @Payload BookAccessGranted granted
-    ) {
+    public void wheneverBookAccessGranted_AddSubscription(@Payload BookAccessGranted granted) {
         System.out.println("\n\n✅ BookAccessGranted received: " + granted + "\n\n");
-
-        Subscription subscription = new Subscription();
-        subscription.setUserId(granted.getUserId());
-        subscription.setBookId(granted.getBookId());
-        subscriptionRepository.save(subscription);
-        
+        Subscription.addSubscription(granted.getUserId(), granted.getBookId());
     }
 
+    // @StreamListener(
+    //     value = KafkaProcessor.INPUT,
+    //     condition = "headers['type']=='PointMinus'"
+    // )
+    // public void wheneverBookAccessGranted_AddSubscription(
+    //     @Payload PointMinus granted
+    // ) {
+    //     System.out.println("\n\n✅ PointMinus received: " + granted + "\n\n");
+
+    //     Subscription subscription = new Subscription();
+    //     subscription.setUserId(granted.getUserId());
+    //     subscription.setBookId(granted.getBookId());
+    //     subscriptionRepository.save(subscription);
+    // }
     @StreamListener(
         value = KafkaProcessor.INPUT,
         condition = "headers['type']=='PointMinus'"
     )
-    public void wheneverBookAccessGranted_AddSubscription(
-        @Payload PointMinus granted
-    ) {
+    public void wheneverPointMinus_AddSubscription(@Payload PointMinus granted) {
         System.out.println("\n\n✅ PointMinus received: " + granted + "\n\n");
-
-        Subscription subscription = new Subscription();
-        subscription.setUserId(granted.getUserId());
-        subscription.setBookId(granted.getBookId());
-        subscriptionRepository.save(subscription);
-    }
+        Subscription.addSubscription(granted.getUserId(), granted.getBookId());
+    }    
 
 
 
@@ -70,9 +86,14 @@ public class PolicyHandler {
         @Payload SubscriptionSaved event
     ) {
         try {
+            System.out.println("📬 SubscriptionSaved 수신: " + event);
+
             RestTemplate restTemplate = new RestTemplate();
             String url = "http://localhost:8088/books/" + event.getBookId();
+            System.out.println("🌐 Book API 호출 주소: " + url);
+
             Map<String, Object> book = restTemplate.getForObject(url, Map.class);
+            System.out.println("📚 받아온 책 정보: " + book);
 
             System.out.println("\uD83D\uDCDA 받아온 책 정보: " + book);
 
