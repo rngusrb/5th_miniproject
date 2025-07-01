@@ -37,31 +37,31 @@ public class Author {
 
     private Boolean isActive;
 
-    @PostPersist
-    public void onPostPersist() {
-        RegistAuthorRequested registAuthorRequested = new RegistAuthorRequested(
-            this
-        );
-        registAuthorRequested.publishAfterCommit();
-
-        AuthorModified authorModified = new AuthorModified(this);
-        authorModified.publishAfterCommit();
-
-        AuthorDeleted authorDeleted = new AuthorDeleted(this);
-        authorDeleted.publishAfterCommit();
-    }
-
-    @PostUpdate
-    public void onPostUpdate() {
-    AuthorModified authorModified = new AuthorModified(this);
-    authorModified.publishAfterCommit();
-   }
-
-    @PostRemove
-    public void onPostRemove() {
-    AuthorDeleted authorDeleted = new AuthorDeleted(this);
-    authorDeleted.publishAfterCommit();
-    }
+//    @PostPersist
+//    public void onPostPersist() {
+//        RegistAuthorRequested registAuthorRequested = new RegistAuthorRequested(
+//            this
+//        );
+//        registAuthorRequested.publishAfterCommit();
+//
+//        AuthorModified authorModified = new AuthorModified(this);
+//        authorModified.publishAfterCommit();
+//
+//        AuthorDeleted authorDeleted = new AuthorDeleted(this);
+//        authorDeleted.publishAfterCommit();
+//    }
+//
+//    @PostUpdate
+//    public void onPostUpdate() {
+//    AuthorModified authorModified = new AuthorModified(this);
+//    authorModified.publishAfterCommit();
+//   }
+//
+//    @PostRemove
+//    public void onPostRemove() {
+//    AuthorDeleted authorDeleted = new AuthorDeleted(this);
+//    authorDeleted.publishAfterCommit();
+//    }
 
     public void register() {
         RegistAuthorRequested registAuthorRequested = new RegistAuthorRequested(this);
