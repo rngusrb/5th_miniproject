@@ -9,5 +9,14 @@ import project.infra.AbstractEvent;
 @ToString
 public class BookViewed extends AbstractEvent {
 
-    private Long id;
+    private Long userId;
+    private Long bookId;
+    private Long authorId;
+    private String bookTitle;
+    private String category;
+    private Date createDate;
+    private Date modifyDate;
+    private String bookSummary;
+    private String bookCoverImage;
+    private String bookContent;
 }

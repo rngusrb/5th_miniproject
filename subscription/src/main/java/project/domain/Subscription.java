@@ -43,6 +43,8 @@ public class Subscription {
     public static void subscriptionCheck(BookViewed bookViewed) {
         //implement business logic here:
 
+
+            
         /** Example 1:  new item 
         Subscription subscription = new Subscription();
         repository().save(subscription);

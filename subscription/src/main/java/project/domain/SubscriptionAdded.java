@@ -11,8 +11,25 @@ import project.infra.AbstractEvent;
 @ToString
 public class SubscriptionAdded extends AbstractEvent {
 
+    // private Long userId;
+    // private Long bookId;
+
+    // public SubscriptionAdded(Subscription aggregate) {
+    //     super(aggregate);
+    // }
+
+    // public SubscriptionAdded() {
+    //     super();
+    // }
+    
     private Long userId;
     private Long bookId;
+    private Long authorId;
+    private String bookTitle;
+    private String bookSummary;
+    private String bookCoverImage;
+    private String category;
+    private Date createDate;
 
     public SubscriptionAdded(Subscription aggregate) {
         super(aggregate);

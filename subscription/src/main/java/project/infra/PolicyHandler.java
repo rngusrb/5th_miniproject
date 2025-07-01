@@ -37,6 +37,7 @@ public class PolicyHandler {
         subscription.setUserId(granted.getUserId());
         subscription.setBookId(granted.getBookId());
         subscriptionRepository.save(subscription);
+        
     }
 
     @StreamListener(
