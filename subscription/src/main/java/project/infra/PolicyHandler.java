@@ -23,36 +23,37 @@ public class PolicyHandler {
     @StreamListener(KafkaProcessor.INPUT)
     public void whatever(@Payload String eventString) {}
 
+
     @StreamListener(
         value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='BookViewed'"
+        condition = "headers['type']=='BookAccessGranted'"
     )
-    public void wheneverBookViewed_SubscriptionCheck(
-        @Payload BookViewed bookViewed
+    public void wheneverBookAccessGranted_AddSubscription(
+        @Payload BookAccessGranted granted
     ) {
-        BookViewed event = bookViewed;
-        System.out.println(
-            "\n\n##### listener SubscriptionCheck : " + bookViewed + "\n\n"
-        );
+        System.out.println("\n\n✅ BookAccessGranted received: " + granted + "\n\n");
 
-        // Sample Logic //
-        Subscription.subscriptionCheck(event);
+        Subscription subscription = new Subscription();
+        subscription.setUserId(granted.getUserId());
+        subscription.setBookId(granted.getBookId());
+        subscriptionRepository.save(subscription);
     }
 
     @StreamListener(
         value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='PointUpdated'"
+        condition = "headers['type']=='PointMinus'"
     )
-    public void wheneverPointUpdated_SubscriptionAdd(
-        @Payload PointUpdated pointUpdated
+    public void wheneverBookAccessGranted_AddSubscription(
+        @Payload PointMinus granted
     ) {
-        PointUpdated event = pointUpdated;
-        System.out.println(
-            "\n\n##### listener SubscriptionAdd : " + pointUpdated + "\n\n"
-        );
+        System.out.println("\n\n✅ PointMinus received: " + granted + "\n\n");
 
-        // Sample Logic //
-        Subscription.subscriptionAdd(event);
+        Subscription subscription = new Subscription();
+        subscription.setUserId(granted.getUserId());
+        subscription.setBookId(granted.getBookId());
+        subscriptionRepository.save(subscription);
     }
+
+    
 }
 //>>> Clean Arch / Inbound Adaptor

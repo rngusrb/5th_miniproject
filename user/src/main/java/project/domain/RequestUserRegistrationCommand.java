@@ -5,4 +5,7 @@ import java.util.*;
 import lombok.Data;
 
 @Data
-public class RequestUserRegistrationCommand {}
+public class RequestUserRegistrationCommand {
+    private Long userId;
+    private Long userPw;
+}

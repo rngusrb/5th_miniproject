@@ -1,18 +1,13 @@
 package project.infra;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +16,7 @@ import project.domain.*;
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
-@RequestMapping(value="/api/v1/manuscripts")
+@RequestMapping(value="/manuscripts")
 @Transactional
 public class ManuscriptController {
 
@@ -69,7 +64,6 @@ public class ManuscriptController {
         }
         manuscriptRepository.save(manuscript);
     }
-
 
     @PatchMapping("/edit/{id}")
     public void editManuscript(@PathVariable Long id, @RequestBody Manuscript body) {
@@ -136,6 +130,18 @@ public class ManuscriptController {
         manuscriptRepository.save(manuscript);
 
         return ManuscriptDTO.toResponse(manuscript);
+    }
+
+    @PostMapping("/publish/{ids}")
+    public void publishManuscript(@PathVariable String ids) {
+        // "1,2,3" → List<Long>
+        List<Long> idList = Arrays.stream(ids.split(",")).map(Long::parseLong).collect(Collectors.toList());
+
+        List<Manuscript> manuscripts = manuscriptRepository.findAllById(idList);
+
+        for (Manuscript manuscript : manuscripts) {
+            manuscript.publish();
+        }
     }
 }
 //>>> Clean Arch / Inbound Adaptor

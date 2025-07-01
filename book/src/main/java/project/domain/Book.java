@@ -2,18 +2,16 @@ package project.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
 import lombok.Data;
 import project.BookApplication;
-import project.domain.AddedToWishlist;
+import project.domain.BookDeleted;
+import project.domain.BookPublished;
 import project.domain.BookViewed;
 import project.domain.EditedBookInfo;
-import project.domain.GetLikeCount;
-import project.domain.GetViewCount;
 
 @Entity
 @Table(name = "Book_table")
@@ -31,32 +29,51 @@ public class Book {
 
     private String category;
 
-    private Date createDate;
+    private LocalDateTime createDate;
 
-    private Date modifyDate;
+    private LocalDateTime modifyDate;
 
+    @Column(length = 1000)
     private String bookSummary;
-
+    
+    @Column(length = 1000)
     private String bookCoverImage;
 
+    @Column(length = 4000)        
     private String bookContent;
+
+    private Integer viewCount;
+
+    private Integer likeCount;
+
+    private Integer price;
+
+    @PrePersist
+    public void onPrePersist() {
+        this.createDate = LocalDateTime.now();
+        this.viewCount = 0;
+        this.likeCount = 0;
+        this.price = 1000;
+    }
 
     @PostPersist
     public void onPostPersist() {
-        BookViewed bookViewed = new BookViewed(this);
-        bookViewed.publishAfterCommit();
+        // BookViewed bookViewed = new BookViewed(this);
+        // bookViewed.publishAfterCommit();
 
-        GetViewCount getViewCount = new GetViewCount(this);
-        getViewCount.publishAfterCommit();
+        // EditedBookInfo editedBookInfo = new EditedBookInfo(this);
+        // editedBookInfo.publishAfterCommit();
 
-        GetLikeCount getLikeCount = new GetLikeCount(this);
-        getLikeCount.publishAfterCommit();
+        // BookPublished bookPublished = new BookPublished(this);
+        // bookPublished.publishAfterCommit();
 
-        AddedToWishlist addedToWishlist = new AddedToWishlist(this);
-        addedToWishlist.publishAfterCommit();
+        // BookDeleted bookDeleted = new BookDeleted(this);
+        // bookDeleted.publishAfterCommit();
+    }
 
-        EditedBookInfo editedBookInfo = new EditedBookInfo(this);
-        editedBookInfo.publishAfterCommit();
+    @PreUpdate
+    public void onPostUpdate() {
+        this.modifyDate = LocalDateTime.now();
     }
 
     public static BookRepository repository() {
@@ -66,12 +83,14 @@ public class Book {
         return bookRepository;
     }
 
-    //<<< Clean Arch / Port Method
-    public void viewBook() {
-        //implement business logic here:
-
+    public void ViewBook() {
+        //
     }
-    //>>> Clean Arch / Port Method
 
+    public void PublishBook() {
+        
+        BookPublished bookPublished = new BookPublished(this);
+        bookPublished.publishAfterCommit();
+    }
 }
 //>>> DDD / Aggregate Root
