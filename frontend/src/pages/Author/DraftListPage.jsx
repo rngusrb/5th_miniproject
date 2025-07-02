@@ -22,29 +22,24 @@ export default function DraftListPage() {
   const [generatedSummaries, setGeneratedSummaries] = useState([]);
   const [isSummaryLoading, setIsSummaryLoading] = useState(false);
 
+  // 원고 목록을 불러오는 함수
+  const fetchDrafts = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/${AUTHOR_ID}`, {
+        headers: {
+          Authorization: `Bearer ${API_TOKEN}`,
+        },
+      });
+      const filtered = res.data.filter(d => d.status !== 'TEMP'); // TEMP 상태는 제외하고 필터링
+      setDrafts(filtered);
+      setSelectedIds([]); // 목록 새로고침 시 선택된 ID 초기화
+    } catch (e) {
+      console.error("원고 목록을 불러오지 못했습니다:", e);
+      alert('원고 목록을 불러오지 못했습니다.');
+    }
+  };
+
   useEffect(() => {
-    const fetchDrafts = async () => {
-      try {
-        const res = await axios.get(`${BASE_URL}/${AUTHOR_ID}`, {
-          headers: {
-            Authorization: `Bearer ${API_TOKEN}`,
-          },
-        });
-        const filtered = res.data.filter(d => d.status !== 'TEMP');
-
-        console.log('--- fetchDrafts 필터링된 데이터 확인 ---');
-        filtered.forEach((d, index) => {
-          console.log(`원고 ${index + 1}의 ID:`, d.manuscriptId);
-          console.log(`원고 ${index + 1}의 ID 타입:`, typeof d.manuscriptId);
-        });
-        console.log('------------------------------------');
-
-        setDrafts(filtered);
-      } catch (e) {
-        console.error("원고 목록을 불러오지 못했습니다:", e);
-        alert('원고 목록을 불러오지 못했습니다.');
-      }
-    };
     fetchDrafts();
   }, [BASE_URL, API_TOKEN, AUTHOR_ID]);
 
@@ -93,10 +88,11 @@ export default function DraftListPage() {
         }
       );
 
-      // 백엔드 ManuscriptController.java에 따라 bookCoverImage 필드 사용
       const imageUrl = res.data?.bookCoverImage;
       if (imageUrl) {
         setGeneratedCoverUrl(imageUrl);
+        // 표지 생성 후, 해당 원고 정보 업데이트 (필요하다면)
+        fetchDrafts();
       } else {
         alert('유효한 커버 이미지 URL을 받지 못했습니다.');
         setShowCoverModal(false);
@@ -157,7 +153,7 @@ export default function DraftListPage() {
             Authorization: `Bearer ${API_TOKEN}`,
           },
         });
-        categoriesList = categoryRes.data?.category ? [categoryRes.data.category] : ['카테고리 없음']; // 백엔드 응답에 'category' 필드 가정
+        categoriesList = categoryRes.data?.category ? [categoryRes.data.category] : ['카테고리 없음'];
       } catch (e) {
         console.error(`AI 카테고리 생성 실패 (ID: ${id}):`, e);
         errorOccurred = true;
@@ -173,6 +169,7 @@ export default function DraftListPage() {
     }
     setGeneratedSummaries(results);
     setIsSummaryLoading(false);
+    fetchDrafts(); // 요약/카테고리 생성 후 원고 정보 업데이트
 
     const failedCount = results.filter(r => r.error).length;
     if (failedCount === 0) {
@@ -183,6 +180,44 @@ export default function DraftListPage() {
       alert(`${failedCount}개의 원고 요약 및 카테고리 생성에 실패했습니다.`);
     }
   };
+
+  // 삭제 기능 추가
+  const handleDeleteSelected = async () => {
+    if (selectedIds.length === 0) {
+      alert('삭제할 원고를 선택해주세요.');
+      return;
+    }
+
+    if (!window.confirm(`선택된 원고 ${selectedIds.length}개를 정말로 삭제하시겠습니까?`)) {
+      return;
+    }
+
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const id of selectedIds) {
+      try {
+        await axios.delete(`${BASE_URL}/${id}`, {
+          headers: {
+            Authorization: `Bearer ${API_TOKEN}`,
+          },
+        });
+        successCount++;
+      } catch (e) {
+        console.error(`원고 삭제 실패 (ID: ${id}):`, e);
+        failCount++;
+      }
+    }
+
+    if (successCount > 0) {
+      alert(`${successCount}개의 원고가 성공적으로 삭제되었습니다.`);
+      fetchDrafts(); // 삭제 후 목록 새로고침
+    }
+    if (failCount > 0) {
+      alert(`${failCount}개의 원고 삭제에 실패했습니다. 콘솔을 확인해주세요.`);
+    }
+  };
+
 
   useEffect(() => {
     const handleEscape = (event) => {
@@ -239,6 +274,14 @@ export default function DraftListPage() {
             onClick={handleGenerateSummaryAndCategory}
           >
             {isSummaryLoading ? 'AI 요약 & 카테고리 생성 중...' : 'AI 요약 & 카테고리 설정'}
+          </button>
+          {/* 삭제 버튼 추가 */}
+          <button
+            className="btn btn-danger btn-wide" // btn-danger 클래스 추가 (빨간색 버튼)
+            disabled={selectedIds.length === 0}
+            onClick={handleDeleteSelected}
+          >
+            선택된 원고 삭제
           </button>
         </div>
 
