@@ -72,5 +72,54 @@ public class AuthorController {
     public Iterable<Author> getAllAuthors() {
         return authorRepository.findAll();
     }
+
+     // 1) 회원가입 요청 (Command 받아서 Aggregate 호출)
+    @PostMapping("/requestRegistration")
+    public Author requestRegistration(
+            @RequestBody RequestAuthorRegistrationCommand cmd
+    ) {
+        System.out.println("##### /authors/requestRegistration called #####");
+
+        // ① Aggregate 생성 및 상태 세팅
+        Author author = new Author();
+        author.setAuthorLoginId(cmd.getAuthorLoginId());
+        author.setAuthorPw(cmd.getAuthorPw());
+        author.setCreateDate(new Date());
+        author.setIsActive(true);
+
+        // ② 도메인 메서드 호출 (이 안에서 AuthorRegistered 이벤트 publish)
+        author.register();
+
+        // ③ 저장
+        return authorRepository.save(author);
+    }
+
+    // 2) 로그인 요청 (Command 받아서 Aggregate 호출)
+    @PostMapping("/login")
+    public Author login(
+            @RequestBody RequestAuthorLoginCommand cmd
+    ) throws Exception {
+        System.out.println("##### /authors/login called #####");
+
+        // ① 아이디로 조회
+        Author author = authorRepository
+            .findByAuthorLoginId(cmd.getAuthorLoginId())
+            .orElseThrow(() -> new Exception("Invalid credentials"));
+
+        // ② 비밀번호 검증
+        if (!author.getAuthorPw().equals(cmd.getAuthorPw())) {
+            throw new Exception("Invalid credentials");
+        }
+
+        // ③ 도메인 메서드 호출 (이 안에서 AuthorLoggedIn 이벤트 publish)
+        author.login();
+
+        // ④ 저장 (이벤트 발행을 위해 반드시 save)
+        return authorRepository.save(author);
+    }
+
+
+
+
 }
 //>>> Clean Arch / Inbound Adaptor
