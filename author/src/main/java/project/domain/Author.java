@@ -68,6 +68,11 @@ public class Author {
         registAuthorRequested.publishAfterCommit();
     }
 
+    public void signup() {
+        AuthorRegistered authorRegistered = new AuthorRegistered(this);
+        authorRegistered.publishAfterCommit();
+    }
+
     public void login() {
         AuthorLoggedIn authorLoggedIn = new AuthorLoggedIn(this);
         authorLoggedIn.publishAfterCommit();
