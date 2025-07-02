@@ -1,35 +1,41 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-// import axios from 'axios'; // 🔄 실제 백엔드 연동 시 사용
+// import { useAuth } from '../../contexts/AuthContext'; // 백엔드 직접 연동으로 변경
+import axiosInstance from '../../api/axiosInstance'; // API 호출을 위한 인스턴스
 import './AuthForm.css';
 
 export default function AuthorSignup() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { signup } = useAuth();
   const navigate = useNavigate();
 
   const handleSignup = async () => {
-    const success = signup(username, password);
-    if (success) {
-      alert('회원가입 성공!');
-      navigate('/login/author');
-    } else {
-      alert('이미 존재하는 아이디입니다.');
+    // 입력 값 검증
+    if (!username || !password) {
+      alert('아이디와 비밀번호를 모두 입력해주세요.');
+      return;
     }
 
-    /*
-    🔄 백엔드 연동 시:
     try {
-      await axios.post('/api/signup/author', { username, password });
+      // 🔄 백엔드 회원가입 API 호출
+      // AuthorController의 requestRegistration 메서드에 맞춰 요청 경로와 데이터를 수정합니다.
+      const response = await axiosInstance.post('/authors/requestRegistration', {
+        authorLoginId: username, // 'username' -> 'authorLoginId'
+        authorPw: password,      // 'password' -> 'authorPw'
+      });
+
+      // 회원가입 성공 시 서버로부터 받은 작가 정보를 활용할 수 있습니다.
+      console.log('회원가입 성공:', response.data);
       alert('회원가입 성공!');
+
+      // 성공 후 작가 로그인 페이지로 이동
       navigate('/login/author');
+
     } catch (err) {
-      alert('회원가입 실패');
+      // API 호출 실패 시 에러 처리
+      console.error("Signup failed:", err);
+      alert('회원가입에 실패했습니다. 다른 아이디를 사용해주세요.');
     }
-    */
   };
 
   return (
