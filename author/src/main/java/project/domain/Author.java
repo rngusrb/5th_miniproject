@@ -68,6 +68,11 @@ public class Author {
         registAuthorRequested.publishAfterCommit();
     }
 
+    public void login() {
+        AuthorLoggedIn authorLoggedIn = new AuthorLoggedIn(this);
+        authorLoggedIn.publishAfterCommit();
+    }
+
     public static AuthorRepository repository() {
         AuthorRepository authorRepository = AuthorApplication.applicationContext.getBean(
             AuthorRepository.class
