@@ -15,21 +15,55 @@ export default function UserMainPage() {
   const [point, setPoint] = useState(0);
   const [isPremium, setIsPremium] = useState(false); // ✅ 구독 여부 상태
   const [bestsellers, setBestsellers] = useState([]);
+  const [bookList, setBooklist] = useState([]);
+  const [categories, setCategories] = useState({});
 
   const getBestsellers = async () => {
     try {
       const res = await axiosInstance.get("/books");
-      console.log(res.data._embedded.books);
-      setBestsellers(res.data._embedded.books);
+
+      setBooklist(res.data._embedded.books)
+
+      const sorted = res.data._embedded.books
+        .sort((a, b) => b.likeCount - a.likeCount)
+        .slice(0, 3);
+
+      setBestsellers(sorted); 
+
     } catch (err) {
       console.error("오류: ", err.response?.data);
     }
   };
 
-  const categories = {
-    "소설": [{ id: 4, title: "소설책", likes: 370, subscribes: 82 }],
-    "판타지": [{ id: 5, title: "판타지책", likes: 370, subscribes: 82 }],
-    "경제": [{ id: 6, title: "경제책", likes: 370, subscribes: 82 }]
+  // const categories = {
+  //   "소설": [{ id: 4, title: "소설책", likes: 370, subscribes: 82 }],
+  //   "판타지": [{ id: 5, title: "판타지책", likes: 370, subscribes: 82 }],
+  //   "경제": [{ id: 6, title: "경제책", likes: 370, subscribes: 82 }]
+  // };
+
+  function getBookIdFromHref(href) {
+    return parseInt(href?.split("/").pop(), 10);
+  }
+  // 카테고리별 책 정리 함수
+  const getCategoryBooks = () => {
+    const grouped = {};
+
+    bookList.forEach(book => {
+      const category = book.category || "기타";
+      const bookId = getBookIdFromHref(book._links?.self?.href);
+
+      if (!grouped[category]) grouped[category] = [];
+
+      grouped[category].push({
+        bookId,
+        bookTitle: book.bookTitle,
+        likeCount: book.likeCount,
+        viewCount: book.viewCount,
+        bookCoverImage: book.bookCoverImage, // 👉 BookCard에 전달할 전체 book 데이터 포함
+      });
+    });
+
+    setCategories(grouped);
   };
 
   const fetchPoint = async () => {
@@ -88,6 +122,12 @@ export default function UserMainPage() {
   useEffect(() => {
     getBestsellers();
   }, []);
+  
+  useEffect(() => {
+    if (bookList.length > 0) {
+      getCategoryBooks();
+    }
+  }, [bookList]);
 
   return (
     <MainLayout>
@@ -113,13 +153,15 @@ export default function UserMainPage() {
           </div>
 
           <h2>카테고리별</h2>
-          <div className="category-grid">
+          <div className="category-list-vertical">
             {Object.entries(categories).map(([catName, books]) => (
-              <div key={catName} className="category-item">
+              <div key={catName} className="category-row">
                 <div className="category-label">{catName}</div>
-                {books.map(book => (
-                  <BookCard key={book.id} book={book} />
-                ))}
+                <div className="book-row-scrollable">
+                  {books.map(book => (
+                    <BookCard key={book.id} book={book} />
+                  ))}
+                </div>
               </div>
             ))}
           </div>
