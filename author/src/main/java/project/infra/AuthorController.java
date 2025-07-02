@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
 import project.domain.*;
+import project.util.JwtUtil;
 
 //<<< Clean Arch / Inbound Adaptor
 
@@ -21,6 +22,9 @@ public class AuthorController {
 
     @Autowired
     AuthorRepository authorRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil; // JWT 유틸리티 주입
 
      // ✅ 작가 등록
     @PostMapping("/register")
@@ -34,20 +38,33 @@ public class AuthorController {
 
     // ✅ 작가 수정
     @PutMapping("/{id}")
+    // AuthorController.java
+
     public Author updateAuthor(@PathVariable("id") Long id, @RequestBody Author updatedAuthor) throws Exception {
         System.out.println("##### /authors/{id} PUT called #####");
-        Optional<Author> optionalAuthor = authorRepository.findById(id);
-        if (!optionalAuthor.isPresent()) {
-            throw new Exception("Author not found with id: " + id);
+
+        // 데이터베이스에서 기존 작가 정보를 가져옵니다.
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new Exception("Author not found with id: " + id));
+
+        // 🔽 요청으로 받은 데이터의 필드가 null이 아닐 경우에만 값을 변경합니다.
+        if (updatedAuthor.getAuthorName() != null) {
+            author.setAuthorName(updatedAuthor.getAuthorName());
+        }
+        if (updatedAuthor.getAuthorInfo() != null) {
+            author.setAuthorInfo(updatedAuthor.getAuthorInfo());
+        }
+        if (updatedAuthor.getAuthorPortfolio() != null) {
+            author.setAuthorPortfolio(updatedAuthor.getAuthorPortfolio());
+        }
+        if (updatedAuthor.getAuthorPw() != null) {
+            author.setAuthorPw(updatedAuthor.getAuthorPw());
+        }
+        if (updatedAuthor.getIsActive() != null) {
+            author.setIsActive(updatedAuthor.getIsActive());
         }
 
-        Author author = optionalAuthor.get();
-        author.setAuthorName(updatedAuthor.getAuthorName());
-        author.setAuthorInfo(updatedAuthor.getAuthorInfo());
-        author.setAuthorPortfolio(updatedAuthor.getAuthorPortfolio());
-        author.setAuthorPw(updatedAuthor.getAuthorPw());
-        author.setIsActive(updatedAuthor.getIsActive());
-
+        // 변경된 내용만 저장합니다.
         return authorRepository.save(author);
     }
 
@@ -104,26 +121,30 @@ public class AuthorController {
 
     // 2) 로그인 요청 (Command 받아서 Aggregate 호출)
     @PostMapping("/login")
-    public Author login(
+    public AuthorLoginResponseDTO login(
             @RequestBody RequestAuthorLoginCommand cmd
     ) throws Exception {
         System.out.println("##### /authors/login called #####");
 
-        // ① 아이디로 조회
         Author author = authorRepository
-            .findByAuthorLoginId(cmd.getAuthorLoginId())
-            .orElseThrow(() -> new Exception("Invalid credentials"));
+                .findByAuthorLoginId(cmd.getAuthorLoginId())
+                .orElseThrow(() -> new Exception("Invalid credentials"));
 
-        // ② 비밀번호 검증
         if (!author.getAuthorPw().equals(cmd.getAuthorPw())) {
             throw new Exception("Invalid credentials");
         }
 
-        // ③ 도메인 메서드 호출 (이 안에서 AuthorLoggedIn 이벤트 publish)
         author.login();
+        authorRepository.save(author);
 
-        // ④ 저장 (이벤트 발행을 위해 반드시 save)
-        return authorRepository.save(author);
+        String token = jwtUtil.generateToken(author.getAuthorId());
+
+        // 별도의 파일로 생성된 DTO 객체를 생성하여 반환
+        return new AuthorLoginResponseDTO(
+                author.getAuthorId(),
+                author.getAuthorLoginId(),
+                token
+        );
     }
 
 

@@ -20,10 +20,14 @@ export default function AuthorLogin() {
         authorPw: password,
       });
 
+      //  응답 데이터에서 토큰과 ID를 모두 추출
+      //    (백엔드 응답 필드명에 따라 'authorId' 또는 'id' 등으로 수정 필요)
       const token = response.data.token;
+      const authorId = response.data.authorId;
 
-      // JWT 토큰 저장
+      // 2. JWT 토큰과 함께 작가 ID도 localStorage에 저장
       localStorage.setItem('token', token);
+      localStorage.setItem('userId', authorId);
 
       alert('로그인 성공!');
 
