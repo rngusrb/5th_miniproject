@@ -13,7 +13,9 @@ import lombok.Data;
 public class SubscriptionList {
 
     @Id
-    //@GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
+
     private Long userId;
 
     private Long bookId;
