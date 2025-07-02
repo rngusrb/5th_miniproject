@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import project.domain.*;
 
@@ -75,24 +77,29 @@ public class AuthorController {
     }
 
      // 1) 회원가입 요청 (Command 받아서 Aggregate 호출)
+
+
     @PostMapping("/requestRegistration")
-    public Author requestRegistration(
+    public ResponseEntity<Author> requestRegistration(
             @RequestBody RequestAuthorRegistrationCommand cmd
     ) {
-        System.out.println("##### /authors/requestRegistration called #####");
+        // ① 아이디로 기존 작가가 있는지 먼저 조회합니다.
+        if (authorRepository.findByAuthorLoginId(cmd.getAuthorLoginId()).isPresent()) {
+            // ② 만약 존재한다면, 409 Conflict 에러를 반환합니다.
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
 
-        // ① Aggregate 생성 및 상태 세팅
+        // ③ 존재하지 않을 경우에만 새로 생성하고 저장합니다.
         Author author = new Author();
         author.setAuthorLoginId(cmd.getAuthorLoginId());
         author.setAuthorPw(cmd.getAuthorPw());
         author.setCreateDate(new Date());
-        author.setIsActive(true);
+        author.setIsActive(false);
 
-        // ② 도메인 메서드 호출 (이 안에서 AuthorRegistered 이벤트 publish)
         author.register();
+        Author savedAuthor = authorRepository.save(author);
 
-        // ③ 저장
-        return authorRepository.save(author);
+        return new ResponseEntity<>(savedAuthor, HttpStatus.OK);
     }
 
     // 2) 로그인 요청 (Command 받아서 Aggregate 호출)
