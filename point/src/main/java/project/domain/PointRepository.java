@@ -14,6 +14,7 @@ public interface PointRepository extends PagingAndSortingRepository<Point, Long>
 
     // 최신 포인트 로그 1건 (native)
     @Query(value = "SELECT * FROM point_table WHERE user_id = :userId ORDER BY change_date DESC LIMIT 1", nativeQuery = true)
-    Point findLatestByUserId(Long userId);
+    Point findLatestByUserId(@org.springframework.data.repository.query.Param("userId") Long userId);
+
 
 }

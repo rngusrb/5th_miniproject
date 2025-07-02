@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-// import axios from 'axios'; // 🔄 실제 백엔드 연동 시 사용
+import axios from 'axios'; // 🔄 실제 백엔드 연동 시 사용
 import './AuthForm.css';
 
 export default function UserSignup() {
@@ -12,24 +12,20 @@ export default function UserSignup() {
   const navigate = useNavigate();
 
   const handleSignup = async () => {
-    const success = signup(username, password);
-    if (success) {
-      alert('회원가입 성공!');
-      navigate('/login/user');
-    } else {
-      alert('이미 존재하는 아이디입니다.');
-    }
-
-    /*
-    🔄 백엔드 연동 시:
     try {
-      await axios.post('/api/signup', { username, password });
+      const res = await axios.post('/users', {
+        userId: Number(username),
+        userPw: Number(password),
+      });
+
+      const token = res.data.token;
+      localStorage.setItem('token', token); // JWT 저장
+
       alert('회원가입 성공!');
       navigate('/login/user');
     } catch (err) {
       alert('회원가입 실패');
     }
-    */
   };
 
   return (
