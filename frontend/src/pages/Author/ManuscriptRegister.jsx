@@ -8,6 +8,7 @@ import './ManuscriptRegister.css';
 function ManuscriptRegister() {
   const navigate = useNavigate();
 
+
   const [form, setForm] = useState({
     title: '',
     category: '',
@@ -18,6 +19,7 @@ function ManuscriptRegister() {
   });
 
   const [tempLoaded, setTempLoaded] = useState(false);
+  const BASE_URL = 'http://localhost:8088/manuscripts';
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -32,7 +34,15 @@ function ManuscriptRegister() {
       modifyDate: new Date().toISOString(),
     };
     try {
-      await axios.post('http://localhost:8080/api/v1/manuscripts', manuscriptData);
+
+      // const token = localStorage.getItem('accessToken');
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE'
+      await axios.post(BASE_URL, manuscriptData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        }
+      });
       alert('임시 저장 완료');
     } catch (e) {
       console.error(e);
@@ -49,7 +59,14 @@ function ManuscriptRegister() {
       modifyDate: new Date().toISOString(),
     };
     try {
-      await axios.post('http://localhost:8080/api/v1/manuscripts', manuscriptData);
+      // const token = localStorage.getItem('accessToken');
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE'
+      await axios.post(BASE_URL, manuscriptData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        }
+      });
       alert('최종 저장 완료');
       navigate('/main/author');
     } catch (e) {
@@ -58,16 +75,27 @@ function ManuscriptRegister() {
     }
   };
 
+
   const loadTempData = async () => {
     try {
-      const res = await axios.get('http://localhost:8080/api/v1/manuscripts/temp/1');
+      // const token = localStorage.getItem('accessToken');
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE'
+      const res = await axios.get(`${BASE_URL}/1`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const temp = res.data.find((item) => item.status === 'TEMP');
+      if (!temp) throw new Error('TEMP 데이터 없음');
+
       setForm({
-        title: res.data.title,
-        category: res.data.category,
-        content: res.data.content,
-        summary: res.data.summary,
-        bookCoverImage: res.data.bookCoverImage,
-        status: res.data.status,
+        title: temp.title,
+        category: temp.category,
+        content: temp.content,
+        summary: temp.summary,
+        bookCoverImage: temp.bookCoverImage,
+        status: temp.status,
       });
       setTempLoaded(true);
     } catch (e) {
@@ -75,6 +103,7 @@ function ManuscriptRegister() {
       alert('임시 저장된 원고가 없습니다');
     }
   };
+
 
   return (
     <div className="manuscript-register-container">
