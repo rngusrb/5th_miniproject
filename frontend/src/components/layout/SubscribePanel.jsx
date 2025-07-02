@@ -2,34 +2,35 @@ import React from 'react';
 import './SubscribePanel.css'; // 👈 CSS 따로 정의
 
 export default function SubscribePanel({ onClose, onSubscribed }) {
-  const handleSubscribe = async () => {
-    const userId = localStorage.getItem('userId');
-    const token = localStorage.getItem('token');
+ const handleSubscribe = async () => {
+  const userId = localStorage.getItem('userId');
+  const token = localStorage.getItem('token');
 
-    if (!userId || !token) {
-      alert('로그인이 필요합니다.');
-      return;
-    }
+  if (!userId || !token) {
+    alert('로그인이 필요합니다.');
+    return;
+  }
 
-    try {
-      // 실제 API 구현 시 이곳 변경
-      await fetch('/subscriptions/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ userId: Number(userId) }),
-      });
+  try {
+    const res = await fetch(`/users/${userId}/requestsubscription`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      alert('정기 구독권 결제가 완료되었습니다!');
-      onSubscribed?.();
-      onClose();
-    } catch (err) {
-      console.error('정기 구독 결제 실패:', err);
-      alert('결제 중 오류가 발생했습니다.');
-    }
-  };
+    if (!res.ok) throw new Error('서버 응답 오류');
+
+    alert('정기 구독권 결제가 완료되었습니다!');
+    onSubscribed?.();
+    onClose();
+  } catch (err) {
+    console.error('정기 구독 결제 실패:', err);
+    alert('결제 중 오류가 발생했습니다.');
+  }
+};
+
 
   return (
     <div className="subscribe-panel">
