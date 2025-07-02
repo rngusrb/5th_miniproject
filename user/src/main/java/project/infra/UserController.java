@@ -92,7 +92,11 @@ public class UserController {
                 .stream(userRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
     }
-
+    @GetMapping("/{id}") // ✅ 여기에 추가
+        public User getUser(@PathVariable Long id) {
+            return userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 유저가 존재하지 않습니다."));
+        }
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);

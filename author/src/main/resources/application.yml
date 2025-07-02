@@ -1,6 +1,7 @@
 server:
   port: 8080
-
+jwt:
+  secret: aivle5thminiprojectgroup10secretkey
 spring:
   application:
     name: author

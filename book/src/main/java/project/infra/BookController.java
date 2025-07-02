@@ -54,7 +54,7 @@ public class BookController {
 
         book.setLikeCount(book.getLikeCount() + 1);
         bookRepository.save(book);
-
+        
         return book;
     }
 

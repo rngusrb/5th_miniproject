@@ -1,35 +1,39 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-// import axios from 'axios'; // 🔄 실제 백엔드 연동 시 사용
+import axiosInstance from '../../api/axiosInstance'; // API 호출을 위한 인스턴스
 import './AuthForm.css';
 
 export default function AuthorSignup() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { signup } = useAuth();
   const navigate = useNavigate();
 
   const handleSignup = async () => {
-    const success = signup(username, password);
-    if (success) {
-      alert('회원가입 성공!');
-      navigate('/login/author');
-    } else {
-      alert('이미 존재하는 아이디입니다.');
+    if (!username || !password) {
+      alert('아이디와 비밀번호를 모두 입력해주세요.');
+      return;
     }
 
-    /*
-    🔄 백엔드 연동 시:
     try {
-      await axios.post('/api/signup/author', { username, password });
-      alert('회원가입 성공!');
+      const response = await axiosInstance.post('/authors/requestRegistration', {
+        authorLoginId: username,
+        authorPw: password,
+      });
+
+      // 회원가입 성공 시의 로직은 그대로 유지합니다.
+      alert('회원가입에 성공하였습니다.');
       navigate('/login/author');
+
     } catch (err) {
-      alert('회원가입 실패');
+      // 에러 처리 로직을 수정
+      console.error("Signup failed:", err);
+
+      if (err.response?.status === 409) {
+        alert('이미 사용 중인 아이디입니다.');
+      } else {
+        alert('회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      }
     }
-    */
   };
 
   return (

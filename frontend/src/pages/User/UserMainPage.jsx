@@ -7,6 +7,7 @@ import SubscribePanel from '../../components/layout/SubscribePanel';
 import MainLayout from '../../components/layout/MainLayout';
 import './UserMainPage.css';
 import axiosInstance from "../../api/axiosInstance";
+import { useNavigate } from 'react-router-dom';
 
 export default function UserMainPage() {
   const [showMyPage, setShowMyPage] = useState(false);
@@ -17,6 +18,7 @@ export default function UserMainPage() {
   const [bestsellers, setBestsellers] = useState([]);
   const [bookList, setBooklist] = useState([]);
   const [categories, setCategories] = useState({});
+  const navigate = useNavigate();
 
   const getBestsellers = async () => {
     try {
@@ -178,6 +180,10 @@ export default function UserMainPage() {
               onSubscribeClick={() => {
                 setShowMyPage(false);
                 setShowSubscribePanel(true);
+              }}
+              onMySubscribeClick={() => {
+                setShowMyPage(false);
+                navigate('/mypage/user/subscribed-books');
               }}
             />
           </div>

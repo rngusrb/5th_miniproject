@@ -13,7 +13,7 @@ export default function PublishRequestPage() {
 
   const [drafts, setDrafts] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
-  const [loading, setLoading] = useState(true); // <-- 이 부분을 수정했습니다.
+  const [loading, setLoading] = useState(true); //
   const [error, setError] = useState(null);
 
   useEffect(() => {
