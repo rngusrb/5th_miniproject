@@ -1,16 +1,39 @@
 import './BookCard.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosInstance from "../../api/axiosInstance";
 
 const extractBookId = (book) => {
   const selfLink = book._links?.self?.href;
   if (!selfLink) return null;
   const parts = selfLink.split('/');
-  return parts[parts.length - 1]; // 마지막 요소가 ID
+  return parts[parts.length - 1];
 };
 
 export default function BookCard({ book, showSubscribe = true }) {
   const [likeCount, setLikeCount] = useState(book.likeCount);
+  const [isSubscribed, setIsSubscribed] = useState(false); // ✅ 구독 상태
+  const [loading, setLoading] = useState(false);            // ✅ 요청 중 표시
+
+  useEffect(() => {
+    checkSubscriptionStatus();
+  }, []);
+
+  const checkSubscriptionStatus = async () => {
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+    if (!userId || !token) return;
+
+    try {
+      const res = await axiosInstance.get(`/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.data?.pass === true) {
+        setIsSubscribed(true); // ✅ 프리미엄이면 항상 구독 상태
+      }
+    } catch (err) {
+      console.error("구독 상태 확인 실패:", err);
+    }
+  };
 
   const handleSubscribeClick = async () => {
     const userId = localStorage.getItem('userId');
@@ -21,36 +44,49 @@ export default function BookCard({ book, showSubscribe = true }) {
       return;
     }
 
-    const confirm = window.confirm("💸 1000포인트를 사용하여 이 책을 구독하시겠습니까?");
-    if (!confirm) return;
-
     try {
-      // 1. 포인트 차감
+      setLoading(true);
+
+      // 1. 사용자 정보로 프리미엄 여부 확인
+      const userRes = await axiosInstance.get(`/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const isPremium = userRes.data?.pass === true;
+
+      if (isPremium) {
+        // 프리미엄은 바로 구독 처리
+        await axiosInstance.put(`/users/${userId}/requestsubscription`, {}, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setIsSubscribed(true);
+        alert("✅ 프리미엄 구독자입니다. 바로 열람이 가능합니다.");
+        return;
+      }
+
+      // 일반 유저 - 포인트 차감
+      const confirm = window.confirm("💸 1000포인트를 사용하여 이 책을 구독하시겠습니까?");
+      if (!confirm) return;
+
       const res = await axiosInstance.put(`/points/${userId}/pluspoints`, {
         points: -1000,
       }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (res.status === 200) {
-        // 2. 구독 상태 업데이트 (pass=true)
         await axiosInstance.put(`/users/${userId}/requestsubscription`, {}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-
+        setIsSubscribed(true);
         alert("✅ 구독이 완료되었습니다. (1000포인트 차감됨)");
       }
+
     } catch (err) {
-      if (err.response?.status === 500 || err.response?.status === 400) {
-        alert("❌ 포인트가 부족하거나 오류가 발생했습니다.");
-      } else {
-        alert("에러: " + err.message);
-      }
+      alert("❌ 구독 실패: " + (err?.response?.data?.message || err.message));
       console.error("구독 실패:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,14 +102,20 @@ export default function BookCard({ book, showSubscribe = true }) {
   return (
     <div className="book-card">
       <div className="book-thumbnail">
-        <img className="book-cover-thumbnail" src={book.bookCoverImage} />
+        <img className="book-cover-thumbnail" src={book.bookCoverImage} alt="cover" />
       </div>
       <div className="book-title-thumbnail" title={book.bookTitle}>
         {book.bookTitle}
       </div>
       <div className="book-actions">
         {showSubscribe && (
-          <button onClick={handleSubscribeClick}>구독</button>
+          <button
+            onClick={handleSubscribeClick}
+            disabled={isSubscribed || loading}
+            className={isSubscribed ? 'subscribed-btn' : ''}
+          >
+            {isSubscribed ? '📘 구독 중' : '구독'}
+          </button>
         )}
       </div>
       <div className="book-meta">
