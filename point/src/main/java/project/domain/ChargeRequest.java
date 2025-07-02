@@ -1,4 +1,4 @@
-package project.infra;
+package project.domain;
 
 import lombok.Getter;
 import lombok.Setter;

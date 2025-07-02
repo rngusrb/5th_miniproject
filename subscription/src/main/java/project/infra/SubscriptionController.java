@@ -48,5 +48,8 @@ public class SubscriptionController {
         System.out.println("✅ 직접 검사 userId=" + userId + ", bookId=" + bookId + ", matched=" + matched);
         return matched ? "true" : "false";
     }
+
+
+
 }
 //>>> Clean Arch / Inbound Adaptor

@@ -1,5 +1,5 @@
 import './BookCard.css';
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosInstance from "../../api/axiosInstance";
 
 const extractBookId = (book) => {
@@ -11,80 +11,92 @@ const extractBookId = (book) => {
 
 export default function BookCard({ book, showSubscribe = true }) {
   const [likeCount, setLikeCount] = useState(book.likeCount);
-  const [isSubscribed, setIsSubscribed] = useState(false); // ✅ 구독 상태
-  const [loading, setLoading] = useState(false);            // ✅ 요청 중 표시
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  const bookId = extractBookId(book);
+
+  // ✅ 렌더링 시 구독 여부 확인
   useEffect(() => {
-    checkSubscriptionStatus();
-  }, []);
-
-  const checkSubscriptionStatus = async () => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
-    if (!userId || !token) return;
 
-    try {
-      const res = await axiosInstance.get(`/users/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.data?.pass === true) {
-        setIsSubscribed(true); // ✅ 프리미엄이면 항상 구독 상태
+    if (!userId || !token || !bookId) return;
+
+    const checkSubscription = async () => {
+      try {
+        const res = await axiosInstance.get(`/subscriptions/${userId}/${bookId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.data === true) {
+          setIsSubscribed(true);
+        }
+      } catch (err) {
+        console.error("초기 구독 확인 실패:", err);
       }
-    } catch (err) {
-      console.error("구독 상태 확인 실패:", err);
-    }
-  };
+    };
+
+    checkSubscription();
+  }, [bookId]);
 
   const handleSubscribeClick = async () => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
 
-    if (!userId || !token) {
-      alert("로그인이 필요합니다.");
+    if (!userId || !token || !bookId) {
+      alert("로그인이 필요하거나 책 정보가 없습니다.");
+      return;
+    }
+
+    if (isSubscribed) {
+      alert("✅ 이미 구독한 책입니다.");
       return;
     }
 
     try {
       setLoading(true);
 
-      // 1. 사용자 정보로 프리미엄 여부 확인
-      const userRes = await axiosInstance.get(`/users/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const isPremium = userRes.data?.pass === true;
-
-      if (isPremium) {
-        // 프리미엄은 바로 구독 처리
-        await axiosInstance.put(`/users/${userId}/requestsubscription`, {}, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setIsSubscribed(true);
-        alert("✅ 프리미엄 구독자입니다. 바로 열람이 가능합니다.");
-        return;
-      }
-
-      // 일반 유저 - 포인트 차감
-      const confirm = window.confirm("💸 1000포인트를 사용하여 이 책을 구독하시겠습니까?");
-      if (!confirm) return;
-
-      const res = await axiosInstance.put(`/points/${userId}/pluspoints`, {
-        points: -1000,
+      // 먼저 구독권 접근 시도
+      const response = await axiosInstance.post(`/users/${userId}/access`, {
+        bookId: parseInt(bookId),
       }, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       });
 
-      if (res.status === 200) {
-        await axiosInstance.put(`/users/${userId}/requestsubscription`, {}, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+      const access = response.data?.access;
+
+      if (access === 'GRANTED') {
         setIsSubscribed(true);
-        alert("✅ 구독이 완료되었습니다. (1000포인트 차감됨)");
+        alert("✅ 구독권으로 구독 완료");
+      } else {
+        alert("❌ 구독권이 없으므로 포인트 결제를 시도합니다...");
+
+        // 포인트 결제 후 구독 여부 확인
+        try {
+          const res = await axiosInstance.get(`/subscriptions/${userId}/${bookId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (res.data === true) {
+            setIsSubscribed(true);
+            alert("✅ 포인트 결제 후 구독 성공!");
+          } else {
+            setIsSubscribed(false);
+            alert("❌ 포인트가 부족하여 구독에 실패했습니다.");
+          }
+        } catch (err) {
+          setIsSubscribed(false);
+          alert("❌ 구독 상태 확인 실패: " + (err?.response?.data?.message || err.message));
+          console.error("구독 상태 조회 에러:", err);
+        }
       }
 
     } catch (err) {
-      alert("❌ 구독 실패: " + (err?.response?.data?.message || err.message));
-      console.error("구독 실패:", err);
+      alert("❌ 요청 실패: " + (err?.response?.data?.message || err.message));
+      console.error("접근 요청 실패:", err);
     } finally {
       setLoading(false);
     }
@@ -112,17 +124,17 @@ export default function BookCard({ book, showSubscribe = true }) {
           <button
             onClick={handleSubscribeClick}
             disabled={isSubscribed || loading}
-            className={isSubscribed ? 'subscribed-btn' : ''}
           >
-            {isSubscribed ? '📘 구독 중' : '구독'}
+            {isSubscribed ? "✅ 이미 구독함" : loading ? "구독 중..." : "📘 구독하기"}
           </button>
         )}
         {/* <button className="btn btn-primary" onClick={onRead}>
           열람
         </button> */}
       </div>
-
-      <div className="book-meta"><span className="like-btn" onClick={() => handleLikeClick(book)}>❤️ {likeCount}</span> ☆ {book.viewCount}</div>
+      <div className="book-meta">
+        <span className="like-btn" onClick={() => handleLikeClick(book)}>❤️ {likeCount}</span> ☆ {book.viewCount}
+      </div>
     </div>
   );
 }
