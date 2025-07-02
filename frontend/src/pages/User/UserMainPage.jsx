@@ -1,33 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import React, { useEffect } from 'react';
-import { useState } from 'react';
 import BookCard from '../../components/card/BookCard';
 import MyPagePanel from '../../components/layout/MyPagePanel';
-import PointChargePanel from '../../components/layout/PointChargePanel'; // 👈 새로 추가
+import PointChargePanel from '../../components/layout/PointChargePanel';
+import SubscribePanel from '../../components/layout/SubscribePanel'; // ✅ 구독 패널 import
 import MainLayout from '../../components/layout/MainLayout';
 import './UserMainPage.css';
 import axiosInstance from "../../api/axiosInstance";
 
 export default function UserMainPage() {
   const [showMyPage, setShowMyPage] = useState(false);
-  const [showChargePanel, setShowChargePanel] = useState(false); // 👈 포인트 충전 패널 상태
+  const [showChargePanel, setShowChargePanel] = useState(false);
+  const [showSubscribePanel, setShowSubscribePanel] = useState(false); // ✅ 구독 패널 상태 추가
   const [point, setPoint] = useState(0);
   const [bestsellers, setBestsellers] = useState([]);
-
-  // const bestsellers = [
-  //   { bookId: 1, bookTitle: "책 1", likeCount: 370, viewCount: 82, bookCoverImage: "" },
-  //   { bookId: 2, bookTitle: "책 2", likeCount: 350, viewCount: 70, bookCoverImage: "" },
-  //   { bookId: 3, bookTitle: "책 3", likeCount: 320, viewCount: 60, bookCoverImage: "" }
-  // ];
 
   const getBestsellers = async () => {
     try {
       const res = await axiosInstance.get("/books");
       console.log(res.data._embedded.books);
-      setBestsellers(res.data._embedded.books); // ✅ 상태에 반영
-
-      return res.data._embedded.books
+      setBestsellers(res.data._embedded.books);
     } catch (err) {
       console.error("오류: ", err.response?.data);
     }
@@ -38,7 +30,6 @@ export default function UserMainPage() {
     "판타지": [{ id: 5, title: "판타지책", likes: 370, subscribes: 82 }],
     "경제": [{ id: 6, title: "경제책", likes: 370, subscribes: 82 }]
   };
-
 
   const fetchPoint = async () => {
     try {
@@ -67,10 +58,10 @@ export default function UserMainPage() {
 
   useEffect(() => {
     fetchPoint();
+  }, []);
 
   useEffect(() => {
     getBestsellers();
-
   }, []);
 
   return (
@@ -111,8 +102,12 @@ export default function UserMainPage() {
             <MyPagePanel
               onClose={() => setShowMyPage(false)}
               onChargeClick={() => {
-                setShowMyPage(false);         // 마이페이지 닫고
-                setShowChargePanel(true);     // 충전창 열기
+                setShowMyPage(false);
+                setShowChargePanel(true);
+              }}
+              onSubscribeClick={() => {
+                setShowMyPage(false);
+                setShowSubscribePanel(true); // ✅ 구독 패널 열기
               }}
             />
           </div>
@@ -124,6 +119,18 @@ export default function UserMainPage() {
             <PointChargePanel
               onClose={() => setShowChargePanel(false)}
               onCharged={fetchPoint}
+            />
+          </div>
+        )}
+
+        {/* 정기 구독권 결제 패널 */}
+        {showSubscribePanel && (
+          <div className="main-right">
+            <SubscribePanel
+              onClose={() => setShowSubscribePanel(false)}
+              onSubscribed={() => {
+                alert("구독이 완료되었습니다!");
+              }}
             />
           </div>
         )}
