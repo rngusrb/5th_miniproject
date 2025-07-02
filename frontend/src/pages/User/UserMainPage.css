@@ -70,3 +70,49 @@
   font-size: 0.9rem;
   margin-bottom: 8px;
 }
+
+.category-list-vertical {
+  /* max-height: 80vh; */
+  max-width: 700px;   /* 👉 원하는 최대 너비로 조절 */
+  margin: 0 auto;     /* 👉 화면 중앙 정렬 */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-right: 8px;
+}
+
+.category-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.category-label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+/* 책 리스트: 가로 스크롤 행 */
+.book-row-scrollable {
+  display:flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+/* BookCard: 한 화면에 3개씩만 보이게 설정 */
+.book-row-scrollable > * {
+  /* flex: 0 0 calc((100% - 24px) / 3); 3개 + gap 2개 (12px*2) */
+  max-width: calc((100% - 24px) / 3);
+}
+
+/* 스크롤바 예쁘게 */
+.book-row-scrollable::-webkit-scrollbar {
+  height: 6px;
+}
+
+.book-row-scrollable::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
