@@ -117,10 +117,12 @@ export default function BookCard({ book, showSubscribe = true }) {
             {isSubscribed ? '📘 구독 중' : '구독'}
           </button>
         )}
+        {/* <button className="btn btn-primary" onClick={onRead}>
+          열람
+        </button> */}
       </div>
-      <div className="book-meta">
-        <span onClick={() => handleLikeClick(book)}>❤️ {likeCount}</span> ☆ {book.viewCount}
-      </div>
+
+      <div className="book-meta"><span className="like-btn" onClick={() => handleLikeClick(book)}>❤️ {likeCount}</span> ☆ {book.viewCount}</div>
     </div>
   );
 }
