@@ -7,14 +7,14 @@ import '../../components/card/BookCard.css';
 export default function SubscriptionBookPage() {
   const [books, setBooks] = useState([]);
   
-  const userId = 1; // 실제 사용자 ID
-  const token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzUxNDQxMDkxLCJleHAiOjE3NTE1Mjc0OTF9._LbIIVbNhMjGKgNSzGTAoxP5df72p366MgRucvM73vI"
+  const token = localStorage.getItem('token'); // 로그인 시 저장된 토큰
+  const userId = localStorage.getItem('userId'); // 로그인 시 저장된 userId
 
   useEffect(() => {
     axios
       .get(`http://localhost:8088/subscriptions/list/${userId}`, {
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {

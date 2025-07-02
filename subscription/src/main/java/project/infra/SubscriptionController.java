@@ -55,11 +55,6 @@ public class SubscriptionController {
     }
 
 
-    // 테스트를 위한 POST => 추후 삭제
-    @PostMapping("/list")
-    public SubscriptionList create(@RequestBody SubscriptionList list) {
-        return subscriptionListRepository.save(list);    
-    }
 
 }
 //>>> Clean Arch / Inbound Adaptor
