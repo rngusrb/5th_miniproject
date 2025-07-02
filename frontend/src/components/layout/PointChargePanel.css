@@ -1,0 +1,47 @@
+.point-charge-panel {
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+  box-sizing: border-box;
+}
+
+.point-charge-panel h2 {
+  margin-bottom: 16px;
+  font-size: 20px;
+  color: #333;
+}
+
+.point-charge-panel input {
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+.charge-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.charge-buttons button {
+  padding: 8px 14px;
+  font-size: 14px;
+  background-color: #4078f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.charge-buttons button:hover {
+  background-color: #2c65d9;
+}
