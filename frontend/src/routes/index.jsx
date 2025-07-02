@@ -12,6 +12,7 @@ import AuthorSignup from '../pages/Auth/AuthorSignup';
 import UserMainPage from '../pages/User/UserMainPage';
 import UserMyPage from '../pages/User/UserMyPage';
 import BookDetailPage from '../pages/User/BookDetailPage';
+import SubscriptionBookPage from '../pages/User/SubscriptionBookPage';
 
 // Author
 import AuthorMainPage from '../pages/Author/AuthorMainPage';
@@ -49,6 +50,8 @@ export default function AppRoutes() {
       <Route path="/main/user" element={<UserMainPage />} />
       <Route path="/mypage/user" element={<UserMyPage />} />
       <Route path="/book/:id" element={<BookDetailPage />} />
+      <Route path="/mypage/user/subscribed-books" element={<SubscriptionBookPage />} />
+
 
       {/* 작가 페이지 */}
       <Route path="/main/author" element={<AuthorMainPage />} />
