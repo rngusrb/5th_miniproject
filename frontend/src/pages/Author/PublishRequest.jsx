@@ -1,5 +1,3 @@
-// PublishRequest.jsx 파일
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '../../components/layout/MainLayout';
@@ -15,7 +13,7 @@ export default function PublishRequestPage() {
 
   const [drafts, setDrafts] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // <-- 이 부분을 수정했습니다.
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -57,41 +55,33 @@ export default function PublishRequestPage() {
 
   const handleSubmit = async () => {
     if (selectedIds.length === 0) {
-      alert('출간 요청할 원고를 선택해주세요.');
+      alert('출간할 원고를 선택해주세요.');
       return;
     }
 
-    if (!window.confirm(`선택된 원고 ${selectedIds.length}개를 출간 요청하시겠습니까?`)) {
+    if (!window.confirm(`선택된 원고 ${selectedIds.length}개를 즉시 출간하시겠습니까?`)) {
       return;
     }
 
-    let successCount = 0;
-    let failCount = 0;
+    // 선택된 ID들을 콤마로 구분된 문자열로 변환 (예: "1,2,3")
+    const idsToPublish = selectedIds.join(',');
 
-    for (const id of selectedIds) {
-      try {
-        // 백엔드 API에 PATCH 요청을 보내 원고의 상태를 'REQUESTED'로 변경
-        // 이 방식은 'edit' 엔드포인트를 사용하여 status 필드만 업데이트하며,
-        // 다른 필드들은 영향을 받지 않습니다.
-        await axios.patch(`${BASE_URL}/edit/${id}`, { status: 'REQUESTED' }, {
+    try {
+        // 백엔드 API의 `/publish/{ids}` 엔드포인트에 POST 요청을 보내 원고들을 즉시 출간합니다.
+        // 이 엔드포인트는 ManuscriptController.java의 publishManuscript 메서드에 해당합니다.
+        // 해당 API가 요청 본문(body)을 필요로 하지 않는다면, 두 번째 인자는 null로 전달합니다.
+        await axios.post(`${BASE_URL}/publish/${idsToPublish}`, null, {
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json', // 백엔드가 JSON을 기대하는 경우 유지
             'Authorization': `Bearer ${API_TOKEN}`,
           },
         });
-        successCount++;
-      } catch (err) {
-        console.error(`원고 ID ${id} 출간 요청 실패:`, err);
-        failCount++;
-      }
-    }
 
-    if (successCount > 0) {
-      alert(`${successCount}개의 원고 출간 요청이 성공적으로 처리되었습니다.`);
-      navigate('/main/author'); // 요청 후 작가 메인 페이지로 이동
-    }
-    if (failCount > 0) {
-      alert(`${failCount}개의 원고 출간 요청에 실패했습니다. 콘솔을 확인해주세요.`);
+        alert(`${selectedIds.length}개의 원고가 성공적으로 출간되었습니다.`); // 메시지 변경
+        navigate('/main/author'); // 출간 후 작가 메인 페이지로 이동
+    } catch (err) {
+        console.error(`원고 출간 실패:`, err.response ? err.response.data : err.message); // 오류 상세 출력
+        alert(`원고 출간에 실패했습니다. 콘솔을 확인해주세요.`); // 메시지 변경
     }
   };
 
@@ -135,7 +125,7 @@ export default function PublishRequestPage() {
           disabled={selectedIds.length === 0}
           onClick={handleSubmit}
         >
-          출간 요청 보내기
+          출간하기
         </button>
       </div>
     </MainLayout>
