@@ -74,7 +74,7 @@ const ManuscriptManagePage = () => {
 
   return (
     <div className="manuscript-manage-page">
-      <h2 className="manuscript-title">원고 관리</h2>
+      <h2 className="manuscript-title">원고 목록</h2>
       <table className="manuscript-table">
         <thead>
           <tr>

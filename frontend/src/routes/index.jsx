@@ -69,7 +69,6 @@ export default function AppRoutes() {
       <Route path="/admin/manuscript-manage" element={<ManuscriptManagePage />}  />
       <Route path="/admin/user-manage" element={<UserManagePage />}  />
       <Route path="/admin/book-manage" element={<BookManagePage />}  />
-      <Route path="/admin/ai-manage" element={<div>AI 관리 페이지</div>} />
     </Routes>
   );
 }
