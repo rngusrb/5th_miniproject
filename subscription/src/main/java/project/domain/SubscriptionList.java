@@ -20,8 +20,15 @@ public class SubscriptionList {
     private String bookTitle;
     private Long authorId;
     private String category;
+
+    @Column(length = 1000)
     private String bookCoverImage;
+
+    @Column(length = 1000)
     private String bookSummary;
+
+    @Column(length = 4000)        
     private String bookContent;
+
     private Date subscribedDate;
 }

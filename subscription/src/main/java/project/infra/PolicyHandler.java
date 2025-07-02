@@ -89,24 +89,33 @@ public class PolicyHandler {
             System.out.println("📬 SubscriptionSaved 수신: " + event);
 
             RestTemplate restTemplate = new RestTemplate();
-            String url = "http://localhost:8088/books/" + event.getBookId();
+            String url = "http://localhost:8083/books/" + event.getBookId();
             System.out.println("🌐 Book API 호출 주소: " + url);
 
             Map<String, Object> book = restTemplate.getForObject(url, Map.class);
             System.out.println("📚 받아온 책 정보: " + book);
 
-            System.out.println("\uD83D\uDCDA 받아온 책 정보: " + book);
-
-            if (book == null) return;
+            if (book == null) {
+                System.out.println("❌ 책 정보가 null입니다.");
+                return;
+            }
 
             SubscriptionList view = new SubscriptionList();
             view.setUserId(event.getUserId());
             view.setBookId(event.getBookId());
-            view.setAuthorId(Long.parseLong(book.get("authorId").toString()));
-            view.setBookTitle(book.get("bookTitle").toString());
-            view.setBookSummary(book.get("bookSummary").toString());
-            view.setBookCoverImage(book.get("bookCoverImage").toString());
-            view.setCategory(book.get("category").toString());
+
+            // 안전한 값 설정: 널 체크 및 기본값 처리
+            Object authorId = book.get("authorId");
+            Object bookTitle = book.get("bookTitle");
+            Object bookSummary = book.get("bookSummary");
+            Object bookCoverImage = book.get("bookCoverImage");
+            Object category = book.get("category");
+
+            view.setAuthorId(authorId != null ? Long.parseLong(authorId.toString()) : null);
+            view.setBookTitle(bookTitle != null ? bookTitle.toString() : "제목없음");
+            view.setBookSummary(bookSummary != null ? bookSummary.toString() : "");
+            view.setBookCoverImage(bookCoverImage != null ? bookCoverImage.toString() : "");
+            view.setCategory(category != null ? category.toString() : "기타");
             view.setSubscribedDate(new Date());
 
             SubscriptionListRepository repo = SubscriptionApplication.applicationContext
