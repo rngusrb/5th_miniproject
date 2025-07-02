@@ -20,3 +20,6 @@ export NODE_OPTIONS=--openssl-legacy-provider
 
 cd infra
 docker-compose up -d
+
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+az version

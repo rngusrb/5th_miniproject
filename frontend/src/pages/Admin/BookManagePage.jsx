@@ -4,6 +4,8 @@ import './BookManagePage.css';
 
 const BookManagePage = () => {
   const [books, setBooks] = useState([]);
+  // 관리자 API 토큰 (실제 환경에서는 환경 변수 등으로 관리)
+  const ADMIN_API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE'; // TODO: 실제 관리자 토큰으로 대체
 
   useEffect(() => {
     fetchBooks();
@@ -11,10 +13,16 @@ const BookManagePage = () => {
 
   const fetchBooks = async () => {
     try {
-      const res = await axios.get('/api/admin/books');
-      setBooks(res.data);
+      const res = await axios.get('http://localhost:8088/books', {
+        headers: {
+          Authorization: `Bearer ${ADMIN_API_TOKEN}`,
+        },
+      });
+      console.log(res.data);
+      setBooks(res.data._embedded.books);
     } catch (err) {
-      console.error('도서 목록 불러오기 실패', err);
+      console.error('도서 목록 불러오기 실패', err.response ? err.response.data : err.message);
+      alert('도서 목록을 불러오는데 실패했습니다.');
     }
   };
 
@@ -22,10 +30,15 @@ const BookManagePage = () => {
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`/api/admin/books/${bookId}`);
+      await axios.delete(`http://localhost:8088/books/${bookId}`, {
+        headers: {
+          Authorization: `Bearer ${ADMIN_API_TOKEN}`,
+        },
+      });
       alert('도서 삭제 완료');
-      setBooks((prev) => prev.filter((book) => book.id !== bookId));
+      setBooks((prev) => prev.filter((book) => book.bookId !== bookId)); // book.id 대신 book.bookId 사용
     } catch (err) {
+      console.error('도서 삭제 실패', err.response ? err.response.data : err.message);
       alert('삭제 실패');
     }
   };
@@ -51,15 +64,15 @@ const BookManagePage = () => {
         </thead>
         <tbody>
           {books.map((book) => (
-            <tr key={book.id}>
-              <td>{book.title}</td>
-              <td>{book.authorName}</td>
+            <tr key={book.bookId}> {/* key를 book.bookId로 수정 */}
+              <td>{book.bookTitle}</td> {/* book.title 대신 book.bookTitle 사용 */}
+              <td>{book.authorName || '알 수 없음'}</td>
               <td>{book.viewCount}</td>
               <td>{book.likeCount}</td>
-              <td>{book.favoriteCount}</td>
+              <td>{book.favoriteCount || 0}</td>
               <td>
-                <button className="book-edit-btn" onClick={() => handleEdit(book.id)}>수정</button>
-                <button className="book-delete-btn" onClick={() => handleDelete(book.id)}>삭제</button>
+                <button className="book-edit-btn" onClick={() => handleEdit(book.bookId)}>수정</button>
+                <button className="book-delete-btn" onClick={() => handleDelete(book.bookId)}>삭제</button>
               </td>
             </tr>
           ))}
