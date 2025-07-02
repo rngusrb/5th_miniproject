@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import project.domain.*;
 import project.util.JwtUtil;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 //<<< Clean Arch / Inbound Adaptor
 
@@ -83,6 +85,19 @@ public class UserController {
         userRepository.save(user);
         return user;
     }
+
+    @GetMapping
+    public List<User> getAllUsers() {
+        return StreamSupport
+                .stream(userRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userRepository.deleteById(id);
+    }
+
 
     @PostMapping("/{userId}/access")
     public Map<String, Object> accessBook(
