@@ -105,6 +105,16 @@ public class UserController {
         response.put("bookId", bookId);
         response.put("access", pass ? "GRANTED" : "DENIED");
 
+        if (pass) {
+            BookAccessGranted event = new BookAccessGranted();
+            event.setUserId(userId);
+            event.setBookId(bookId);
+            event.setEventType("BookAccessGranted"); // headers['type']으로 사용됨
+            event.publishAfterCommit(); 
+        }
+        
+
+
         return response;
     }
 }

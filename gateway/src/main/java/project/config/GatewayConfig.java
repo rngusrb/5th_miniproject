@@ -29,9 +29,9 @@ public class GatewayConfig {
                 .filters(f -> f.filter(jwtAuthenticationFilter))
                 .uri("http://localhost:8081"))
             
-            .route("manuscript", r -> r.path("/manuscripts/**")
-                .filters(f -> f.filter(jwtAuthenticationFilter))
-                .uri("http://localhost:8087"))
+            // .route("manuscript", r -> r.path("/manuscripts/**")
+            //     .filters(f -> f.filter(jwtAuthenticationFilter))
+            //     .uri("http://localhost:8087"))
             
             .route("point", r -> r.path("/points/**")
                 .filters(f -> f.filter(jwtAuthenticationFilter))
