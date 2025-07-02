@@ -6,7 +6,7 @@ import axios from 'axios';
 
 export default function DraftListPage() {
   const navigate = useNavigate();
-  const BASE_URL = 'http://localhost:8088/manuscripts';
+  const BASE_URL = `${import.meta.env.VITE_APP_API_URL}:8088/manuscripts`;
   const AUTHOR_ID = 1;
 
   const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE';

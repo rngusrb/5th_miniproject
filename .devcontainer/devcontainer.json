@@ -1,0 +1,29 @@
+{
+  "name": "Codespaces Environment",
+  "image": "mcr.microsoft.com/devcontainers/universal:latest",
+
+  "containerEnv": {
+    "VITE_APP_API_URL": "https://${CODESPACE_NAME}.github.dev"
+  },
+
+  "forwardPorts": [5173, 8088],
+
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend App",
+      "onAutoForward": "openBrowser"
+    },
+    "8088": {
+      "label": "Backend API",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+
+      ]
+    }
+  }
+}
