@@ -9,7 +9,7 @@ const extractBookId = (book) => {
   return parts[parts.length - 1]; // 마지막 요소가 ID
 };
 
-export default function BookCard({ book, showSubscribe = true,onRead }) {
+export default function BookCard({ book, showSubscribe = true }) {
   const [likeCount, setLikeCount] = useState(book.likeCount);
 
   const handleSubscribeClick = async () => {
@@ -43,7 +43,6 @@ export default function BookCard({ book, showSubscribe = true,onRead }) {
         });
 
         alert("✅ 구독이 완료되었습니다. (1000포인트 차감됨)");
-        // TODO: 필요하다면 상태 리렌더링 등 추가
       }
     } catch (err) {
       if (err.response?.status === 500 || err.response?.status === 400) {
@@ -55,22 +54,31 @@ export default function BookCard({ book, showSubscribe = true,onRead }) {
     }
   };
 
+  const handleLikeClick = async (book) => {
+    try {
+      const res = await axiosInstance.patch(`/books/${extractBookId(book)}/likebook`);
+      setLikeCount(res.data.likeCount);
+    } catch (err) {
+      console.error("좋아요 요청 실패", err);
+    }
+  };
+
   return (
     <div className="book-card">
       <div className="book-thumbnail">
-        <img className="book-cover-thumbnail" src={book.bookCoverImage}/>
+        <img className="book-cover-thumbnail" src={book.bookCoverImage} />
       </div>
-      <div className="book-title-thumbnail" title={book.bookTitle}>{book.bookTitle}</div>
+      <div className="book-title-thumbnail" title={book.bookTitle}>
+        {book.bookTitle}
+      </div>
       <div className="book-actions">
         {showSubscribe && (
           <button onClick={handleSubscribeClick}>구독</button>
         )}
-        <button className="btn btn-primary" onClick={onRead}>
-          열람
-        </button>
       </div>
-
-      <div className="book-meta"><span onClick={() => handleLikeClick(book)}>❤️ {likeCount}</span> ☆ {book.viewCount}</div>
+      <div className="book-meta">
+        <span onClick={() => handleLikeClick(book)}>❤️ {likeCount}</span> ☆ {book.viewCount}
+      </div>
     </div>
   );
 }

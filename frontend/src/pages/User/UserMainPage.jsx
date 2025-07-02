@@ -3,7 +3,7 @@ import axios from 'axios';
 import BookCard from '../../components/card/BookCard';
 import MyPagePanel from '../../components/layout/MyPagePanel';
 import PointChargePanel from '../../components/layout/PointChargePanel';
-import SubscribePanel from '../../components/layout/SubscribePanel'; // ✅ 구독 패널 import
+import SubscribePanel from '../../components/layout/SubscribePanel';
 import MainLayout from '../../components/layout/MainLayout';
 import './UserMainPage.css';
 import axiosInstance from "../../api/axiosInstance";
@@ -11,8 +11,9 @@ import axiosInstance from "../../api/axiosInstance";
 export default function UserMainPage() {
   const [showMyPage, setShowMyPage] = useState(false);
   const [showChargePanel, setShowChargePanel] = useState(false);
-  const [showSubscribePanel, setShowSubscribePanel] = useState(false); // ✅ 구독 패널 상태 추가
+  const [showSubscribePanel, setShowSubscribePanel] = useState(false);
   const [point, setPoint] = useState(0);
+  const [isPremium, setIsPremium] = useState(false); // ✅ 구독 여부 상태
   const [bestsellers, setBestsellers] = useState([]);
 
   const getBestsellers = async () => {
@@ -56,8 +57,32 @@ export default function UserMainPage() {
     }
   };
 
+  const fetchUserPass = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      const token = localStorage.getItem('token');
+      if (!userId || !token) return;
+
+      const res = await axios.get(`/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.data?.pass === true) {
+        setIsPremium(true);
+      } else {
+        setIsPremium(false);
+      }
+    } catch (err) {
+      console.error("구독 상태 조회 실패:", err);
+      setIsPremium(false);
+    }
+  };
+
   useEffect(() => {
     fetchPoint();
+    fetchUserPass(); // ✅ 함께 실행
   }, []);
 
   useEffect(() => {
@@ -70,7 +95,11 @@ export default function UserMainPage() {
         <div className="main-left">
           <div className="user-header-panel">
             <h1>걷다가 서재</h1>
-            <span>포인트: {point.toLocaleString()}P</span>
+            {
+              isPremium
+                ? <span className="premium-badge">🌟 Premium Pass</span>
+                : <span>포인트: {point.toLocaleString()}P</span>
+            }
             <button onClick={() => setShowMyPage(v => !v)}>
               My Page
             </button>
@@ -96,7 +125,6 @@ export default function UserMainPage() {
           </div>
         </div>
 
-        {/* 마이페이지 패널 */}
         {showMyPage && (
           <div className="main-right">
             <MyPagePanel
@@ -107,13 +135,12 @@ export default function UserMainPage() {
               }}
               onSubscribeClick={() => {
                 setShowMyPage(false);
-                setShowSubscribePanel(true); // ✅ 구독 패널 열기
+                setShowSubscribePanel(true);
               }}
             />
           </div>
         )}
 
-        {/* 포인트 충전 패널 */}
         {showChargePanel && (
           <div className="main-right">
             <PointChargePanel
@@ -123,13 +150,13 @@ export default function UserMainPage() {
           </div>
         )}
 
-        {/* 정기 구독권 결제 패널 */}
         {showSubscribePanel && (
           <div className="main-right">
             <SubscribePanel
               onClose={() => setShowSubscribePanel(false)}
               onSubscribed={() => {
                 alert("구독이 완료되었습니다!");
+                fetchUserPass(); // ✅ 구독 후 상태 갱신
               }}
             />
           </div>
