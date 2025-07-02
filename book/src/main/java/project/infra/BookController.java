@@ -58,5 +58,21 @@ public class BookController {
         return book;
     }
 
+    @GetMapping("/{bookId}")
+    public ResponseEntity<Map<String, Object>> getBookInfo(@PathVariable Long bookId) {
+        Book book = bookRepository.findById(bookId)
+            .orElseThrow(() -> new RuntimeException("도서를 찾을 수 없습니다."));
+    
+        Map<String, Object> result = new HashMap<>();
+        result.put("id", book.getId());
+        result.put("title", book.getTitle());
+        result.put("authorId", book.getAuthorId());
+        result.put("summary", book.getSummary());
+        result.put("coverImage", book.getCoverImage());
+        result.put("category", book.getCategory());
+    
+        return ResponseEntity.ok(result);
+    }
+
 }
 //>>> Clean Arch / Inbound Adaptor

@@ -18,6 +18,9 @@ public class SubscriptionSaved extends AbstractEvent {
         super(subscription);
         this.userId = subscription.getUserId();
         this.bookId = subscription.getBookId();
+        this.setEventType("SubscriptionSaved");
+        System.out.println("✅ SubscriptionSaved 객체 생성 완료: userId=" + userId + ", bookId=" + bookId); // 🔍
+
     }
 
     public SubscriptionSaved() {

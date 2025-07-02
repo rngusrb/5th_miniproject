@@ -20,6 +20,19 @@
   color: #1a1a1a;
 }
 
+.book-cover-thumbnail {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+}
+
+.book-title-thumbnail {
+  white-space: nowrap;       /* 줄바꿈 없이 한 줄로 */
+  overflow: hidden;          /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
 .book-actions button {
   width: 60px;
   margin: 4px;
