@@ -27,6 +27,9 @@ export default function UserMainPage() {
   const [categories, setCategories] = useState({});
   const [refreshFlag, setRefreshFlag] = useState(false);
   const [showRecommendPopup, setShowRecommendPopup] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchResult, setSearchResult] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
 
   const fetchBooksAndSeparate = async () => {
@@ -34,9 +37,8 @@ export default function UserMainPage() {
       const res = await axiosInstance.get("/books");
       const books = res.data._embedded.books;
 
-      setBooklist(books); // 전체 원본 저장
+      setBooklist(books);
 
-      // 📌 1. bestseller 따로 추출
       const bestsellers = books
         .sort((a, b) => b.likeCount - a.likeCount)
         .slice(0, 3)
@@ -53,15 +55,11 @@ export default function UserMainPage() {
 
       setBestsellers(bestsellers);
 
-      // 📌 2. 카테고리별 분류
       const grouped = {};
-
       books.forEach(book => {
         const category = book.category || "기타";
         const bookId = getBookIdFromHref(book._links?.self?.href);
-
         if (!grouped[category]) grouped[category] = [];
-
         grouped[category].push({
           bookId,
           bookTitle: book.bookTitle,
@@ -89,12 +87,8 @@ export default function UserMainPage() {
         },
       });
 
-      console.log("📦 point 응답 데이터:", res.data);
-
       if (res.data?.pointSum !== undefined) {
         setPoint(res.data.pointSum);
-
-        // ✅ 포인트 0이면 추천 팝업 띄움
         if (res.data.pointSum === 0) {
           setShowRecommendPopup(true);
         }
@@ -119,12 +113,43 @@ export default function UserMainPage() {
         },
       });
       setIsPremium(res.data?.pass === true);
-      
     } catch (err) {
       console.error("구독 상태 조회 실패:", err);
       setIsPremium(false);
     }
   };
+
+  const handleSearch = async (keyword) => {
+    if (!keyword.trim()) {
+      setIsSearching(false);
+      return;
+    }
+
+    try {
+      const res = await axiosInstance.get(`/books/search/findByBookTitleContainingIgnoreCase?keyword=${keyword}`);
+      const results = res.data._embedded?.books || [];
+
+      if (results.length > 0) {
+        setSearchResult(results);
+        setIsSearching(true);
+      } else {
+        setSearchResult([]);
+        setIsSearching(false);
+      }
+    } catch (err) {
+      console.error("검색 실패:", err);
+      setSearchResult([]);
+      setIsSearching(false);
+    }
+  };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      handleSearch(searchKeyword);
+    }, 250);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchKeyword]);
 
   useEffect(() => {
     fetchPoint();
@@ -134,43 +159,60 @@ export default function UserMainPage() {
   useEffect(() => {
     fetchBooksAndSeparate();
   }, [refreshFlag]);
-  
+
   return (
     <MainLayout>
       <div className="user-main-container">
         <div className="main-left">
           <div className="user-header-panel">
             <h1>걷다가 서재</h1>
-            {
-              isPremium
-                ? <span className="premium-badge">🌟 Premium Pass</span>
-                : <span>포인트: {point.toLocaleString()}P</span>
+            {isPremium
+              ? <span className="premium-badge">🌟 Premium Pass</span>
+              : <span>포인트: {point.toLocaleString()}P</span>
             }
-            <button onClick={() => setShowMyPage(v => !v)}>
-              My Page
-            </button>
+            <button onClick={() => setShowMyPage(v => !v)}>My Page</button>
           </div>
 
-          <h2>이달의 베스트셀러</h2>
-          <div className="bestseller-grid">
-            {bestsellers.map(book => (
-              <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} onLike={() => setRefreshFlag(prev => !prev)} onZeroPoint={() => setShowRecommendPopup(true)} />
-            ))}
+          <div className="search-container">
+            <input
+              type="text"
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              placeholder="도서 제목을 검색해보세요"
+            />
+            <button onClick={() => handleSearch(searchKeyword)}>검색</button>
           </div>
 
-          <h2>카테고리별</h2>
-          <div className="category-list-vertical">
-            {Object.entries(categories).map(([catName, books]) => (
-              <div key={catName} className="category-row">
-                <div className="category-label">{catName}</div>
-                <div className="book-row-scrollable">
-                  {books.map(book => (
-                    <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} onLike={() => setRefreshFlag(prev => !prev)} onZeroPoint={() => setShowRecommendPopup(true)} />
-                  ))}
-                </div>
+          {isSearching ? (
+            <div className="book-grid">
+              {searchResult.map(book => (
+                <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} />
+              ))}
+            </div>
+          ) : (
+            <>
+              <h2>이달의 베스트셀러</h2>
+              <div className="bestseller-grid">
+                {bestsellers.map(book => (
+                  <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} onLike={() => setRefreshFlag(prev => !prev)} onZeroPoint={() => setShowRecommendPopup(true)} />
+                ))}
               </div>
-            ))}
-          </div>
+
+              <h2>카테고리별</h2>
+              <div className="category-list-vertical">
+                {Object.entries(categories).map(([catName, books]) => (
+                  <div key={catName} className="category-row">
+                    <div className="category-label">{catName}</div>
+                    <div className="book-row-scrollable">
+                      {books.map(book => (
+                        <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} onLike={() => setRefreshFlag(prev => !prev)} onZeroPoint={() => setShowRecommendPopup(true)} />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         {showMyPage && (
@@ -193,7 +235,7 @@ export default function UserMainPage() {
                 if(confirm('로그아웃 하시겠습니까?')) {
                   const token = localStorage.getItem('token');
                   if(token) localStorage.removeItem('token');
-                  navigate('/'); // ✅ 홈으로 이동
+                  navigate('/');
                 }
               }}
             />
@@ -202,10 +244,7 @@ export default function UserMainPage() {
 
         {showChargePanel && (
           <div className="main-right">
-            <PointChargePanel
-              onClose={() => setShowChargePanel(false)}
-              onCharged={fetchPoint}
-            />
+            <PointChargePanel onClose={() => setShowChargePanel(false)} onCharged={fetchPoint} />
           </div>
         )}
 
@@ -214,15 +253,14 @@ export default function UserMainPage() {
             <SubscribePanel
               onClose={() => setShowSubscribePanel(false)}
               onSubscribed={() => {
-                alert("구독이 완료되었습니다!");
+                alert("구독 상태가 변경되었습니다!");
                 fetchUserPass();
-                fetchPoint();    
+                fetchPoint();
               }}
             />
           </div>
         )}
 
-        {/* ✅ KT 추천 팝업 */}
         {showRecommendPopup && (
           <RecommendPopup onClose={() => setShowRecommendPopup(false)} />
         )}

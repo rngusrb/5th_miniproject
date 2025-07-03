@@ -13,6 +13,8 @@ import project.domain.*;
 @RepositoryRestResource(collectionResourceRel = "books", path = "books")
 public interface BookRepository
     extends JpaRepository<Book, Long> {
+        List<Book> findByBookTitleContainingIgnoreCase(String keyword);
+
 
         List<Book> findByAuthorId(Long authorId);
 
