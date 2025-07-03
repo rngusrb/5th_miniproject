@@ -8,16 +8,18 @@ import MainLayout from '../../components/layout/MainLayout';
 import './UserMainPage.css';
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from 'react-router-dom';
+import RecommendPopup from '../../components/modal/RecommendPopup';
 
 export default function UserMainPage() {
   const [showMyPage, setShowMyPage] = useState(false);
   const [showChargePanel, setShowChargePanel] = useState(false);
   const [showSubscribePanel, setShowSubscribePanel] = useState(false);
   const [point, setPoint] = useState(0);
-  const [isPremium, setIsPremium] = useState(false); // ✅ 구독 여부 상태
+  const [isPremium, setIsPremium] = useState(false);
   const [bestsellers, setBestsellers] = useState([]);
   const [bookList, setBooklist] = useState([]);
   const [categories, setCategories] = useState({});
+  const [showRecommendPopup, setShowRecommendPopup] = useState(false);
   const navigate = useNavigate();
 
   const getBestsellers = async () => {
@@ -30,23 +32,16 @@ export default function UserMainPage() {
         .sort((a, b) => b.likeCount - a.likeCount)
         .slice(0, 3);
 
-      setBestsellers(sorted); 
-
+      setBestsellers(sorted);
     } catch (err) {
       console.error("오류: ", err.response?.data);
     }
   };
 
-  // const categories = {
-  //   "소설": [{ id: 4, title: "소설책", likes: 370, subscribes: 82 }],
-  //   "판타지": [{ id: 5, title: "판타지책", likes: 370, subscribes: 82 }],
-  //   "경제": [{ id: 6, title: "경제책", likes: 370, subscribes: 82 }]
-  // };
-
   function getBookIdFromHref(href) {
     return parseInt(href?.split("/").pop(), 10);
   }
-  // 카테고리별 책 정리 함수
+
   const getCategoryBooks = () => {
     const grouped = {};
 
@@ -61,7 +56,7 @@ export default function UserMainPage() {
         bookTitle: book.bookTitle,
         likeCount: book.likeCount,
         viewCount: book.viewCount,
-        bookCoverImage: book.bookCoverImage, // 👉 BookCard에 전달할 전체 book 데이터 포함
+        bookCoverImage: book.bookCoverImage,
       });
     });
 
@@ -84,6 +79,11 @@ export default function UserMainPage() {
 
       if (res.data?.pointSum !== undefined) {
         setPoint(res.data.pointSum);
+
+        // ✅ 포인트 0이면 추천 팝업 띄움
+        if (res.data.pointSum === 0) {
+          setShowRecommendPopup(true);
+        }
       } else {
         setPoint(0);
       }
@@ -118,13 +118,13 @@ export default function UserMainPage() {
 
   useEffect(() => {
     fetchPoint();
-    fetchUserPass(); // ✅ 함께 실행
+    fetchUserPass();
   }, []);
 
   useEffect(() => {
     getBestsellers();
   }, []);
-  
+
   useEffect(() => {
     if (bookList.length > 0) {
       getCategoryBooks();
@@ -150,7 +150,7 @@ export default function UserMainPage() {
           <h2>이달의 베스트셀러</h2>
           <div className="bestseller-grid">
             {bestsellers.map(book => (
-              <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} />
+              <BookCard key={book.bookId} book={book} />
             ))}
           </div>
 
@@ -161,7 +161,7 @@ export default function UserMainPage() {
                 <div className="category-label">{catName}</div>
                 <div className="book-row-scrollable">
                   {books.map(book => (
-                    <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} />
+                    <BookCard key={book.bookId} book={book} />
                   ))}
                 </div>
               </div>
@@ -204,10 +204,15 @@ export default function UserMainPage() {
               onClose={() => setShowSubscribePanel(false)}
               onSubscribed={() => {
                 alert("구독이 완료되었습니다!");
-                fetchUserPass(); // ✅ 구독 후 상태 갱신
+                fetchUserPass();
               }}
             />
           </div>
+        )}
+
+        {/* ✅ KT 추천 팝업 */}
+        {showRecommendPopup && (
+          <RecommendPopup onClose={() => setShowRecommendPopup(false)} />
         )}
       </div>
     </MainLayout>
