@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../api/axiosInstance';
 import './BookManagePage.css';
 
 const BookManagePage = () => {
   const [books, setBooks] = useState([]);
   const [authors, setAuthors] = useState([]);
-  // 관리자 API 토큰 (실제 환경에서는 환경 변수 등으로 관리)
-  const ADMIN_API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE'; // TODO: 실제 관리자 토큰으로 대체
+
+  const ADMIN_API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE';
 
   useEffect(() => {
     fetchBooks();
@@ -15,7 +15,7 @@ const BookManagePage = () => {
 
   const fetchBooks = async () => {
     try {
-      const res = await axios.get('http://localhost:8088/books', {
+      const res = await axiosInstance.get('/books', {
         headers: {
           Authorization: `Bearer ${ADMIN_API_TOKEN}`,
         },
@@ -26,10 +26,10 @@ const BookManagePage = () => {
       alert('도서 목록을 불러오는데 실패했습니다.');
     }
   };
-  
+
   const fetchAuthors = async () => {
     try {
-      const res = await axios.get('http://localhost:8088/authors', {
+      const res = await axiosInstance.get('/authors', {
         headers: {
           Authorization: `Bearer ${ADMIN_API_TOKEN}`,
         },
@@ -45,13 +45,13 @@ const BookManagePage = () => {
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`http://localhost:8088/books/${bookId}`, {
+      await axiosInstance.delete(`/books/${bookId}`, {
         headers: {
           Authorization: `Bearer ${ADMIN_API_TOKEN}`,
         },
       });
       alert('도서 삭제 완료');
-      setBooks((prev) => prev.filter((book) => book.bookId !== bookId)); // book.id 대신 book.bookId 사용
+      setBooks((prev) => prev.filter((book) => book.bookId !== bookId));
     } catch (err) {
       console.error('도서 삭제 실패', err.response ? err.response.data : err.message);
       alert('삭제 실패');
@@ -59,7 +59,6 @@ const BookManagePage = () => {
   };
 
   const handleEdit = (bookId) => {
-    // 수정 페이지로 이동하거나 모달 띄우기
     alert(`수정 기능 준비 중: 도서 ID ${bookId}`);
   };
 
