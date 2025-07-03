@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: manuscript
-          image: "username/manuscript:latest"
+          image: "project10registry.azurecr.io/manuscript:latest"
           ports:
             - containerPort: 8080
           readinessProbe:
