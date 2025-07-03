@@ -26,6 +26,8 @@ public class User {
     private Long userPw;
     private Boolean pass;
 
+    private Boolean isKtMember;
+
     @PostPersist
     public void onPostPersist() {
     }

@@ -8,4 +8,5 @@ import lombok.Data;
 public class RequestUserRegistrationCommand {
     private Long userId;
     private Long userPw;
+    private Boolean isKtMember; 
 }

@@ -60,10 +60,12 @@ public class UserController {
         User user = new User();
         user.setUserId(command.getUserId());
         user.setUserPw(command.getUserPw());
+        user.setIsKtMember(command.getIsKtMember());
         user.setPass(false); // 기본값 false
 
         userRepository.save(user);
-        user.requestUserRegistration(); // 이벤트 발행
+        UserRegistered event = new UserRegistered(user.getUserId(), user.getIsKtMember());
+        event.publishAfterCommit();
 
         String token = jwtUtil.generateToken(user.getUserId());
 

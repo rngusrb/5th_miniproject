@@ -125,7 +125,7 @@ export default function BookCard({ book, showSubscribe = true }) {
             onClick={handleSubscribeClick}
             disabled={isSubscribed || loading}
           >
-            {isSubscribed ? "✅ 이미 구독함" : loading ? "구독 중..." : "📘 구독하기"}
+            {isSubscribed ? "✅ 이미 구독함" : "📘 구독하기"}
           </button>
         )}
         {/* <button className="btn btn-primary" onClick={onRead}>
