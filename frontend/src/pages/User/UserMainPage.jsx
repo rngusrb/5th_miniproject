@@ -150,7 +150,7 @@ export default function UserMainPage() {
           <h2>이달의 베스트셀러</h2>
           <div className="bestseller-grid">
             {bestsellers.map(book => (
-              <BookCard key={book.bookId} book={book} />
+              <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} />
             ))}
           </div>
 
@@ -161,7 +161,7 @@ export default function UserMainPage() {
                 <div className="category-label">{catName}</div>
                 <div className="book-row-scrollable">
                   {books.map(book => (
-                    <BookCard key={book.id} book={book} />
+                    <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} />
                   ))}
                 </div>
               </div>

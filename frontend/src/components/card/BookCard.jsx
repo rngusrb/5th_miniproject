@@ -9,7 +9,7 @@ const extractBookId = (book) => {
   return parts[parts.length - 1];
 };
 
-export default function BookCard({ book, showSubscribe = true }) {
+export default function BookCard({ book, showSubscribe = true,onPointChanged }) {
   const [likeCount, setLikeCount] = useState(book.likeCount);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -83,6 +83,8 @@ export default function BookCard({ book, showSubscribe = true }) {
           if (res.data === true) {
             setIsSubscribed(true);
             alert("✅ 포인트 결제 후 구독 성공!");
+              // ✅ 포인트 갱신
+            if (onPointChanged) onPointChanged();
           } else {
             setIsSubscribed(false);
             alert("❌ 포인트가 부족하여 구독에 실패했습니다.");
