@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../api/axiosInstance'; // axios 대신 axiosInstance를 사용
 import './UserManagePage.css';
 
-// API 토큰 정의
+// 이 페이지에서만 사용할 관리자 토큰 정의
 const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE';
 
 const UserManagePage = () => {
@@ -15,11 +15,10 @@ const UserManagePage = () => {
 
   const fetchUsers = async () => {
     try {
-      // URL을 백엔드 UserController.java의 @GetMapping에 정의된 '/users'로 수정합니다.
-      // 기본 백엔드 URL이 'http://localhost:8088'이라고 가정하면, '/users'로만 호출합니다.
-      const res = await axios.get('http://localhost:8088/users', {
+      // axiosInstance를 사용하고, 헤더를 직접 추가합니다.
+      const res = await axiosInstance.get('/users', {
         headers: {
-          Authorization: `Bearer ${API_TOKEN}` // Bearer 토큰 형식 사용
+          Authorization: `Bearer ${API_TOKEN}`
         }
       });
       console.log(res);
@@ -43,13 +42,9 @@ const UserManagePage = () => {
     }
 
     try {
-      // 백엔드 UserController.java의 @DeleteMapping("/{id}")에 맞춰 수정
-      // 각 선택된 userId에 대해 개별 DELETE 요청을 보냅니다.
-      // 백엔드는 /users/{id} 형태의 단일 삭제를 지원합니다.
-      // 여러 유저를 한 번에 삭제하려면 백엔드에 POST /users/delete-batch 와 같은 API가 필요합니다.
-      // 현재는 선택된 각 유저에 대해 개별 요청을 보냅니다.
       for (const userId of selected) {
-        await axios.delete(`http://localhost:8088/users/${userId}`, { // <-- 여기를 수정!
+        // axiosInstance를 사용하고, 헤더를 직접 추가합니다.
+        await axiosInstance.delete(`/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${API_TOKEN}`
           }
@@ -57,7 +52,6 @@ const UserManagePage = () => {
       }
 
       alert('유저 삭제 완료');
-      // 삭제된 유저를 목록에서 제거
       setUsers((prev) => prev.filter((u) => !selected.includes(u.userId)));
       setSelected([]);
     } catch (err) {
@@ -73,8 +67,8 @@ const UserManagePage = () => {
         <thead>
           <tr>
             <th>선택</th>
-            <th>아이디</th> {/* 이름 대신 아이디로 변경 */}
-            <th>비밀번호 (표시 안 함)</th> {/* 이메일 대신 비밀번호 필드 */}
+            <th>아이디</th>
+            <th>비밀번호 (표시 안 함)</th>
           </tr>
         </thead>
         <tbody>
