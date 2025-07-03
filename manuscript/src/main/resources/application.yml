@@ -7,7 +7,7 @@ spring:
 
 openai:
   api:
-    key: 
+    key: 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
 ---
 
 spring:
@@ -96,5 +96,13 @@ spring:
         event-out:
           destination: project
           contentType: application/json
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
 
 

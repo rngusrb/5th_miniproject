@@ -94,5 +94,13 @@ spring:
         event-out:
           destination: project
           contentType: application/json
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
 
 

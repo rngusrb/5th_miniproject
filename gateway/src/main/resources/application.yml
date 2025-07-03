@@ -60,7 +60,9 @@ spring:
 
 
 ---
-
+jwt:
+  secret: aivle5thminiprojectgroup10secretkey
+  
 spring:
   profiles: docker
   cloud:
