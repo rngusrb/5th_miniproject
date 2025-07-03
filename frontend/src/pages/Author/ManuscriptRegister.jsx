@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../api/axiosInstance'; // axiosInstance 사용
 import './ManuscriptRegister.css';
 
 function ManuscriptRegister() {
   const navigate = useNavigate();
+  // localStorage에서 사용자 ID 가져오기
+  const authorId = localStorage.getItem('userId');
 
   const [form, setForm] = useState({
     title: '',
@@ -26,13 +28,14 @@ function ManuscriptRegister() {
   const handleTempSave = async () => {
     const manuscriptData = {
       ...form,
-      authorId: 1,
+      authorId: Number(authorId), // authorId 사용
       status: 'TEMP',
       createDate: new Date().toISOString(),
       modifyDate: new Date().toISOString(),
     };
     try {
-      await axios.post('http://localhost:8080/api/v1/manuscripts', manuscriptData);
+      // axiosInstance 사용, 상대 경로 및 헤더 자동 처리
+      await axiosInstance.post('/manuscripts', manuscriptData);
       alert('임시 저장 완료');
     } catch (e) {
       console.error(e);
@@ -43,13 +46,14 @@ function ManuscriptRegister() {
   const handleFinalSave = async () => {
     const manuscriptData = {
       ...form,
-      authorId: 1,
+      authorId: Number(authorId), // authorId 사용
       status: 'COMPLETE',
       createDate: new Date().toISOString(),
       modifyDate: new Date().toISOString(),
     };
     try {
-      await axios.post('http://localhost:8080/api/v1/manuscripts', manuscriptData);
+      // axiosInstance 사용, 상대 경로 및 헤더 자동 처리
+      await axiosInstance.post('/manuscripts', manuscriptData);
       alert('최종 저장 완료');
       navigate('/main/author');
     } catch (e) {
@@ -58,16 +62,26 @@ function ManuscriptRegister() {
     }
   };
 
+
   const loadTempData = async () => {
+    if (!authorId) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
     try {
-      const res = await axios.get('http://localhost:8080/api/v1/manuscripts/temp/1');
+      // axiosInstance 사용
+      const res = await axiosInstance.get(`/manuscripts/${authorId}`);
+
+      const temp = res.data.find((item) => item.status === 'TEMP');
+      if (!temp) throw new Error('TEMP 데이터 없음');
+
       setForm({
-        title: res.data.title,
-        category: res.data.category,
-        content: res.data.content,
-        summary: res.data.summary,
-        bookCoverImage: res.data.bookCoverImage,
-        status: res.data.status,
+        title: temp.title,
+        category: temp.category,
+        content: temp.content,
+        summary: temp.summary,
+        bookCoverImage: temp.bookCoverImage,
+        status: temp.status,
       });
       setTempLoaded(true);
     } catch (e) {
@@ -75,6 +89,7 @@ function ManuscriptRegister() {
       alert('임시 저장된 원고가 없습니다');
     }
   };
+
 
   return (
     <div className="manuscript-register-container">

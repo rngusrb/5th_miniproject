@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class RegistAuthorRequested {
     private Long id;
-    private Long authorId;
+    private String authorLoginId;
     private String authorPw;
     private String authorName;
     private Date createDate;

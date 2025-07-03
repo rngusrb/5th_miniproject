@@ -1,20 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../api/axiosInstance';
 import './BookManagePage.css';
 
 const BookManagePage = () => {
   const [books, setBooks] = useState([]);
+  const [authors, setAuthors] = useState([]);
+
+  const ADMIN_API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE';
 
   useEffect(() => {
     fetchBooks();
+    fetchAuthors();
   }, []);
 
   const fetchBooks = async () => {
     try {
-      const res = await axios.get('/api/admin/books');
-      setBooks(res.data);
+      const res = await axiosInstance.get('/books', {
+        headers: {
+          Authorization: `Bearer ${ADMIN_API_TOKEN}`,
+        },
+      });
+      setBooks(res.data._embedded.books);
     } catch (err) {
-      console.error('도서 목록 불러오기 실패', err);
+      console.error('도서 목록 불러오기 실패', err.response ? err.response.data : err.message);
+      alert('도서 목록을 불러오는데 실패했습니다.');
+    }
+  };
+
+  const fetchAuthors = async () => {
+    try {
+      const res = await axiosInstance.get('/authors', {
+        headers: {
+          Authorization: `Bearer ${ADMIN_API_TOKEN}`,
+        },
+      });
+      setAuthors(res.data);
+    } catch (err) {
+      console.error('작가 목록 불러오기 실패', err.response ? err.response.data : err.message);
+      alert('작가 목록을 불러오는데 실패했습니다.');
     }
   };
 
@@ -22,16 +45,20 @@ const BookManagePage = () => {
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`/api/admin/books/${bookId}`);
+      await axiosInstance.delete(`/books/${bookId}`, {
+        headers: {
+          Authorization: `Bearer ${ADMIN_API_TOKEN}`,
+        },
+      });
       alert('도서 삭제 완료');
-      setBooks((prev) => prev.filter((book) => book.id !== bookId));
+      setBooks((prev) => prev.filter((book) => book.bookId !== bookId));
     } catch (err) {
+      console.error('도서 삭제 실패', err.response ? err.response.data : err.message);
       alert('삭제 실패');
     }
   };
 
   const handleEdit = (bookId) => {
-    // 수정 페이지로 이동하거나 모달 띄우기
     alert(`수정 기능 준비 중: 도서 ID ${bookId}`);
   };
 
@@ -50,19 +77,23 @@ const BookManagePage = () => {
           </tr>
         </thead>
         <tbody>
-          {books.map((book) => (
-            <tr key={book.id}>
-              <td>{book.title}</td>
-              <td>{book.authorName}</td>
-              <td>{book.viewCount}</td>
-              <td>{book.likeCount}</td>
-              <td>{book.favoriteCount}</td>
-              <td>
-                <button className="book-edit-btn" onClick={() => handleEdit(book.id)}>수정</button>
-                <button className="book-delete-btn" onClick={() => handleDelete(book.id)}>삭제</button>
-              </td>
-            </tr>
-          ))}
+          {books.map((book) => {
+            const author = authors.find((a) => a.authorId === book.authorId);
+
+            return (
+              <tr key={book.bookId}>
+                <td>{book.bookTitle}</td>
+                <td>{author?.authorLoginId || '알 수 없음'}</td>
+                <td>{book.viewCount}</td>
+                <td>{book.likeCount}</td>
+                <td>{book.favoriteCount || 0}</td>
+                <td>
+                  <button className="book-edit-btn" onClick={() => handleEdit(book.bookId)}>수정</button>
+                  <button className="book-delete-btn" onClick={() => handleDelete(book.bookId)}>삭제</button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

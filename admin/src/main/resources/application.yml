@@ -10,15 +10,13 @@ spring:
   profiles: default
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:~/testdb
-    username: test
+    url: jdbc:h2:~/admin
+    username: kim
     password: 1234
   h2:
     console:
       enabled: true
       path: /h2-console
-spring:
-  profiles: default
   jpa:
     properties:
       hibernate:
@@ -50,6 +48,10 @@ spring:
           destination: project
 #>>> EDA / Topic Name
           contentType: application/json
+
+springdoc:
+  swagger-ui:
+    path: /admin-docs
 
 logging:
   level:
@@ -92,4 +94,12 @@ spring:
           destination: project
           contentType: application/json
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
 

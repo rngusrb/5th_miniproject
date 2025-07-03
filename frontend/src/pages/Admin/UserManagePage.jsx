@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../api/axiosInstance'; // axios 대신 axiosInstance를 사용
 import './UserManagePage.css';
+
+// 이 페이지에서만 사용할 관리자 토큰 정의
+const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE';
 
 const UserManagePage = () => {
   const [users, setUsers] = useState([]);
@@ -12,10 +15,17 @@ const UserManagePage = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('/api/admin/users');
+      // axiosInstance를 사용하고, 헤더를 직접 추가합니다.
+      const res = await axiosInstance.get('/users', {
+        headers: {
+          Authorization: `Bearer ${API_TOKEN}`
+        }
+      });
+      console.log(res);
       setUsers(res.data);
     } catch (err) {
       console.error('유저 불러오기 실패', err);
+      alert('유저 정보를 불러오는데 실패했습니다. 백엔드 서버 상태 및 API 경로를 확인해주세요.');
     }
   };
 
@@ -32,9 +42,17 @@ const UserManagePage = () => {
     }
 
     try {
-      await axios.post('/api/admin/delete-users', { userIds: selected });
+      for (const userId of selected) {
+        // axiosInstance를 사용하고, 헤더를 직접 추가합니다.
+        await axiosInstance.delete(`/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${API_TOKEN}`
+          }
+        });
+      }
+
       alert('유저 삭제 완료');
-      setUsers((prev) => prev.filter((u) => !selected.includes(u.id)));
+      setUsers((prev) => prev.filter((u) => !selected.includes(u.userId)));
       setSelected([]);
     } catch (err) {
       console.error('삭제 실패', err);
@@ -49,24 +67,22 @@ const UserManagePage = () => {
         <thead>
           <tr>
             <th>선택</th>
-            <th>이름</th>
-            <th>이메일</th>
-            <th>가입일</th>
+            <th>아이디</th>
+            <th>비밀번호 (표시 안 함)</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id}>
+            <tr key={user.userId}>
               <td>
                 <input
                   type="checkbox"
-                  checked={selected.includes(user.id)}
-                  onChange={() => handleCheckboxChange(user.id)}
+                  checked={selected.includes(user.userId)}
+                  onChange={() => handleCheckboxChange(user.userId)}
                 />
               </td>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.createdAt?.slice(0, 10)}</td>
+              <td>{user.userId}</td>
+              <td>********</td>
             </tr>
           ))}
         </tbody>

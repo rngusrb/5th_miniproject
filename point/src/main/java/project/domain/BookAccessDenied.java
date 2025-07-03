@@ -12,6 +12,11 @@ import project.infra.AbstractEvent;
 public class BookAccessDenied extends AbstractEvent {
     private Long userId;
     private Long bookId;
+
+    public BookAccessDenied(Long userId, Long bookId) {
+        super();
+        this.userId = userId;
+        this.bookId = bookId;
     }
 
     public BookAccessDenied() {

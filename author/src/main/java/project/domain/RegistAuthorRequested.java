@@ -9,7 +9,7 @@ import java.util.Date;
 public class RegistAuthorRequested extends AbstractEvent {
 
     private Long id;
-    private Long authorId;
+    private String authorLoginId;
     private String authorPw;
     private String authorName;
     private Date createDate;
@@ -20,7 +20,7 @@ public class RegistAuthorRequested extends AbstractEvent {
     public RegistAuthorRequested(Author aggregate) {
         super(aggregate);
         this.id = aggregate.getAuthorId();
-        this.authorId = aggregate.getAuthorId();
+        this.authorLoginId = aggregate.getAuthorLoginId();
         this.authorPw = aggregate.getAuthorPw();
         this.authorName = aggregate.getAuthorName();
         this.createDate = aggregate.getCreateDate();

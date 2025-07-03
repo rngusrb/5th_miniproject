@@ -54,6 +54,8 @@ public class AbstractEvent {
             new TransactionSynchronizationAdapter() {
                 @Override
                 public void afterCompletion(int status) {
+                    System.out.println("✅ Kafka 이벤트 발행 준비됨: " + getEventType());
+                    System.out.println("📤 Kafka Payload: " + AbstractEvent.this.toJson());
                     AbstractEvent.this.publish();
                 }
             }

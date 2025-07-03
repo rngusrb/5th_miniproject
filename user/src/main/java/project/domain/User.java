@@ -26,8 +26,12 @@ public class User {
     private Long userPw;
     private Boolean pass;
 
+    private Boolean isKtMember;
+
     @PostPersist
     public void onPostPersist() {
+        UserRegistered event = new UserRegistered(this);
+        event.publishAfterCommit();
     }
 
     public static UserRepository repository() {

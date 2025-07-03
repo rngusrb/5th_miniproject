@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React from 'react';
 
 // Auth
@@ -12,6 +12,7 @@ import AuthorSignup from '../pages/Auth/AuthorSignup';
 import UserMainPage from '../pages/User/UserMainPage';
 import UserMyPage from '../pages/User/UserMyPage';
 import BookDetailPage from '../pages/User/BookDetailPage';
+import SubscriptionBookPage from '../pages/User/SubscriptionBookPage';
 
 // Author
 import AuthorMainPage from '../pages/Author/AuthorMainPage';
@@ -48,7 +49,11 @@ export default function AppRoutes() {
       {/* 사용자 페이지 */}
       <Route path="/main/user" element={<UserMainPage />} />
       <Route path="/mypage/user" element={<UserMyPage />} />
-      <Route path="/book/:id" element={<BookDetailPage />} />
+      {/* <Route path="/book/:id" element={<BookDetailPage />} /> */}
+      <Route path="/mypage/user/subscribed-books" element={<SubscriptionBookPage />} />
+      <Route path="/books/:id" element={<BookDetailPage />} />
+
+
 
       {/* 작가 페이지 */}
       <Route path="/main/author" element={<AuthorMainPage />} />
@@ -66,7 +71,6 @@ export default function AppRoutes() {
       <Route path="/admin/manuscript-manage" element={<ManuscriptManagePage />}  />
       <Route path="/admin/user-manage" element={<UserManagePage />}  />
       <Route path="/admin/book-manage" element={<BookManagePage />}  />
-      <Route path="/admin/ai-manage" element={<div>AI 관리 페이지</div>} />
     </Routes>
   );
 }

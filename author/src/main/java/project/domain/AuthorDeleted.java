@@ -7,11 +7,11 @@ import project.infra.AbstractEvent;
 @ToString
 public class AuthorDeleted extends AbstractEvent {
 
-    private Long id;
+    private Long Id;
 
     public AuthorDeleted(Author aggregate) {
         super(aggregate);
-        this.id = aggregate.getAuthorId();
+        this.Id = aggregate.getAuthorId();
     }
 
     public AuthorDeleted() {

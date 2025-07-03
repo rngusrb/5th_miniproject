@@ -15,23 +15,24 @@ spec:
     metadata:
       labels:
         app: user
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: user
-          image: username/user:latest
+          image: project10registry.azurecr.io/user:v250702
           ports:
             - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
+            initialDelaySeconds: 60
+            timeoutSeconds: 15
             periodSeconds: 5
             failureThreshold: 10
           livenessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
             initialDelaySeconds: 120
             timeoutSeconds: 2
@@ -55,23 +56,24 @@ spec:
     metadata:
       labels:
         app: book
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: book
-          image: username/book:latest
+          image: project10registry.azurecr.io/book:v250702
           ports:
             - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
+            initialDelaySeconds: 60
+            timeoutSeconds: 15
             periodSeconds: 5
             failureThreshold: 10
           livenessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
             initialDelaySeconds: 120
             timeoutSeconds: 2
@@ -95,23 +97,24 @@ spec:
     metadata:
       labels:
         app: admin
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: admin
-          image: username/admin:latest
+          image: project10registry.azurecr.io/admin:v250702
           ports:
             - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
+            initialDelaySeconds: 60
+            timeoutSeconds: 15
             periodSeconds: 5
             failureThreshold: 10
           livenessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
             initialDelaySeconds: 120
             timeoutSeconds: 2
@@ -135,63 +138,24 @@ spec:
     metadata:
       labels:
         app: author
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: author
-          image: username/author:latest
+          image: project10registry.azurecr.io/author:v250702
           ports:
             - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
+            initialDelaySeconds: 15
+            timeoutSeconds: 15
             periodSeconds: 5
             failureThreshold: 10
           livenessProbe:
             httpGet:
-              path: '/actuator/health'
-              port: 8080
-            initialDelaySeconds: 120
-            timeoutSeconds: 2
-            periodSeconds: 5
-            failureThreshold: 5
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: platform
-  labels:
-    app: platform
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: platform
-  template:
-    metadata:
-      labels:
-        app: platform
-    spec:
-      containers:
-        - name: platform
-          image: username/platform:latest
-          ports:
-            - containerPort: 8080
-          readinessProbe:
-            httpGet:
-              path: '/actuator/health'
-              port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
-            periodSeconds: 5
-            failureThreshold: 10
-          livenessProbe:
-            httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
             initialDelaySeconds: 120
             timeoutSeconds: 2
@@ -215,23 +179,24 @@ spec:
     metadata:
       labels:
         app: manuscript
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: manuscript
-          image: username/manuscript:latest
+          image: project10registry.azurecr.io/manuscript:v250702
           ports:
             - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
+            initialDelaySeconds: 60
+            timeoutSeconds: 15
             periodSeconds: 5
             failureThreshold: 10
           livenessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
             initialDelaySeconds: 120
             timeoutSeconds: 2
@@ -255,23 +220,24 @@ spec:
     metadata:
       labels:
         app: subscription
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: subscription
-          image: username/subscription:latest
+          image: project10registry.azurecr.io/subscription:v250702
           ports:
             - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
+            initialDelaySeconds: 60
+            timeoutSeconds: 15
             periodSeconds: 5
             failureThreshold: 10
           livenessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
             initialDelaySeconds: 120
             timeoutSeconds: 2
@@ -295,29 +261,78 @@ spec:
     metadata:
       labels:
         app: point
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
         - name: point
-          image: username/point:latest
+          image: project10registry.azurecr.io/point:v250702
           ports:
             - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
-            initialDelaySeconds: 10
+            initialDelaySeconds: 60
             timeoutSeconds: 2
             periodSeconds: 5
             failureThreshold: 10
           livenessProbe:
             httpGet:
-              path: '/actuator/health'
+              path: /actuator/health
               port: 8080
             initialDelaySeconds: 120
             timeoutSeconds: 2
             periodSeconds: 5
             failureThreshold: 5
 
+
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  labels:
+    app: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: project10registry.azurecr.io/gateway:v250702
+          ports:
+            - containerPort: 8080
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: project10registry.azurecr.io/frontend:v250702
+          ports:
+            - containerPort: 8080
 
 ---
 
@@ -393,23 +408,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: platform
-  labels:
-    app: platform
-spec:
-  ports:
-    - port: 8080
-      targetPort: 8080
-  selector:
-    app: platform
-
-
----
-
-
-apiVersion: v1
-kind: Service
-metadata:
   name: manuscript
   labels:
     app: manuscript
@@ -454,3 +452,37 @@ spec:
   selector:
     app: point
 
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+  labels:
+    app: gateway
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: gateway
+  type: LoadBalancer
+
+  
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: frontend
