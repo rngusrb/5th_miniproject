@@ -103,6 +103,13 @@ const fetchPublishedBooks = async () => {
             <button onClick={() => navigate("/author/draftlist")}>원고 목록 & AI 활용</button>
             <button onClick={() => navigate("/author/publishrequest")}>출간 요청</button>
             <button onClick={() => alert("출간 확인 기능 준비중")}>출간 확인</button>
+            <button onClick={() => {
+              if(confirm('로그아웃 하시겠습니까?')) {
+                const token = localStorage.getItem('token');
+                if(token) localStorage.removeItem('token');
+                navigate('/');
+              }
+            }}>로그아웃</button>
           </div>
         </>
       )}
