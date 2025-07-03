@@ -30,7 +30,7 @@ public class PointController {
         Integer points = request.getPoints();
 
         Long currentSum = 0L;
-        Point latest = pointRepository.findLatestByUserId(userId);
+        Point latest = pointRepository.findTopByUserIdOrderByChangeDateDesc(userId);
         if (latest != null) {
             currentSum = latest.getPointSum();
         }
@@ -49,7 +49,7 @@ public class PointController {
     @GetMapping("/{userId}")
     public ResponseEntity<?> getLatestPoint(@PathVariable Long userId) {
         try {
-            Point latest = pointRepository.findLatestByUserId(userId);
+            Point latest = pointRepository.findTopByUserIdOrderByChangeDateDesc(userId);
             if (latest == null) {
                 latest = new Point();
                 latest.setUserId(userId);
@@ -87,7 +87,7 @@ public class PointController {
         }
 
         Long currentSum = 0L;
-        Point latest = pointRepository.findLatestByUserId(userId);
+        Point latest = pointRepository.findTopByUserIdOrderByChangeDateDesc(userId);
         if (latest != null) {
             currentSum = latest.getPointSum();
         }

@@ -45,7 +45,7 @@ public static void pointBalanceChange(BookAccessDenied bookAccessDenied) {
 
     // 가장 최근 포인트 합계 조회
     Long currentSum = 0L;
-    Point latest = repository().findLatestByUserId(userId); // native 쿼리 기준
+    Point latest = repository().findTopByUserIdOrderByChangeDateDesc(userId); // native 쿼리 기준
     if (latest != null) {
         currentSum = latest.getPointSum();
     }
@@ -82,7 +82,7 @@ public static void pointBalanceChange(UserRegistered userRegistered) {
 
     
     // 중복 지급 방지: 가장 최근 지급 내역의 reason을 체크
-    Point latest = repository().findLatestByUserId(userId);
+    Point latest = repository().findTopByUserIdOrderByChangeDateDesc(userId);
     if (latest != null && reason.equals(latest.getReason())) {
         System.out.println("⚠️ 이미 '" + reason + "' 지급됨 - 중복 방지로 건너뜀");
         return;
