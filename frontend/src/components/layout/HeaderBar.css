@@ -18,18 +18,3 @@
   border-radius: 6px;
   margin-left: 1rem;
 }
-
-.logout-btn {
-  font-size: 16px;
-  padding: 8px 12px;
-  background-color: #ffffff;
-  color: #1976d2;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.logout-btn:hover {
-  background-color: #e3f2fd;
-}

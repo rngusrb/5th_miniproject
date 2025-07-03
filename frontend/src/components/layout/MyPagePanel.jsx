@@ -1,7 +1,7 @@
 import './MyPagePanel.css';
 import React from 'react';
 
-export default function MyPagePanel({ onClose, onChargeClick, onSubscribeClick, onMySubscribeClick }) {
+export default function MyPagePanel({ onClose, onChargeClick, onSubscribeClick, onMySubscribeClick, onLogout }) {
   return (
     <div className="mypage-panel">
       <h2>My Page</h2>
@@ -10,7 +10,7 @@ export default function MyPagePanel({ onClose, onChargeClick, onSubscribeClick, 
         <li onClick={onSubscribeClick}>정기 구독권 결제</li> {/* ✅ 클릭 가능하게 수정 */}
         <li onClick={onMySubscribeClick}>구독중인 도서</li> 
         <li>열람한 도서</li>
-        <li>로그아웃</li>
+        <li onClick={onLogout}>로그아웃</li>
         <li onClick={onClose}>닫기</li>
       </ul>
     </div>
