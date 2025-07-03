@@ -1,6 +1,7 @@
 package project.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
@@ -19,18 +20,30 @@ public class SubscriptionList {
     private Long userId;
 
     private Long bookId;
-    private String bookTitle;
+
     private Long authorId;
+
+    private String bookTitle;
+
     private String category;
 
-    @Column(length = 1000)
-    private String bookCoverImage;
+    private LocalDateTime createDate;
+
+    private LocalDateTime modifyDate;
 
     @Column(length = 1000)
     private String bookSummary;
+    
+    @Column(length = 1000)
+    private String bookCoverImage;
 
     @Column(length = 4000)        
     private String bookContent;
 
-    private Date subscribedDate;
+    private Integer viewCount;
+
+    private Integer likeCount;
+
+    private Integer price;
 }
+
