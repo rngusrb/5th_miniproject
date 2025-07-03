@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import project.domain.*;
@@ -46,19 +47,35 @@ public class PointController {
 
     // ✅ 포인트 조회 API (프론트에서 사용하는 부분)
     @GetMapping("/{userId}")
-    public Point getLatestPoint(@PathVariable Long userId) {
-        Point latest = pointRepository.findLatestByUserId(userId);
-        if (latest == null) {
-            Point empty = new Point();
-            empty.setUserId(userId);
-            empty.setChangeDate(new Date());
-            empty.setChangePoint(0);
-            empty.setPointSum(0L);
-            empty.setReason("초기 생성");
-            return empty;
+    public ResponseEntity<?> getLatestPoint(@PathVariable Long userId) {
+        try {
+            Point latest = pointRepository.findLatestByUserId(userId);
+            if (latest == null) {
+                latest = new Point();
+                latest.setUserId(userId);
+                latest.setChangeDate(new Date());
+                latest.setChangePoint(0);
+                latest.setPointSum(0L);
+                latest.setReason("초기 생성");
+            }
+
+            PointResponse dto = new PointResponse(
+                latest.getUserId(),
+                latest.getChangeDate(),
+                latest.getChangePoint(),
+                latest.getPointSum(),
+                latest.getReason()
+            );
+
+            return ResponseEntity.ok(dto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
         }
-        return latest;
     }
+
+
+
     // ✅ 포인트 충전 API (프론트 연동용)
     @PostMapping("/charge")
     public Point chargePoints(@RequestBody ChargeRequest request) {

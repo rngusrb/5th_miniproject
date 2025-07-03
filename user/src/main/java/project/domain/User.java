@@ -30,6 +30,8 @@ public class User {
 
     @PostPersist
     public void onPostPersist() {
+        UserRegistered event = new UserRegistered(this);
+        event.publishAfterCommit();
     }
 
     public static UserRepository repository() {
