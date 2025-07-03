@@ -118,12 +118,8 @@ export default function UserMainPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      if (res.data?.pass === true) {
-        setIsPremium(true);
-      } else {
-        setIsPremium(false);
-      }
+      setIsPremium(res.data?.pass === true);
+      
     } catch (err) {
       console.error("구독 상태 조회 실패:", err);
       setIsPremium(false);
@@ -158,7 +154,7 @@ export default function UserMainPage() {
           <h2>이달의 베스트셀러</h2>
           <div className="bestseller-grid">
             {bestsellers.map(book => (
-              <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} onLike={() => setRefreshFlag(prev => !prev)}  />
+              <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} onLike={() => setRefreshFlag(prev => !prev)} onZeroPoint={() => setShowRecommendPopup(true)} />
             ))}
           </div>
 
@@ -169,7 +165,7 @@ export default function UserMainPage() {
                 <div className="category-label">{catName}</div>
                 <div className="book-row-scrollable">
                   {books.map(book => (
-                    <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} onLike={() => setRefreshFlag(prev => !prev)} />
+                    <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} onLike={() => setRefreshFlag(prev => !prev)} onZeroPoint={() => setShowRecommendPopup(true)} />
                   ))}
                 </div>
               </div>
@@ -220,6 +216,7 @@ export default function UserMainPage() {
               onSubscribed={() => {
                 alert("구독이 완료되었습니다!");
                 fetchUserPass();
+                fetchPoint();    
               }}
             />
           </div>
