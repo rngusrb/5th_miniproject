@@ -1,0 +1,116 @@
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+#<<< API Gateway / Routes
+      routes:
+        - id: user
+          uri: http://localhost:8082
+          predicates:
+            - Path=/users/**, /userLists/**
+        - id: book
+          uri: http://localhost:8083
+          predicates:
+            - Path=/books/**, /booksForSubscribers/**, /booksByAuthors/**, /allBooks/**
+        - id: admin
+          uri: http://localhost:8084
+          predicates:
+            - Path=/admins/**, 
+        - id: author
+          uri: http://localhost:8085
+          predicates:
+            - Path=/authors/**, /authorLists/**
+        - id: platform
+          uri: http://localhost:8086
+          predicates:
+            - Path=/platforms/**, 
+        - id: manuscript
+          uri: http://localhost:8087
+          predicates:
+            - Path=/manuscripts/**, /manuscriptLists/**
+        - id: subscription
+          uri: http://localhost:8081
+          predicates:
+            - Path=/subscriptions/**, /subscriptionLists/**
+        - id: point
+          uri: http://localhost:8089
+          predicates:
+            - Path=/points/**, /pointUsageHistories/**
+        - id: frontend
+          uri: http://localhost:8080
+          predicates:
+            - Path=/**
+#>>> API Gateway / Routes
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: user
+          uri: http://user:8080
+          predicates:
+            - Path=/users/**, 
+        - id: book
+          uri: http://book:8080
+          predicates:
+            - Path=/books/**, 
+        - id: admin
+          uri: http://admin:8080
+          predicates:
+            - Path=/admins/**, 
+        - id: author
+          uri: http://author:8080
+          predicates:
+            - Path=/authors/**, 
+        - id: platform
+          uri: http://platform:8080
+          predicates:
+            - Path=/platforms/**, 
+        - id: manuscript
+          uri: http://manuscript:8080
+          predicates:
+            - Path=/manuscripts/**, 
+        - id: subscription
+          uri: http://subscription:8080
+          predicates:
+            - Path=/subscriptions/**, 
+        - id: point
+          uri: http://point:8080
+          predicates:
+            - Path=/points/**, 
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080

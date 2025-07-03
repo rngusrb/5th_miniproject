@@ -48,6 +48,9 @@ public class PolicyHandler {
 
         
 
+    adminRepository.save(admin);
+
+    
         
     }
 }
