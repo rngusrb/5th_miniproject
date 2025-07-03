@@ -123,6 +123,7 @@
 /* BookCard: 한 화면에 3개씩만 보이게 설정 */
 .book-row-scrollable > * {
   max-width: calc((100% - 24px) / 3);
+  min-width: 140px;
 }
 
 /* 스크롤바 예쁘게 */
