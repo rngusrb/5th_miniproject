@@ -7,7 +7,7 @@ spring:
 
 openai:
   api:
-    key:
+    key: 
 ---
 
 spring:
