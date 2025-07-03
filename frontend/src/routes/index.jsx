@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React from 'react';
 
 // Auth
@@ -49,8 +49,10 @@ export default function AppRoutes() {
       {/* 사용자 페이지 */}
       <Route path="/main/user" element={<UserMainPage />} />
       <Route path="/mypage/user" element={<UserMyPage />} />
-      <Route path="/book/:id" element={<BookDetailPage />} />
+      {/* <Route path="/book/:id" element={<BookDetailPage />} /> */}
       <Route path="/mypage/user/subscribed-books" element={<SubscriptionBookPage />} />
+      <Route path="/books/:id" element={<BookDetailPage />} />
+
 
 
       {/* 작가 페이지 */}
