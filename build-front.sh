@@ -3,8 +3,11 @@ echo "도메인버전: $2"
 echo "registry 이름: $3"
 
 cd $1
+
+npx vite build
 npm run build
 echo "빌드 완료"
+npm install --save-dev vite
 
 az acr login --name $3
 # 이미지 생성

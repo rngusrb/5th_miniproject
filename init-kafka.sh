@@ -5,7 +5,7 @@ chmod 700 get_helm.sh
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 
-// 카프카 설치
+# 카프카 설치
 helm install my-kafka bitnami/kafka
 
 kubectl get all

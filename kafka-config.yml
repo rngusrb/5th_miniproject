@@ -1,0 +1,32 @@
+# listeners:
+#   advertisedListeners: CLIENT://my-kafka:9092
+
+# kafka:
+#   configurationOverrides:
+#     advertised.listeners: PLAINTEXT://my-kafka:9092
+
+replicaCount: 1
+
+auth:
+  enabled: false
+
+listeners:
+  client:
+    protocol: PLAINTEXT
+    containerPort: 9092
+  controller:
+    protocol: PLAINTEXT
+    containerPort: 9093
+
+configurationOverrides:
+  listeners: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+  advertised.listeners: PLAINTEXT://my-kafka:9092
+  listener.security.protocol.map: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+  inter.broker.listener.name: PLAINTEXT
+  controller.listener.names: CONTROLLER
+  offsets.topic.replication.factor: 1
+  transaction.state.log.replication.factor: 1
+  transaction.state.log.min.isr: 1
+  auto.create.topics.enable: "true"
+  log.retention.hours: 168
+  log.dirs: /var/lib/kafka/data
