@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // ✅ axios는 외부 요청용
-import axiosInstance from '../../api/axiosInstance'; // ✅ 내부 요청용 (인터셉터 등 설정 포함)
+import axios from 'axios';
+import axiosInstance from '../../api/axiosInstance';
 import SubscribedBookCard from './SubscribedBookCard';
-import '../../components/card/BookCard.css';
+import MainLayout from '../../components/layout/MainLayout';
+import { useNavigate } from 'react-router-dom';
+import './UserMainPage.css';
 
 export default function SubscriptionBookPage() {
   const [books, setBooks] = useState([]);
@@ -11,6 +13,7 @@ export default function SubscriptionBookPage() {
 
   const token = localStorage.getItem('token');
   const userId = localStorage.getItem('userId');
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -21,8 +24,6 @@ export default function SubscriptionBookPage() {
       })
       .then((res) => {
         setBooks(res.data);
-
-        // 📌 각 책의 최신 like/view 정보 불러오기
         res.data.forEach(book => {
           const bookId = book.bookId;
           axiosInstance.get(`/books/${bookId}`)
@@ -40,25 +41,55 @@ export default function SubscriptionBookPage() {
   }, []);
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>📚 {userId} 님의 구독 중인 도서 목록입니다.</h2>
-
-      {books.length === 0 ? (
-        <p>현재 구독 중인 도서가 없습니다.</p>
-      ) : (
-        <div className="book-row-scrollable">
-          {books.map((book, idx) => (
-            <SubscribedBookCard
-              key={idx}
-              book={{
-                ...book,
-                likeCount: likeCounts[book.bookId] ?? book.likeCount,
-                viewCount: viewCounts[book.bookId] ?? book.viewCount
+    <MainLayout>
+      <div className="user-main-container">
+        <div className="main-left">
+          <div className="user-header-panel" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h1>📚 구독 중인 도서</h1>
+            <button
+              className="small-button"
+              onClick={() => navigate('/main/user')}
+              style={{
+                padding: '6px 12px',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '0.9rem'
               }}
-            />
-          ))}
+            >
+              홈으로
+            </button>
+          </div>
+
+          {/* 👇 설명 문구만 따로 아래에 위치 */}
+          <p style={{ fontSize: '1.1rem', marginBottom: '20px' }}>
+            '<strong style={{ color: '#333', fontWeight: '600' }}>{userId}</strong>' 님의 구독 목록입니다.
+          </p>
+
+          {books.length === 0 ? (
+            <p style={{ marginTop: '30px' }}>현재 구독 중인 도서가 없습니다.</p>
+          ) : (
+            <div className="category-list-vertical">
+              <div className="category-row">
+                <div className="book-row-scrollable">
+                  {books.map((book, idx) => (
+                    <SubscribedBookCard
+                      key={idx}
+                      book={{
+                        ...book,
+                        likeCount: likeCounts[book.bookId] ?? book.likeCount,
+                        viewCount: viewCounts[book.bookId] ?? book.viewCount
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </div>
+    </MainLayout>
   );
 }
