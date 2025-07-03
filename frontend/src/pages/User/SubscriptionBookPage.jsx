@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from 'axios'; // ✅ axios는 외부 요청용
+import axiosInstance from '../../api/axiosInstance'; // ✅ 내부 요청용 (인터셉터 등 설정 포함)
 import SubscribedBookCard from './SubscribedBookCard';
 import '../../components/card/BookCard.css';
-import axiosInstance from '../../api/axiosInstance';
 
 export default function SubscriptionBookPage() {
   const [books, setBooks] = useState([]);
@@ -22,7 +22,7 @@ export default function SubscriptionBookPage() {
       .then((res) => {
         setBooks(res.data);
 
-        // 📌 추가로 각 책의 최신 like/view 정보 받아오기
+        // 📌 각 책의 최신 like/view 정보 불러오기
         res.data.forEach(book => {
           const bookId = book.bookId;
           axiosInstance.get(`/books/${bookId}`)
