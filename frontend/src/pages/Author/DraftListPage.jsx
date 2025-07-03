@@ -2,14 +2,11 @@ import React, { useEffect, useState } from 'react';
 import MainLayout from '../../components/layout/MainLayout';
 import './DraftListPage.css';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../api/axiosInstance'; // 중앙 관리 인스턴스 사용
 
 export default function DraftListPage() {
   const navigate = useNavigate();
-  const BASE_URL = 'http://localhost:8088/manuscripts';
-  const AUTHOR_ID = 1;
-
-  const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE';
+  const authorId = localStorage.getItem('userId'); // 로컬 스토리지에서 동적으로 ID 가져오기
 
   const [drafts, setDrafts] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
@@ -24,15 +21,12 @@ export default function DraftListPage() {
 
   // 원고 목록을 불러오는 함수
   const fetchDrafts = async () => {
+    if (!authorId) return;
     try {
-      const res = await axios.get(`${BASE_URL}/${AUTHOR_ID}`, {
-        headers: {
-          Authorization: `Bearer ${API_TOKEN}`,
-        },
-      });
-      const filtered = res.data.filter(d => d.status !== 'TEMP'); // TEMP 상태는 제외하고 필터링
+      const res = await axiosInstance.get(`/manuscripts/${authorId}`);
+      const filtered = res.data.filter(d => d.status !== 'TEMP');
       setDrafts(filtered);
-      setSelectedIds([]); // 목록 새로고침 시 선택된 ID 초기화
+      setSelectedIds([]);
     } catch (e) {
       console.error("원고 목록을 불러오지 못했습니다:", e);
       alert('원고 목록을 불러오지 못했습니다.');
@@ -40,58 +34,38 @@ export default function DraftListPage() {
   };
 
   useEffect(() => {
-    fetchDrafts();
-  }, [BASE_URL, API_TOKEN, AUTHOR_ID]);
+    // 로그인 상태가 아니면 로그인 페이지로 이동
+    if (!authorId) {
+      alert('로그인이 필요합니다.');
+      navigate('/login/author');
+    } else {
+      fetchDrafts();
+    }
+  }, [authorId, navigate]);
 
   const toggleSelect = id => {
-    setSelectedIds(prev => {
-      if (prev.includes(id)) {
-        return prev.filter(i => i !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
   };
 
   const handleGenerateCover = async () => {
-    console.log('handleGenerateCover 호출됨');
-    console.log('현재 selectedIds:', selectedIds);
-    console.log('selectedIds의 길이:', selectedIds.length);
-
-    if (selectedIds.length === 0) {
-      alert('표지를 생성할 원고를 선택해주세요.');
+    if (selectedIds.length !== 1) {
+      alert('표지를 생성할 원고 하나만 선택해주세요.');
       return;
     }
-
     const manuscriptId = Number(selectedIds[0]);
-
-    console.log('변환된 manuscriptId:', manuscriptId);
-    console.log('변환된 manuscriptId의 타입:', typeof manuscriptId);
-
-    if (isNaN(manuscriptId) || typeof manuscriptId !== 'number') {
-      alert('유효한 원고 ID가 없습니다.');
-      return;
-    }
+    if (isNaN(manuscriptId)) return;
 
     setIsCoverLoading(true);
     setGeneratedCoverUrl('');
     setShowCoverModal(true);
 
     try {
-      const res = await axios.post(
-        `${BASE_URL}/coverimage/${manuscriptId}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${API_TOKEN}`,
-          },
-        }
-      );
-
+      const res = await axiosInstance.post(`/manuscripts/coverimage/${manuscriptId}`);
       const imageUrl = res.data?.bookCoverImage;
       if (imageUrl) {
         setGeneratedCoverUrl(imageUrl);
-        // 표지 생성 후, 해당 원고 정보 업데이트 (필요하다면)
         fetchDrafts();
       } else {
         alert('유효한 커버 이미지 URL을 받지 못했습니다.');
@@ -119,40 +93,22 @@ export default function DraftListPage() {
     const results = [];
     for (const id of selectedIds) {
       const parsedId = Number(id);
-      if (isNaN(parsedId) || typeof parsedId !== 'number') {
-        console.error(`유효하지 않은 ID (요약/카테고리): ${id}`);
-        results.push({
-          id,
-          title: drafts.find(d => d.manuscriptId === id)?.title || `ID: ${id}`,
-          error: '유효하지 않은 ID'
-        });
-        continue;
-      }
+      if (isNaN(parsedId)) continue;
 
       let summaryText = '요약 내용 없음';
       let categoriesList = ['카테고리 없음'];
       let errorOccurred = false;
 
-      // 1. 요약 생성 API 호출
       try {
-        const summaryRes = await axios.post(`${BASE_URL}/summary/${parsedId}`, {}, {
-          headers: {
-            Authorization: `Bearer ${API_TOKEN}`,
-          },
-        });
+        const summaryRes = await axiosInstance.post(`/manuscripts/summary/${parsedId}`);
         summaryText = summaryRes.data?.summary || '요약 내용 없음';
       } catch (e) {
         console.error(`AI 요약 생성 실패 (ID: ${id}):`, e);
         errorOccurred = true;
       }
 
-      // 2. 카테고리 생성 API 호출
       try {
-        const categoryRes = await axios.post(`${BASE_URL}/category/${parsedId}`, {}, {
-          headers: {
-            Authorization: `Bearer ${API_TOKEN}`,
-          },
-        });
+        const categoryRes = await axiosInstance.post(`/manuscripts/category/${parsedId}`);
         categoriesList = categoryRes.data?.category ? [categoryRes.data.category] : ['카테고리 없음'];
       } catch (e) {
         console.error(`AI 카테고리 생성 실패 (ID: ${id}):`, e);
@@ -164,30 +120,26 @@ export default function DraftListPage() {
         title: drafts.find(d => d.manuscriptId === parsedId)?.title || `ID: ${parsedId}`,
         summary: summaryText,
         categories: categoriesList,
-        error: errorOccurred ? '생성 실패' : undefined
+        error: errorOccurred ? '생성 실패' : undefined,
       });
     }
     setGeneratedSummaries(results);
     setIsSummaryLoading(false);
-    fetchDrafts(); // 요약/카테고리 생성 후 원고 정보 업데이트
+    fetchDrafts();
 
     const failedCount = results.filter(r => r.error).length;
     if (failedCount === 0) {
       alert('AI 요약 및 카테고리 생성이 완료되었습니다.');
-    } else if (failedCount === selectedIds.length) {
-      alert('선택된 모든 원고의 요약 및 카테고리 생성에 실패했습니다.');
     } else {
       alert(`${failedCount}개의 원고 요약 및 카테고리 생성에 실패했습니다.`);
     }
   };
 
-  // 삭제 기능 추가
   const handleDeleteSelected = async () => {
     if (selectedIds.length === 0) {
       alert('삭제할 원고를 선택해주세요.');
       return;
     }
-
     if (!window.confirm(`선택된 원고 ${selectedIds.length}개를 정말로 삭제하시겠습니까?`)) {
       return;
     }
@@ -197,11 +149,7 @@ export default function DraftListPage() {
 
     for (const id of selectedIds) {
       try {
-        await axios.delete(`${BASE_URL}/${id}`, {
-          headers: {
-            Authorization: `Bearer ${API_TOKEN}`,
-          },
-        });
+        await axiosInstance.delete(`/manuscripts/${id}`);
         successCount++;
       } catch (e) {
         console.error(`원고 삭제 실패 (ID: ${id}):`, e);
@@ -211,13 +159,12 @@ export default function DraftListPage() {
 
     if (successCount > 0) {
       alert(`${successCount}개의 원고가 성공적으로 삭제되었습니다.`);
-      fetchDrafts(); // 삭제 후 목록 새로고침
+      fetchDrafts();
     }
     if (failCount > 0) {
-      alert(`${failCount}개의 원고 삭제에 실패했습니다. 콘솔을 확인해주세요.`);
+      alert(`${failCount}개의 원고 삭제에 실패했습니다.`);
     }
   };
-
 
   useEffect(() => {
     const handleEscape = (event) => {
@@ -275,9 +222,8 @@ export default function DraftListPage() {
           >
             {isSummaryLoading ? 'AI 요약 & 카테고리 생성 중...' : 'AI 요약 & 카테고리 설정'}
           </button>
-          {/* 삭제 버튼 추가 */}
           <button
-            className="btn btn-danger btn-wide" // btn-danger 클래스 추가 (빨간색 버튼)
+            className="btn btn-danger btn-wide"
             disabled={selectedIds.length === 0}
             onClick={handleDeleteSelected}
           >
@@ -308,26 +254,22 @@ export default function DraftListPage() {
             <div className="modal-content" onClick={e => e.stopPropagation()}>
               <h3>AI 요약 & 카테고리 결과</h3>
               {isSummaryLoading ? (
-                <p>요약 및 카테고리 생성 중입니다... 잠시만 기다려주세요.</p>
+                <p>요약 및 카테고리 생성 중입니다...</p>
               ) : (
                 <div className="summary-results">
-                  {generatedSummaries.length > 0 ? (
-                    generatedSummaries.map((result) => (
-                      <div key={result.id} className="summary-item">
-                        <h4>{result.title}</h4>
-                        {result.error ? (
-                          <p style={{ color: 'red' }}>{result.error}</p>
-                        ) : (
-                          <>
-                            <p><strong>요약:</strong> {result.summary}</p>
-                            <p><strong>카테고리:</strong> {result.categories.join(', ')}</p>
-                          </>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <p>생성된 요약 및 카테고리가 없습니다.</p>
-                  )}
+                  {generatedSummaries.map((result) => (
+                    <div key={result.id} className="summary-item">
+                      <h4>{result.title}</h4>
+                      {result.error ? (
+                        <p style={{ color: 'red' }}>{result.error}</p>
+                      ) : (
+                        <>
+                          <p><strong>요약:</strong> {result.summary}</p>
+                          <p><strong>카테고리:</strong> {result.categories.join(', ')}</p>
+                        </>
+                      )}
+                    </div>
+                  ))}
                 </div>
               )}
               <button className="btn close-btn small-btn" onClick={() => setShowSummaryModal(false)}>

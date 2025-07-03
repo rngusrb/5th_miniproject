@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../api/axiosInstance'; // axiosInstance 사용
 import './ManuscriptRegister.css';
 
 function ManuscriptRegister() {
   const navigate = useNavigate();
-
+  // localStorage에서 사용자 ID 가져오기
+  const authorId = localStorage.getItem('userId');
 
   const [form, setForm] = useState({
     title: '',
@@ -19,7 +20,6 @@ function ManuscriptRegister() {
   });
 
   const [tempLoaded, setTempLoaded] = useState(false);
-  const BASE_URL = 'http://localhost:8088/manuscripts';
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -28,21 +28,14 @@ function ManuscriptRegister() {
   const handleTempSave = async () => {
     const manuscriptData = {
       ...form,
-      authorId: 1,
+      authorId: Number(authorId), // authorId 사용
       status: 'TEMP',
       createDate: new Date().toISOString(),
       modifyDate: new Date().toISOString(),
     };
     try {
-
-      // const token = localStorage.getItem('accessToken');
-      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE'
-      await axios.post(BASE_URL, manuscriptData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        }
-      });
+      // axiosInstance 사용, 상대 경로 및 헤더 자동 처리
+      await axiosInstance.post('/manuscripts', manuscriptData);
       alert('임시 저장 완료');
     } catch (e) {
       console.error(e);
@@ -53,20 +46,14 @@ function ManuscriptRegister() {
   const handleFinalSave = async () => {
     const manuscriptData = {
       ...form,
-      authorId: 1,
+      authorId: Number(authorId), // authorId 사용
       status: 'COMPLETE',
       createDate: new Date().toISOString(),
       modifyDate: new Date().toISOString(),
     };
     try {
-      // const token = localStorage.getItem('accessToken');
-      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE'
-      await axios.post(BASE_URL, manuscriptData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        }
-      });
+      // axiosInstance 사용, 상대 경로 및 헤더 자동 처리
+      await axiosInstance.post('/manuscripts', manuscriptData);
       alert('최종 저장 완료');
       navigate('/main/author');
     } catch (e) {
@@ -77,14 +64,13 @@ function ManuscriptRegister() {
 
 
   const loadTempData = async () => {
+    if (!authorId) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
     try {
-      // const token = localStorage.getItem('accessToken');
-      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3QiLCJwYXNzIjoxMjM0fQ.sBcWSbn_ZRJX6S_C-qF4m45zPNaQwVdKE20wuRroQbE'
-      const res = await axios.get(`${BASE_URL}/1`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // axiosInstance 사용
+      const res = await axiosInstance.get(`/manuscripts/${authorId}`);
 
       const temp = res.data.find((item) => item.status === 'TEMP');
       if (!temp) throw new Error('TEMP 데이터 없음');
