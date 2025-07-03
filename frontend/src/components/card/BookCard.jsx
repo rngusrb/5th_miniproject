@@ -2,7 +2,7 @@ import './BookCard.css';
 import React, { useState, useEffect } from 'react';
 import axiosInstance from "../../api/axiosInstance";
 
-export default function BookCard({ book, showSubscribe = true, onPointChanged, onLike }) {
+export default function BookCard({ book, showSubscribe = true, onPointChanged, onLike,onZeroPoint }) {
   const [likeCount, setLikeCount] = useState(book.likeCount);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -81,6 +81,7 @@ export default function BookCard({ book, showSubscribe = true, onPointChanged, o
           } else {
             setIsSubscribed(false);
             alert("❌ 포인트가 부족하여 구독에 실패했습니다.");
+            if (onZeroPoint) onZeroPoint();
           }
         } catch (err) {
           setIsSubscribed(false);
