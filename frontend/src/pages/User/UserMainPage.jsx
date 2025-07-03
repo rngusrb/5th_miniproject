@@ -76,7 +76,7 @@ export default function UserMainPage() {
       console.error("오류: ", err.response?.data);
     }
   };
-  
+
   const fetchPoint = async () => {
     try {
       const userId = localStorage.getItem('userId');
@@ -192,6 +192,13 @@ export default function UserMainPage() {
               onMySubscribeClick={() => {
                 setShowMyPage(false);
                 navigate('/mypage/user/subscribed-books');
+              }}
+              onLogout={() => {
+                if(confirm('로그아웃 하시겠습니까?')) {
+                  const token = localStorage.getItem('token');
+                  if(token) localStorage.removeItem('token');
+                  navigate('/'); // ✅ 홈으로 이동
+                }
               }}
             />
           </div>
