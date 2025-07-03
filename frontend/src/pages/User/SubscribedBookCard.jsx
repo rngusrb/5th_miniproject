@@ -1,13 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axiosInstance from "../../api/axiosInstance";
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../components/card/BookCard.css';
-import axios from 'axios';
-
 
 export default function SubscribedBookCard({ book }) {
+  const [likeCount, setLikeCount] = useState(book.likeCount || 0);
+  const [viewCount, setViewCount] = useState(book.viewCount || 0);
+  const bookId = book.bookId;
   const navigate = useNavigate();
-  const [likeCount, setLikeCount] = useState(book.likeCount ?? 0);
 
+  useEffect(() => {
+    const fetchLatestBookInfo = async () => {
+      try {
+        const res = await axiosInstance.get(`/books/${bookId}`);
+        const latest = res.data;
+        setLikeCount(latest.likeCount);
+        setViewCount(latest.viewCount);
+      } catch (err) {
+        console.error(`도서 ${bookId} 정보 조회 실패:`, err);
+      }
+    };
+
+    if (bookId) fetchLatestBookInfo();
+  }, [bookId]);
+
+  const handleLikeClick = async () => {
+    try {
+      const res = await axiosInstance.patch(`/books/${bookId}/likebook`);
+      setLikeCount(res.data.likeCount);
+    } catch (err) {
+      console.error("좋아요 요청 실패:", err);
+    }
+  };
 
   const handleReadClick = async () => {
     alert(`${book.bookTitle} 열람 페이지로 이동합니다.`);
@@ -16,29 +41,7 @@ export default function SubscribedBookCard({ book }) {
       const token = localStorage.getItem('token');
 
       await axios.patch(
-        `http://localhost:8088/books/${book.bookId}/viewbook`,
-        {}, // PATCH는 body 없어도 되므로 빈 객체
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      // 이후 상세 페이지로 이동
-      navigate(`/books/${book.bookId}`);
-    } catch (err) {
-      console.error('📕 열람(viewbook) 요청 실패:', err);
-      alert('열람 기록에 실패했습니다.');
-      navigate(`/books/${book.bookId}`); // 그래도 이동은 시킴
-    }
-  };
-  const handleLikeClick = async () => {
-    try {
-      const token = localStorage.getItem('token');
-
-      const res = await axios.patch(
-        `http://localhost:8088/books/${book.bookId}/likebook`,
+        `http://localhost:8088/books/${bookId}/viewbook`,
         {},
         {
           headers: {
@@ -47,31 +50,29 @@ export default function SubscribedBookCard({ book }) {
         }
       );
 
-      setLikeCount(res.data.likeCount); // 서버 응답값으로 갱신
+      navigate(`/books/${bookId}`);
     } catch (err) {
-      console.error('❤️ 좋아요 요청 실패:', err);
-      alert('좋아요에 실패했습니다.');
+      console.error('📕 열람(viewbook) 요청 실패:', err);
+      alert('열람 기록에 실패했습니다.');
+      navigate(`/books/${bookId}`);
     }
   };
-
-
 
   return (
     <div className="book-card">
       <div className="book-thumbnail">
         <img
-          src={`/images/${book.bookCoverImage}`}
-          alt="표지"
           className="book-cover-thumbnail"
+          src={book.bookCoverImage}
+          alt="cover"
         />
       </div>
-
-      <div className="book-title-thumbnail">{book.bookTitle}</div>
-
-      <div className="book-meta">
-        <span className="like-btn" onClick={() => handleLikeClick(book)}>❤️ {likeCount}</span> ☆ {book.viewCount}
+      <div className="book-title-thumbnail" title={book.bookTitle}>
+        {book.bookTitle}
       </div>
-
+      <div className="book-meta">
+        <span className="like-btn" onClick={handleLikeClick}>❤️ {likeCount}</span> ☆ {viewCount}
+      </div>
       <div className="book-actions">
         <button onClick={handleReadClick}>열람</button>
       </div>
