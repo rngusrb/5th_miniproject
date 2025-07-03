@@ -9,6 +9,12 @@ import './UserMainPage.css';
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from 'react-router-dom';
 
+const getBookIdFromHref = (selfLink) => {
+  if (!selfLink) return null;
+  const parts = selfLink.split('/');
+  return parts[parts.length - 1];
+};
+
 export default function UserMainPage() {
   const [showMyPage, setShowMyPage] = useState(false);
   const [showChargePanel, setShowChargePanel] = useState(false);
@@ -18,55 +24,61 @@ export default function UserMainPage() {
   const [bestsellers, setBestsellers] = useState([]);
   const [bookList, setBooklist] = useState([]);
   const [categories, setCategories] = useState({});
+  const [refreshFlag, setRefreshFlag] = useState(false);
   const navigate = useNavigate();
 
-  const getBestsellers = async () => {
+  const fetchBooksAndSeparate = async () => {
     try {
       const res = await axiosInstance.get("/books");
+      const books = res.data._embedded.books;
 
-      setBooklist(res.data._embedded.books)
+      setBooklist(books); // 전체 원본 저장
 
-      const sorted = res.data._embedded.books
+      // 📌 1. bestseller 따로 추출
+      const bestsellers = books
         .sort((a, b) => b.likeCount - a.likeCount)
-        .slice(0, 3);
+        .slice(0, 3)
+        .map(book => {
+          const bookId = getBookIdFromHref(book._links?.self?.href);
+          return {
+            bookId,
+            bookTitle: book.bookTitle,
+            likeCount: book.likeCount,
+            viewCount: book.viewCount,
+            bookCoverImage: book.bookCoverImage,
+          };
+        });
 
-      setBestsellers(sorted); 
+      setBestsellers(bestsellers);
+
+      // 📌 2. 카테고리별 분류
+      const grouped = {};
+
+      books.forEach(book => {
+        const category = book.category || "기타";
+        const bookId = getBookIdFromHref(book._links?.self?.href);
+
+        if (!grouped[category]) grouped[category] = [];
+
+        grouped[category].push({
+          bookId,
+          bookTitle: book.bookTitle,
+          likeCount: book.likeCount,
+          viewCount: book.viewCount,
+          bookCoverImage: book.bookCoverImage,
+        });
+      });
+
+      setCategories(grouped);
 
     } catch (err) {
       console.error("오류: ", err.response?.data);
     }
   };
 
-  // const categories = {
-  //   "소설": [{ id: 4, title: "소설책", likes: 370, subscribes: 82 }],
-  //   "판타지": [{ id: 5, title: "판타지책", likes: 370, subscribes: 82 }],
-  //   "경제": [{ id: 6, title: "경제책", likes: 370, subscribes: 82 }]
-  // };
 
-  function getBookIdFromHref(href) {
-    return parseInt(href?.split("/").pop(), 10);
-  }
-  // 카테고리별 책 정리 함수
-  const getCategoryBooks = () => {
-    const grouped = {};
 
-    bookList.forEach(book => {
-      const category = book.category || "기타";
-      const bookId = getBookIdFromHref(book._links?.self?.href);
 
-      if (!grouped[category]) grouped[category] = [];
-
-      grouped[category].push({
-        bookId,
-        bookTitle: book.bookTitle,
-        likeCount: book.likeCount,
-        viewCount: book.viewCount,
-        bookCoverImage: book.bookCoverImage, // 👉 BookCard에 전달할 전체 book 데이터 포함
-      });
-    });
-
-    setCategories(grouped);
-  };
 
   const fetchPoint = async () => {
     try {
@@ -122,15 +134,9 @@ export default function UserMainPage() {
   }, []);
 
   useEffect(() => {
-    getBestsellers();
-  }, []);
+    fetchBooksAndSeparate();
+  }, [refreshFlag]);
   
-  useEffect(() => {
-    if (bookList.length > 0) {
-      getCategoryBooks();
-    }
-  }, [bookList]);
-
   return (
     <MainLayout>
       <div className="user-main-container">
@@ -150,7 +156,7 @@ export default function UserMainPage() {
           <h2>이달의 베스트셀러</h2>
           <div className="bestseller-grid">
             {bestsellers.map(book => (
-              <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} />
+              <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} onLike={() => setRefreshFlag(prev => !prev)}  />
             ))}
           </div>
 
@@ -161,7 +167,7 @@ export default function UserMainPage() {
                 <div className="category-label">{catName}</div>
                 <div className="book-row-scrollable">
                   {books.map(book => (
-                    <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} />
+                    <BookCard key={book.bookId} book={book} onPointChanged={fetchPoint} onLike={() => setRefreshFlag(prev => !prev)} />
                   ))}
                 </div>
               </div>

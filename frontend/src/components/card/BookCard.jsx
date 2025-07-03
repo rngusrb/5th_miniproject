@@ -2,19 +2,12 @@ import './BookCard.css';
 import React, { useState, useEffect } from 'react';
 import axiosInstance from "../../api/axiosInstance";
 
-const extractBookId = (book) => {
-  const selfLink = book._links?.self?.href;
-  if (!selfLink) return null;
-  const parts = selfLink.split('/');
-  return parts[parts.length - 1];
-};
-
-export default function BookCard({ book, showSubscribe = true,onPointChanged }) {
+export default function BookCard({ book, showSubscribe = true, onPointChanged, onLike }) {
   const [likeCount, setLikeCount] = useState(book.likeCount);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const bookId = extractBookId(book);
+  const bookId = book.bookId;
 
   // ✅ 렌더링 시 구독 여부 확인
   useEffect(() => {
@@ -106,8 +99,10 @@ export default function BookCard({ book, showSubscribe = true,onPointChanged }) 
 
   const handleLikeClick = async (book) => {
     try {
-      const res = await axiosInstance.patch(`/books/${extractBookId(book)}/likebook`);
+      const res = await axiosInstance.patch(`/books/${bookId}/likebook`);
       setLikeCount(res.data.likeCount);
+      
+      if (onLike) onLike(); // 📌 부모에 알림
     } catch (err) {
       console.error("좋아요 요청 실패", err);
     }
