@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import project.config.kafka.KafkaProcessor;
 import project.domain.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 import org.springframework.web.client.RestTemplate;
@@ -104,19 +105,23 @@ public class PolicyHandler {
             view.setUserId(event.getUserId());
             view.setBookId(event.getBookId());
 
-            // 안전한 값 설정: 널 체크 및 기본값 처리
-            Object authorId = book.get("authorId");
-            Object bookTitle = book.get("bookTitle");
-            Object bookSummary = book.get("bookSummary");
-            Object bookCoverImage = book.get("bookCoverImage");
-            Object category = book.get("category");
+            // book 데이터에서 필드 추출
+            view.setAuthorId(book.get("authorId") != null ? Long.parseLong(book.get("authorId").toString()) : null);
+            view.setBookTitle(book.get("bookTitle") != null ? book.get("bookTitle").toString() : "제목없음");
+            view.setCategory(book.get("category") != null ? book.get("category").toString() : "기타");
 
-            view.setAuthorId(authorId != null ? Long.parseLong(authorId.toString()) : null);
-            view.setBookTitle(bookTitle != null ? bookTitle.toString() : "제목없음");
-            view.setBookSummary(bookSummary != null ? bookSummary.toString() : "");
-            view.setBookCoverImage(bookCoverImage != null ? bookCoverImage.toString() : "");
-            view.setCategory(category != null ? category.toString() : "기타");
-            view.setSubscribedDate(new Date());
+            view.setBookSummary(book.get("bookSummary") != null ? book.get("bookSummary").toString() : "");
+            view.setBookCoverImage(book.get("bookCoverImage") != null ? book.get("bookCoverImage").toString() : "");
+            view.setBookContent(book.get("bookContent") != null ? book.get("bookContent").toString() : "");
+
+            view.setViewCount(book.get("viewCount") != null ? Integer.parseInt(book.get("viewCount").toString()) : 0);
+            view.setLikeCount(book.get("likeCount") != null ? Integer.parseInt(book.get("likeCount").toString()) : 0);
+            view.setPrice(book.get("price") != null ? Integer.parseInt(book.get("price").toString()) : 0);
+
+            // 시간 설정
+            LocalDateTime now = LocalDateTime.now();
+            view.setCreateDate(now);
+            view.setModifyDate(now);
 
             SubscriptionListRepository repo = SubscriptionApplication.applicationContext
                 .getBean(SubscriptionListRepository.class);
