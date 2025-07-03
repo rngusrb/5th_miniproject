@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: subscription
-          image: "username/subscription:latest"
+          image: "project10registry.azurecr.io/subscription:latest"
           ports:
             - containerPort: 8080
           readinessProbe:
