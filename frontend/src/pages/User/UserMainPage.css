@@ -43,11 +43,31 @@
   cursor: pointer;
 }
 
+/* Premium 뱃지 */
+.premium-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.premium-badge-img {
+  height: 28px;
+  width: auto;
+  margin-left: 2px;
+}
+
+.premium-text {
+  font-weight: bold;
+  font-size: 16px;
+  color: #008080;
+}
+
 /* 이달의 베스트셀러: 3열 grid */
 .bestseller-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 24px;
+  margin-top: 20px;
   margin-bottom: 32px;
 }
 
@@ -72,9 +92,8 @@
 }
 
 .category-list-vertical {
-  /* max-height: 80vh; */
-  max-width: 700px;   /* 👉 원하는 최대 너비로 조절 */
-  margin: 0 auto;     /* 👉 화면 중앙 정렬 */
+  max-width: 700px;
+  margin: 0 auto;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -95,7 +114,7 @@
 
 /* 책 리스트: 가로 스크롤 행 */
 .book-row-scrollable {
-  display:flex;
+  display: flex;
   gap: 12px;
   overflow-x: auto;
   padding-bottom: 8px;
@@ -103,7 +122,6 @@
 
 /* BookCard: 한 화면에 3개씩만 보이게 설정 */
 .book-row-scrollable > * {
-  /* flex: 0 0 calc((100% - 24px) / 3); 3개 + gap 2개 (12px*2) */
   max-width: calc((100% - 24px) / 3);
 }
 
@@ -117,19 +135,15 @@
   border-radius: 4px;
 }
 
+/* 도서 검색결과 grid */
 .book-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 32px;
 }
-.bestseller-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-top: 20px;
-}
 
+/* 검색창 */
 .search-container {
   display: flex;
   justify-content: center;

@@ -166,10 +166,18 @@ export default function UserMainPage() {
         <div className="main-left">
           <div className="user-header-panel">
             <h1>걷다가 서재</h1>
-            {isPremium
-              ? <span className="premium-badge">🌟 Premium Pass</span>
-              : <span>포인트: {point.toLocaleString()}P</span>
-            }
+            {isPremium ? (
+              <div className="premium-wrapper">
+                <img
+                  src="/premium-badge.png"
+                  alt="Premium Badge"
+                  className="premium-badge-img"
+                />
+                <span className="premium-text">Premium</span>
+              </div>
+            ) : (
+              <span>포인트: {point.toLocaleString()}P</span>
+            )}
             <button onClick={() => setShowMyPage(v => !v)}>My Page</button>
           </div>
 
