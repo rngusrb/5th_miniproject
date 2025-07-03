@@ -1,10 +1,12 @@
 import axios from "axios";
+// 하드코딩된 주소 대신, 동적 설정 로직을 import 합니다.
+import baseURL from "../apiConfig";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8088", // 백엔드 API 주소
+  // 동적으로 결정된 baseURL을 사용
+  baseURL: baseURL,
 });
 
-// 요청 인터셉터로 토큰 추가
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");

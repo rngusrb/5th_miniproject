@@ -30,8 +30,8 @@ jspm_packages/
 Thumbs.db
 
 # dotenv files (API key 등 민감정보)
-.env
-.env.* 
+# .env.development
+# .env.*
 
 # Coverage reports
 coverage/
