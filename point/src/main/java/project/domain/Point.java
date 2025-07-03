@@ -80,12 +80,16 @@ public static void pointBalanceChange(UserRegistered userRegistered) {
     int grantPoint = Boolean.TRUE.equals(isKt) ? 1500 : 1000;
     String reason = Boolean.TRUE.equals(isKt) ? "KT 회원 보너스" : "Welcome Bonus";
 
-    // 현재 누적 포인트 조회
-    Long currentSum = 0L;
+    
+    // 중복 지급 방지: 가장 최근 지급 내역의 reason을 체크
     Point latest = repository().findLatestByUserId(userId);
-    if (latest != null) {
-        currentSum = latest.getPointSum();
+    if (latest != null && reason.equals(latest.getReason())) {
+        System.out.println("⚠️ 이미 '" + reason + "' 지급됨 - 중복 방지로 건너뜀");
+        return;
     }
+
+    Long currentSum = latest != null ? latest.getPointSum() : 0L;
+
 
     // 새 포인트 기록 생성
     Point point = new Point();
