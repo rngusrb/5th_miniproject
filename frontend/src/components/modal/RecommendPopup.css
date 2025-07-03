@@ -1,0 +1,63 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-box {
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.popup-box h2 {
+  margin-bottom: 16px;
+  font-size: 20px;
+  color: #333;
+}
+
+.popup-box p {
+  margin-bottom: 12px;
+  font-size: 15px;
+  color: #444;
+}
+
+.popup-box a {
+  color: #4078f2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.popup-box a:hover {
+  text-decoration: underline;
+}
+
+.popup-box button {
+  padding: 10px 16px;
+  font-size: 14px;
+  background-color: #4078f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin-top: 10px;
+}
+
+.popup-box button:hover {
+  background-color: #2c65d9;
+}

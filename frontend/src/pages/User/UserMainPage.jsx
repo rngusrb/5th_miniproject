@@ -8,6 +8,7 @@ import MainLayout from '../../components/layout/MainLayout';
 import './UserMainPage.css';
 import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from 'react-router-dom';
+import RecommendPopup from '../../components/modal/RecommendPopup';
 
 const getBookIdFromHref = (selfLink) => {
   if (!selfLink) return null;
@@ -20,11 +21,12 @@ export default function UserMainPage() {
   const [showChargePanel, setShowChargePanel] = useState(false);
   const [showSubscribePanel, setShowSubscribePanel] = useState(false);
   const [point, setPoint] = useState(0);
-  const [isPremium, setIsPremium] = useState(false); // ✅ 구독 여부 상태
+  const [isPremium, setIsPremium] = useState(false);
   const [bestsellers, setBestsellers] = useState([]);
   const [bookList, setBooklist] = useState([]);
   const [categories, setCategories] = useState({});
   const [refreshFlag, setRefreshFlag] = useState(false);
+  const [showRecommendPopup, setShowRecommendPopup] = useState(false);
   const navigate = useNavigate();
 
   const fetchBooksAndSeparate = async () => {
@@ -70,16 +72,11 @@ export default function UserMainPage() {
       });
 
       setCategories(grouped);
-
     } catch (err) {
       console.error("오류: ", err.response?.data);
     }
   };
-
-
-
-
-
+  
   const fetchPoint = async () => {
     try {
       const userId = localStorage.getItem('userId');
@@ -96,6 +93,11 @@ export default function UserMainPage() {
 
       if (res.data?.pointSum !== undefined) {
         setPoint(res.data.pointSum);
+
+        // ✅ 포인트 0이면 추천 팝업 띄움
+        if (res.data.pointSum === 0) {
+          setShowRecommendPopup(true);
+        }
       } else {
         setPoint(0);
       }
@@ -130,7 +132,7 @@ export default function UserMainPage() {
 
   useEffect(() => {
     fetchPoint();
-    fetchUserPass(); // ✅ 함께 실행
+    fetchUserPass();
   }, []);
 
   useEffect(() => {
@@ -210,10 +212,15 @@ export default function UserMainPage() {
               onClose={() => setShowSubscribePanel(false)}
               onSubscribed={() => {
                 alert("구독이 완료되었습니다!");
-                fetchUserPass(); // ✅ 구독 후 상태 갱신
+                fetchUserPass();
               }}
             />
           </div>
+        )}
+
+        {/* ✅ KT 추천 팝업 */}
+        {showRecommendPopup && (
+          <RecommendPopup onClose={() => setShowRecommendPopup(false)} />
         )}
       </div>
     </MainLayout>
