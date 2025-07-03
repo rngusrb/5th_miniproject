@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: point
-          image: "username/point:latest"
+          image: "project10registry.azurecr.io/point:latest"
           ports:
             - containerPort: 8080
           readinessProbe:
