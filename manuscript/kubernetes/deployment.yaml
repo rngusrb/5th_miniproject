@@ -20,6 +20,9 @@ spec:
           image: "project10registry.azurecr.io/manuscript:latest"
           ports:
             - containerPort: 8080
+          env:
+            - name: OPENAI_API_KEY
+              value: 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
           readinessProbe:
             httpGet:
               path: '/actuator/health'
