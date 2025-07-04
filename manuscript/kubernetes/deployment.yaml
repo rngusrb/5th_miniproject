@@ -4,6 +4,7 @@ metadata:
   name: manuscript
   labels:
     app: manuscript
+    sidecar.istio.io/inject: "true"
 spec:
   replicas: 1
   selector:
