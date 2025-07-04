@@ -77,7 +77,7 @@ public static void pointBalanceChange(UserRegistered userRegistered) {
     System.out.println("🔥 [PointService] UserRegistered 이벤트 수신 - userId=" + userId + ", isKtMember=" + isKt);
 
     // 지급 포인트 결정
-    int grantPoint = Boolean.TRUE.equals(isKt) ? 1500 : 1000;
+    int grantPoint = Boolean.TRUE.equals(isKt) ? 5000 : 1000;
     String reason = Boolean.TRUE.equals(isKt) ? "KT 회원 보너스" : "Welcome Bonus";
 
     
