@@ -27,7 +27,7 @@ public class GatewayConfig {
             
             .route("subscription", r -> r.path("/subscriptions/**")
                 .filters(f -> f.filter(jwtAuthenticationFilter))
-                .uri("http://subscriptions:8080"))
+                .uri("http://subscription:8080"))
             
             // .route("manuscript", r -> r.path("/manuscripts/**")
             //     .filters(f -> f.filter(jwtAuthenticationFilter))
@@ -35,7 +35,7 @@ public class GatewayConfig {
             
             .route("point", r -> r.path("/points/**")
                 .filters(f -> f.filter(jwtAuthenticationFilter))
-                .uri("http://points:8080"))
+                .uri("http://point:8080"))
 
             .build();
     }
