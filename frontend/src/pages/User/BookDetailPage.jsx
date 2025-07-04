@@ -11,7 +11,7 @@ export default function BookDetailPage() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8088/subscriptions/list/${userId}`, {
+      .get(`/subscriptions/list/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

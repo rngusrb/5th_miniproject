@@ -41,7 +41,7 @@ export default function SubscribedBookCard({ book }) {
       const token = localStorage.getItem('token');
 
       await axios.patch(
-        `http://localhost:8088/books/${bookId}/viewbook`,
+        `/books/${bookId}/viewbook`,
         {},
         {
           headers: {

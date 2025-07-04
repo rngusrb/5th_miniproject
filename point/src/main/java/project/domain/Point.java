@@ -45,7 +45,7 @@ public static void pointBalanceChange(BookAccessDenied bookAccessDenied) {
 
     // 가장 최근 포인트 합계 조회
     Long currentSum = 0L;
-    Point latest = repository().findTopByUserIdOrderByChangeDateDesc(userId); // native 쿼리 기준
+    Point latest = repository().findLatestByUserId(userId); // native 쿼리 기준
     if (latest != null) {
         currentSum = latest.getPointSum();
     }
@@ -77,19 +77,15 @@ public static void pointBalanceChange(UserRegistered userRegistered) {
     System.out.println("🔥 [PointService] UserRegistered 이벤트 수신 - userId=" + userId + ", isKtMember=" + isKt);
 
     // 지급 포인트 결정
-    int grantPoint = Boolean.TRUE.equals(isKt) ? 5000 : 1000;
+    int grantPoint = Boolean.TRUE.equals(isKt) ? 1500 : 1000;
     String reason = Boolean.TRUE.equals(isKt) ? "KT 회원 보너스" : "Welcome Bonus";
 
-    
-    // 중복 지급 방지: 가장 최근 지급 내역의 reason을 체크
-    Point latest = repository().findTopByUserIdOrderByChangeDateDesc(userId);
-    if (latest != null && reason.equals(latest.getReason())) {
-        System.out.println("⚠️ 이미 '" + reason + "' 지급됨 - 중복 방지로 건너뜀");
-        return;
+    // 현재 누적 포인트 조회
+    Long currentSum = 0L;
+    Point latest = repository().findLatestByUserId(userId);
+    if (latest != null) {
+        currentSum = latest.getPointSum();
     }
-
-    Long currentSum = latest != null ? latest.getPointSum() : 0L;
-
 
     // 새 포인트 기록 생성
     Point point = new Point();
