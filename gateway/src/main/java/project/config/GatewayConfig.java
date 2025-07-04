@@ -23,11 +23,11 @@ public class GatewayConfig {
 
             .route("book", r -> r.path("/books/**")
                 .filters(f -> f.filter(jwtAuthenticationFilter))
-                .uri("http://localhost:8083"))
+                .uri("http://localhost:8080"))
             
             .route("subscription", r -> r.path("/subscriptions/**")
                 .filters(f -> f.filter(jwtAuthenticationFilter))
-                .uri("http://localhost:8081"))
+                .uri("http://localhost:8080"))
             
             // .route("manuscript", r -> r.path("/manuscripts/**")
             //     .filters(f -> f.filter(jwtAuthenticationFilter))
@@ -35,7 +35,7 @@ public class GatewayConfig {
             
             .route("point", r -> r.path("/points/**")
                 .filters(f -> f.filter(jwtAuthenticationFilter))
-                .uri("http://localhost:8089"))
+                .uri("http://localhost:8080"))
 
             .build();
     }
