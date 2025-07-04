@@ -7,7 +7,7 @@ spring:
 
 openai:
   api:
-    key: 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
+    key: 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
 ---
 
 spring:
