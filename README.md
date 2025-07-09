@@ -49,7 +49,9 @@
 
 ## 설계 구조 (MSA EZ 기반)
 
-![MSA 설계 다이어그램](https://github.com/user-attachments/assets/f8f919ab-2874-4cd6-87fe-197552fa95e4)
+![MSA 설계 다이어그램]
+<img width="601" alt="{83A87C79-2EF8-4C79-B6AA-9CDC33C88470}" src="https://github.com/user-attachments/assets/14a34dfd-de46-4b75-84b3-3b5e848662b4" />
+
 
 > 전체 서비스는 MSA-EZ를 통해 헥사고날 아키텍처 기반으로 설계되었으며, 이벤트 기반 Kafka 구조와 Gateway API 라우팅이 적용됨
 
