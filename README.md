@@ -39,7 +39,8 @@
 
 ## API 문서 (Swagger 기반)
 
-![Uploading {860C76DB-62D6-4408-958C-DCC4AC5FAEF9}.png…]()
+<img width="357" alt="{860C76DB-62D6-4408-958C-DCC4AC5FAEF9}" src="https://github.com/user-attachments/assets/d073be35-2c76-4bbb-9b10-542749d8a249" />
+
 
 ---
 
