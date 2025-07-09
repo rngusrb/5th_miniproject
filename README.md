@@ -39,11 +39,7 @@
 
 ## API 문서 (Swagger 기반)
 
-![API 명세 1](https://github.com/user-attachments/assets/ec42a72e-476c-442c-9191-927e91d39267)
-![API 명세 2](https://github.com/user-attachments/assets/58631a2d-9ff0-4202-9fb7-f4d0b4beb6df)
-![API 명세 3](https://github.com/user-attachments/assets/22c23fe8-a16a-42c0-968f-a7b3f5ff2e28)
-![API 명세 4](https://github.com/user-attachments/assets/3bfec8f6-4bfe-4675-acd9-6c944f546733)
-![API 명세 5](https://github.com/user-attachments/assets/a13b9739-9f07-4880-8f83-7fe9d802d331)
+![Uploading {860C76DB-62D6-4408-958C-DCC4AC5FAEF9}.png…]()
 
 ---
 
